@@ -5,10 +5,40 @@
 	- vivante
 	- morte
 
+## Utilitaires du projet
+### Ant
+voir pour faire la compilation auto
+
+### Wiki
+voir pour faire en sorte que le wiki se génère automatiquement
+
 ## Structure du projet
-cellule
-grille
-quadtree
+gol
+	META-INF
+		manifest.mf
+	core
+		cells
+			// all cells
+		boards
+			// all boards
+		quadtree
+	gui
+		components
+			buttons
+			// mettre les autres composants ici
+	executable
+		// mettre les fichiers exécutables ici
+	
+test
+	META-INF
+		manifest.mf
+	core
+		cells
+			// all tests for cells
+		boards
+			// all tests for boards
+	game
+		// tests pour la modification des données
 
 
 ## Idées
