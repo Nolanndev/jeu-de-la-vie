@@ -1,5 +1,4 @@
 # JEU DE LA VIE
-
 ## Règles
 - Une cellule a deux états
 	- vivante
@@ -8,11 +7,10 @@
 ## Utilitaires du projet
 ### Ant
 voir pour faire la compilation auto
-
 ### Wiki
 voir pour faire en sorte que le wiki se génère automatiquement
-
 ## Structure du projet
+```
 gol
 	META-INF
 		manifest.mf
@@ -39,7 +37,7 @@ test
 			// all tests for boards
 	game
 		// tests pour la modification des données
-
+```
 
 ## Idées
 ### Options
@@ -78,10 +76,3 @@ test
 		- nombre de naissances (au total)
 		- nombre de morts (au total)
 		- nombre d'étapes
-
-
-### Structures de données
-- Quadtrees
-- Tableaux
-
-### Implémentation des fonctionnalités
