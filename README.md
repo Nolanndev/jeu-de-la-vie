@@ -76,3 +76,28 @@ test
 		- nombre de naissances (au total)
 		- nombre de morts (au total)
 		- nombre d'étapes
+
+
+main.core.Cell -> classe abstraite
+	-packages nécessaires
+		- org.javatuples.Pair
+	- attributs
+		- protected boolean alive
+		- protected Pair<Int> coordinates
+		- protected ArrayList<Cell> neighbors (toutes les cellules voisines)
+		- protected int maxNeighbors
+	- méthodes
+		- public abstract void setState(type state)
+		- public boolean isAlive()
+		- public Int getCoordinateX()
+		- public Int getCoordinateY()
+		- public ArrayList<Cell> getNeighbors(int radius)
+
+main.core.Board -> classe concrète
+	- packages nécessaires
+		- private QuadTree quadTreeBoard
+		- private ArrayList<ArrayList<Cell>> arrayBoard
+	- attributs
+		- 
+	- méthodes
+		- 
