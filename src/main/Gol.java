@@ -1,14 +1,14 @@
 package main;
 
-import main.gui.*;
-import javax.swing.*;
+import main.core.*;
 
-public class Gol extends JFrame{
+public class Gol{
     public static void main(String [] args){
         System.out.println("DEBUT");
-
-        new StartMenu();
-
-        System.out.println("FIN");
+        System.out.println("-----------");
+        Grid g = new Grid(5, 5);
+        System.out.println(g.getColumns());
+        System.out.println(g.getRows());
+        g.showGrid();
     }
 }
