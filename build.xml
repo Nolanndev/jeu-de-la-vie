@@ -1,24 +1,43 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="exemple" default="compile" basedir=".">
+<project name="ExampleAnt" default="compile" basedir=".">
     
     <!-- Definition des proprietes du projet -->
     <property name="projet.sources.dir" value="src"/>
     <property name="projet.bin.dir" value="bin"/>
     <property name="projet.lib.dir" value="lib"/>
-    
+    <property name="projet.execution.class" value="main.Gol"/>
+
     <!-- Definition du classpath du projet -->
     <path id="projet.classpath">
-        <fileset dir="$projet.lib.dir">
+        <fileset dir="${projet.lib.dir}">
            <include name="*.jar"/>
         </fileset>
-        <pathelement location="$projet.bin.dir" />
+        <pathelement location="${projet.bin.dir}" />
     </path>
 
     <!-- Compilation des classes du projet -->
-    <target name="compile" description="Compilation des classes">
-        <javac srcdir="$projet.sources.dir" destdir="$projet.bin.dir" debug="on" optimize="off" deprecation="on">
+    <target name="compil" description="Compilation du projet">
+        <javac srcdir="${projet.sources.dir}" destdir="${projet.bin.dir}" debug="on" optimize="off" deprecation="on">
             <classpath refid="projet.classpath"/>
         </javac>
     </target>
+
+    <!-- Exécution de la classe principale -->
+    <target name="run" description="Execution du projet">
+        <java classname="${projet.execution.class}">
+            <classpath refid="projet.classpath"/>
+        </java>
+    </target>
+
+    <!-- Exécution de la classe principale -->
+    <target name="runa" description="Compilation et execution du projet">
+        <javac srcdir="${projet.sources.dir}" destdir="${projet.bin.dir}" debug="on" optimize="off" deprecation="on">
+            <classpath refid="projet.classpath"/>
+        </javac>
+        <java classname="${projet.execution.class}">
+            <classpath refid="projet.classpath"/>
+        </java>
+    </target>
+
 
 </project>

@@ -10,6 +10,6 @@ public class Gol {
         NormalCell cell = new NormalCell(new Tuple(0,0));
         System.out.println("Coordonnées: (" + cell.getCoordinateX() + "," + cell.getCoordinateY() + ")");
         System.out.println("En vie ? " + (cell.isAlive() ? "oui" : "non"));
-        System.out.println("Nombre max de voisins: " + cell.getMaxNeighbors());
+        System.out.println("Nombre de voisins: " + cell.getMinNeighbors() + " à " + cell.getMaxNeighbors() + "voisins pour vivre");
     }
 }
