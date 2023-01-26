@@ -2,7 +2,6 @@ package main;
 
 import main.core.*;
 import main.utils.Tuple;
-import java.util.Random;
 
 public class Gol {
     public static void main(String[] args) {
@@ -15,14 +14,9 @@ public class Gol {
 
         System.out.println("-----------");
 
-        Random obj = new Random();
-        int rows = obj.nextInt(20);
-        int columns = obj.newInt(20);
-
-        Grid g = new Grid(rows, columns);
-        g.getColumns();
-        g.getRows();
-        System.out.println("--------");
+        Grid g = new Grid(5, 5);
+        System.out.println(g.getColumns());
+        System.out.println(g.getRows());
         g.showGrid();
     }
 }
