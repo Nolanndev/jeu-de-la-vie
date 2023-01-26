@@ -45,6 +45,14 @@ public class Cell {
         return this.neighbors;
     }
 
+    public void setMinNeighbors(int newMin) {
+        this.minNeighbors = newMin;
+    }
+
+    public int getMinNeighbors() {
+        return this.minNeighbors;
+    }
+
     public int getMaxNeighbors() {
         return this.maxNeighbors;
     }
