@@ -1,19 +1,29 @@
 package main.core;
 
-import org.javatuples.*;
 import java.util.ArrayList;
+import main.utils.Tuple;
 
 public class Cell {
-    protected Pair<Integer,Integer> coordinates;
+    protected Tuple coordinates;
     protected boolean alive;
     protected ArrayList<Cell> neighbors;
+    protected int minNeighbors;
     protected int maxNeighbors;
 
-    public Cell(Pair<Integer,Integer> coordinates, boolean alive, int maxNeighbors) {
+    public Cell(Tuple coordinates, int minNeighbors, int maxNeighbors) {
         this.coordinates = coordinates;
-        this.alive = alive;
+        this.alive = true;
         this.neighbors = new ArrayList<Cell>();
+        this.minNeighbors = minNeighbors;
         this.maxNeighbors = maxNeighbors;
+    }
+
+    public Cell(Tuple coordinates) {
+        this(coordinates, 2, 3);
+    }
+
+    public Cell() {
+        this(new Tuple(0,0), 2, 3);
     }
 
     public void setState(boolean state) {
@@ -24,11 +34,11 @@ public class Cell {
     }
 
     public Integer getCoordinateX() {
-        return this.coordinates.getValue0();
+        return this.coordinates.getValue1();
     }
 
     public int getCoordinateY() {
-        return this.coordinates.getValue1();
+        return this.coordinates.getValue2();
     }
 
     public ArrayList<Cell> getNeighbors(int radius) {
