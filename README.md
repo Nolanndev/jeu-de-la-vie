@@ -1,4 +1,7 @@
 # JEU DE LA VIE
+## Utilisation
+<!-- Faire une partie utilisation, pour montrer et expliquer le fonctionnement du logiciel -->
+
 ## Règles
 - Une cellule a deux états
 	- vivante

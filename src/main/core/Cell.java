@@ -3,7 +3,7 @@ package main.core;
 import java.util.ArrayList;
 import main.utils.Tuple;
 
-public class Cell {
+public abstract class Cell {
     protected Tuple coordinates;
     protected boolean alive;
     protected ArrayList<Cell> neighbors;
@@ -33,6 +33,10 @@ public class Cell {
         return this.alive;
     }
 
+    public Tuple getCoordinates() {
+        return this.coordinates;
+    }
+
     public Integer getCoordinateX() {
         return this.coordinates.getValue1();
     }
@@ -41,9 +45,7 @@ public class Cell {
         return this.coordinates.getValue2();
     }
 
-    public ArrayList<Cell> getNeighbors(int radius) {
-        return this.neighbors;
-    }
+    public abstract ArrayList<Cell> getNeighbors(int radius);
 
     public void setMinNeighbors(int newMin) {
         this.minNeighbors = newMin;

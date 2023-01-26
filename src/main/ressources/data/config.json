@@ -1,0 +1,10 @@
+{
+    "window": {
+        "title": "Game Of Life",
+        "size": {
+            "width": 700,
+            "height": 500
+        },
+        "resizable": false
+    }
+}

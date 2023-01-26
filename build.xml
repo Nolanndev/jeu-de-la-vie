@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project name="ExampleAnt" default="compile" basedir=".">
     
-    <!-- Definition des proprietes du projet -->
+    <!-- PROPRIETES -->
     <property name="projet.sources.dir" value="src"/>
     <property name="projet.bin.dir" value="bin"/>
     <property name="projet.lib.dir" value="lib"/>
     <property name="projet.execution.class" value="main.Gol"/>
 
-    <!-- Definition du classpath du projet -->
+    <!-- CLASSPATH -->
     <path id="projet.classpath">
         <fileset dir="${projet.lib.dir}">
            <include name="*.jar"/>
@@ -15,28 +15,46 @@
         <pathelement location="${projet.bin.dir}" />
     </path>
 
-    <!-- Compilation des classes du projet -->
+    <!-- COMPILATION -->
     <target name="compil" description="Compilation du projet">
         <javac srcdir="${projet.sources.dir}" destdir="${projet.bin.dir}" debug="on" optimize="off" deprecation="on">
             <classpath refid="projet.classpath"/>
         </javac>
     </target>
 
-    <!-- Exécution de la classe principale -->
+    <!-- EXECUTION -->
     <target name="run" description="Execution du projet">
         <java classname="${projet.execution.class}">
             <classpath refid="projet.classpath"/>
         </java>
     </target>
 
-    <!-- Exécution de la classe principale -->
-    <target name="runa" description="Compilation et execution du projet">
-        <javac srcdir="${projet.sources.dir}" destdir="${projet.bin.dir}" debug="on" optimize="off" deprecation="on">
-            <classpath refid="projet.classpath"/>
-        </javac>
+    <!-- COMPILATION & EXECUTION -->
+    <target name="runa" description="Compilation et execution du projet" depends="compil">
         <java classname="${projet.execution.class}">
             <classpath refid="projet.classpath"/>
         </java>
+    </target>
+
+    <!-- CONSTRUCTION -->
+    <target name="jar" description="Create .jar file for the project" depends="compil">
+        <jar jarfile="gol.jar" basedir="${projet.bin.dir}" manifest="META-INF/MANIFEST.mf" />
+    </target>
+
+    <!-- CONSTRUCTION & LANCEMENT -->
+    <!-- <target name="jara" description="Create .jar file for the project" depends="jar">
+        <java classname="gol.jar">
+            <classpath refid="projet.classpath"/>
+        </java>
+    </target> -->
+
+    <!-- JAVADOC -->
+    <target name="doc" >
+        <javadoc sourcepath="src" destdir="doc">
+            <fileset dir="src" defaultexcludes="yes">
+                <include name="*.java" />
+            </fileset>
+        </javadoc>
     </target>
 
 

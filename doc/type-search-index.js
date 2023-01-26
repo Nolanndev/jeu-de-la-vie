@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"main.core","l":"Cell"},{"p":"main","l":"Gol"},{"p":"main.core","l":"Grid"},{"p":"main.core","l":"NormalCell"},{"p":"main.utils","l":"Tuple"}];updateSearchResults();
