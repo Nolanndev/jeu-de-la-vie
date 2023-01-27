@@ -1,35 +1,50 @@
 package main.core;
 
-public class Grid{
+import java.util.ArrayList;
+import java.util.Random;
+
+import main.utils.Tuple;
+
+public class Grid {
     private int rows;
     private int columns;
-    private int grid[][];
+    private ArrayList<ArrayList<BasicCell>> board;
 
-    public Grid(int rows, int columns, int grid[][]){
+    public Grid(int rows, int columns) {
         this.rows = rows;
         this.columns = columns;
-        this.grid = new int[rows][columns];
+        this.board = new ArrayList<ArrayList<BasicCell>>();
+        for (int i = 0; i < this.rows; i++) {
+            this.board.add(new ArrayList<BasicCell>());
+        }
 
-        for (int i = 0; i <= rows; i++){
-            for (int j = 0; j <= columns; j++){
-                grid[i][j] = 0; // on initialise une grille vide de 0. On ajoutera des cellules dedans plutard
+        Random rand = new Random();
+        // Initialisation des valeurs de la grille
+        for (int i=0; i<this.rows; i++) {
+            for (int j=0; j<this.rows; j++) {
+                this.board.get(i).add(new NormalCell(new Tuple(rand.nextInt(0, 10), rand.nextInt(0, 10))));
             }
         }
     }
 
-    public int getRows(){
+    public int getRows() {
         return this.rows;
     }
 
-    public int getColumns(){
+    public int getColumns() {
         return this.columns;
     }
 
-    public void showGrid(){
-        for (int i = 0; i <= getRows(); i++){
-            for (int j = 0; j <= getColumns(); j++){
-                System.out.println(grid[i][j]);
+    public String getCellInfos(int row, int column) {
+        return this.board.get(row).get(column).infos();
+    }
+
+    public void displayGrid() {
+        for (ArrayList<BasicCell> row : this.board) {
+            for (BasicCell cell : row) {
+                System.out.print(cell.getCoordinates().toString() + " ");
             }
+            System.out.print("\n");
         }
     }
 }

@@ -16,4 +16,8 @@ public class Tuple {
     public int getValue2() {
         return this.secondValue;
     }
-}
+
+    public String toString() {
+        return "(" + this.firstValue + "," + this.secondValue + ")";
+    }
+} 

@@ -1,66 +1,25 @@
 package main.core;
 
-import java.util.ArrayList;
 import main.utils.Tuple;
 
-public abstract class Cell {
-    protected Tuple coordinates;
-    protected boolean alive;
-    protected ArrayList<Cell> neighbors;
-    protected int minNeighbors;
-    protected int maxNeighbors;
+public interface Cell {
+    public void setState(boolean newState);
 
-    public Cell(Tuple coordinates, int minNeighbors, int maxNeighbors) {
-        this.coordinates = coordinates;
-        this.alive = true;
-        this.neighbors = new ArrayList<Cell>();
-        this.minNeighbors = minNeighbors;
-        this.maxNeighbors = maxNeighbors;
-    }
+    public boolean isAlive();
 
-    public Cell(Tuple coordinates) {
-        this(coordinates, 2, 3);
-    }
+    public Tuple getCoordinates();
 
-    public Cell() {
-        this(new Tuple(0,0), 2, 3);
-    }
+    public int getCoordinateX();
 
-    public void setState(boolean state) {
-        this.alive = state;
-    }
-    public boolean isAlive() {
-        return this.alive;
-    }
+    public int getCoordinateY();
 
-    public Tuple getCoordinates() {
-        return this.coordinates;
-    }
+    public void setMinNeighbors(int newMin);
 
-    public Integer getCoordinateX() {
-        return this.coordinates.getValue1();
-    }
+    public int getMinNeighbors();
 
-    public int getCoordinateY() {
-        return this.coordinates.getValue2();
-    }
+    public void setMaxNeighbors(int newMax);
 
-    public abstract ArrayList<Cell> getNeighbors(int radius);
+    public int getMaxNeighbors();
 
-    public void setMinNeighbors(int newMin) {
-        this.minNeighbors = newMin;
-    }
-
-    public int getMinNeighbors() {
-        return this.minNeighbors;
-    }
-
-    public int getMaxNeighbors() {
-        return this.maxNeighbors;
-    }
-
-    public void setMaxNeighbors(int maxNeighbors) {
-        this.maxNeighbors = maxNeighbors;
-    }
-
+    public String infos();
 }
