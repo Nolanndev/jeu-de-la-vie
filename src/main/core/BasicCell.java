@@ -64,4 +64,8 @@ public abstract class BasicCell implements Cell {
         return "Coordinates: " + this.coordinates.toString() + "\nStatus: " + this.alive + "\nNeighbors\n\tmin: "
                 + this.minNeighbors + "\n\tmax: " + this.maxNeighbors;
     }
+
+    public void viewCoordinates() {
+        System.out.println(this.coordinates.toString());
+    }
 }

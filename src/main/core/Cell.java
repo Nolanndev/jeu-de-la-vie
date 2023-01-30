@@ -22,4 +22,6 @@ public interface Cell {
     public int getMaxNeighbors();
 
     public String infos();
+
+    public void viewCoordinates();
 }

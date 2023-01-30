@@ -20,4 +20,14 @@ public class Tuple {
     public String toString() {
         return "(" + this.firstValue + "," + this.secondValue + ")";
     }
+
+    @Override
+    public int hashCode() {
+        return this.toString().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return this.toString() == other.toString();
+    }
 } 

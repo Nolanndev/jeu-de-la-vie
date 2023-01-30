@@ -8,23 +8,23 @@ import main.utils.Tuple;
 public class Grid {
     private int rows;
     private int columns;
-    private ArrayList<ArrayList<BasicCell>> board;
+    private ArrayList<ArrayList<Cell>> board;
 
     public Grid(int rows, int columns) {
         this.rows = rows;
         this.columns = columns;
-        this.board = new ArrayList<ArrayList<BasicCell>>();
+        this.board = new ArrayList<ArrayList<Cell>>();
         for (int i = 0; i < this.rows; i++) {
-            this.board.add(new ArrayList<BasicCell>());
+            this.board.add(new ArrayList<Cell>());
         }
+    }
 
-        Random rand = new Random();
-        // Initialisation des valeurs de la grille
-        for (int i=0; i<this.rows; i++) {
-            for (int j=0; j<this.rows; j++) {
-                this.board.get(i).add(new NormalCell(new Tuple(rand.nextInt(0, 10), rand.nextInt(0, 10))));
-            }
-        }
+    public Grid(int size) {
+        this(size, size);
+    }
+
+    public Grid() {
+        this(15,15);
     }
 
     public int getRows() {
@@ -40,11 +40,43 @@ public class Grid {
     }
 
     public void displayGrid() {
-        for (ArrayList<BasicCell> row : this.board) {
-            for (BasicCell cell : row) {
+        for (ArrayList<Cell> row : this.board) {
+            for (Cell cell : row) {
                 System.out.print(cell.getCoordinates().toString() + " ");
             }
             System.out.print("\n");
         }
+    }
+
+    public Cell getCell(Tuple coordinates) {
+        Cell cell = this.board.get(coordinates.getValue1()).get(coordinates.getValue2());
+        if (Cell.class.isInstance(cell)) {
+            return cell;
+        }
+        return null;
+    }
+
+    public void setCell(int x, int y, Cell cell) {
+        Cell c = this.board.get(x).get(y);
+        c = cell;
+    }
+
+    public ArrayList<Cell> getNeighbors(Cell cell, int radius) {
+        int x = cell.getCoordinateX();
+        int y = cell.getCoordinateY();
+        int diameter = 2 * radius + 1;
+        ArrayList<Cell> neighbors = new ArrayList<Cell>();
+        
+        for (int i=0; i < diameter; i++) {
+            for (int j=0; j < diameter; j++) {
+                if (Cell.class.isInstance(this.board.get(i).get(j))) {
+                    System.out.print(this.board.get(i).get(j).getCoordinates().toString());
+
+                }
+            }
+            System.lineSeparator();
+        }
+        
+        return neighbors;
     }
 }

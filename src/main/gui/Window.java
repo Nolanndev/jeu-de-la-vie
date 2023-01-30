@@ -14,7 +14,6 @@ public class Window {
         this.window.setSize(windowSize.getValue1(),windowSize.getValue2());
         this.window.setVisible(true);
         this.window.setResizable(false);
-
     }
 
 }
