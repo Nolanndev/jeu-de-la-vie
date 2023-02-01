@@ -1,5 +1,7 @@
 package main.core;
 
+import java.lang.ref.Cleaner.Cleanable;
+
 import main.utils.Tuple;
 
 public class Grid {
@@ -22,6 +24,19 @@ public class Grid {
 
     public Grid() {
         this(15);
+    }
+
+    public Grid(Cell[][] board) {
+        this.board = board;
+        this.size = new Tuple(board.length, board[0].length);
+    }
+
+    public Cell[][] getBoard() {
+        return board;
+    }
+
+    public void setBoard(Cell[][] board) {
+        this.board = board;
     }
 
     public Tuple getSize(){
@@ -94,4 +109,26 @@ public class Grid {
 
         return countNeighbors;
     }
+
+    public void nextGen(){
+        Cell[][] copyBoard = copyBoard();
+        for (int i = 0; i < getHeight() ; i++) {
+            for (int j = 0; j < getWidth(); j++) {
+                Boolean res = (countNeighbors(i, j) == 3 || (countNeighbors(i, j) == 2 && this.board[i][j].isAlive()));
+                copyBoard[i][j].setState(res);
+            }
+        }
+        setBoard(copyBoard);
+    }
+
+    public Cell[][] copyBoard(){
+        Cell[][] copyBoard = new Cell[this.getHeight()][this.getWidth()];
+        for (int i = 0; i < getHeight() ; i++) {
+            for (int j = 0; j < getWidth(); j++) {
+                copyBoard[i][j] = new NormalCell(this.board[i][j].isAlive());
+            }
+        }
+        return copyBoard;
+    }
+
 }

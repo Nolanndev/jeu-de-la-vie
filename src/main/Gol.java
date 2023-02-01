@@ -23,9 +23,14 @@ public class Gol {
 
         grid.getCell(new Tuple(0, 0)).setState(false);;
 
+        System.out.println("Nombre de voisins de (1,2) : " + grid.countNeighbors(1, 2));
         
-        System.out.println("Nombre de voisins de (1,2) : " + grid.countNeighbors(1, 1));
-        grid.displayGrid();
+        for (int i = 1; i <= 3; i++) {
+            System.out.println("-----------------");
+            System.out.println("Gen " + i + " : ");
+            grid.displayGrid();
+            grid.nextGen();
+        }
 
 
         System.out.println("FIN");
