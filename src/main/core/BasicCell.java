@@ -1,24 +1,24 @@
 package main.core;
 
-import main.utils.Tuple;
-
 public abstract class BasicCell implements Cell {
-    protected Tuple coordinates;
     protected boolean alive;
     protected int minNeighbors;
     protected int maxNeighbors;
     protected int radius;
 
-    public BasicCell(Tuple coordinates, int minNeighbors, int maxNeighbors, int radius) {
-        this.coordinates = coordinates;
-        this.alive = true;
+    public BasicCell(int minNeighbors, int maxNeighbors, int radius, boolean alive) {
+        this.alive = alive;
         this.minNeighbors = minNeighbors;
         this.maxNeighbors = maxNeighbors;
         this.radius = radius;
     }
 
-    public BasicCell(Tuple coordinates) {
-        this(coordinates, 2, 3,1);
+    public BasicCell(boolean alive) {
+        this(2, 3, 1, alive);
+    }
+
+    public BasicCell() {
+        this(2, 3, 1, false);
     }
 
     @Override
@@ -28,22 +28,6 @@ public abstract class BasicCell implements Cell {
     
     public boolean isAlive() {
         return this.alive;
-    }
-    
-    public void setCoordinates(Tuple newCoordinates) {
-        this.coordinates = newCoordinates;
-    }
-    
-    public Tuple getCoordinates() {
-        return this.coordinates;
-    }
-
-    public int getCoordinateX() {
-        return this.coordinates.getValue1();
-    }
-
-    public int getCoordinateY() {
-        return this.coordinates.getValue2();
     }
 
     public int getRadius() {
@@ -67,11 +51,8 @@ public abstract class BasicCell implements Cell {
     }
 
     public String infos() {
-        return "Coordinates: " + this.coordinates.toString() + "\nStatus: " + this.alive + "\nNeighbors\n\tmin: "
+        return "Status: " + this.alive + "\nNeighbors\n\tmin: "
                 + this.minNeighbors + "\n\tmax: " + this.maxNeighbors;
     }
 
-    public void viewCoordinates() {
-        System.out.println(this.coordinates.toString());
-    }
 }

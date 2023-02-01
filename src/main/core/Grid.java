@@ -11,7 +11,7 @@ public class Grid {
         this.board = new Cell[this.getHeight()][this.getWidth()];
         for (int i = 0; i < getHeight(); i++)  {  
             for (int j=0; j < getWidth(); j++){
-                this.board[i][j] = new NormalCell(new Tuple(i, j));
+                this.board[i][j] = new NormalCell();
             }  
         }  
     }
@@ -55,7 +55,8 @@ public class Grid {
     public void displayGrid() {
         for (Cell[] row : this.board) {
             for (Cell cell : row) {
-                System.out.print(cell.getCoordinates().toString() + " ");
+                String res = (cell.isAlive()) ? "1" : "0";
+                System.out.print(res + " ");
             }
             System.out.print("\n");
         }
@@ -73,24 +74,24 @@ public class Grid {
         this.board[x][y] = cell;
     }
 
-    public int countNeighbors(Cell cell) {
-        int x = cell.getCoordinateX();
-        int y = cell.getCoordinateY();
-        int radius = cell.getRadius();
+    public int countNeighbors(int x, int y) {
+        int radius = getCell(new Tuple(x, y)).getRadius();
         
         int countNeighbors = 0;
 
         int firstRow = (x-radius < 0) ? 0 : x-radius;
-        int lastRow = (x+radius > getHeight()-1) ? getHeight() : x+radius;  
+        int lastRow = (x+radius > getHeight()-1) ? getHeight()-1 : x+radius;  
         int firstColumn = (y-radius < 0) ? 0 : y-radius;
-        int lastColumn= (y+radius > getWidth()-1) ? getWidth() : y+radius;  
+        int lastColumn= (y+radius > getWidth()-1) ? getWidth()-1 : y+radius;  
 
-        for(int i = firstRow; i < lastRow; i++){
-            for(int j = firstColumn; j < lastColumn; j++){
+        for(int i = firstRow; i <= lastRow; i++){
+            for(int j = firstColumn; j <= lastColumn; j++){                
                 countNeighbors += (this.board[i][j].isAlive()) ? 1 : 0;
             }
         }
 
-        return countNeighbors-1;
+        countNeighbors -= (this.board[x][y].isAlive()) ? 1 : 0;
+
+        return countNeighbors;
     }
 }

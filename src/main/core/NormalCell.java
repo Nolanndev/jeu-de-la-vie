@@ -1,10 +1,12 @@
 package main.core;
 
-import main.utils.*;
-
 public class NormalCell extends BasicCell{
 
-    public NormalCell(Tuple coordinates) {
-        super(coordinates);
+    public NormalCell(Boolean alive) {
+        super(alive);
+    }
+
+    public NormalCell() {
+        super();
     }
 }

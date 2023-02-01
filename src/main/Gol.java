@@ -5,34 +5,29 @@ import main.utils.Tuple;
 
 public class Gol {
 
-    public static Grid genGrid(int size) {
-        Grid grid = new Grid(size);
-
-        for (int i=0; i<size; i++) {
-            for (int j = 0; j < size; j++) {
-                grid.setCell(i,j, new NormalCell(new Tuple(i,j)));
-            }
-        }
-
-        return grid;
-    }
     
     public static void main(String[] args) {
         System.out.println("DEBUT");
         System.lineSeparator();
 
-        NormalCell cell = new NormalCell(new Tuple(2, 3));
+        NormalCell cell = new NormalCell();
         System.out.println(cell.infos());
         System.out.println("-----------------");
-        System.lineSeparator();
-        cell.setState(false);
+        cell.setState(true);
 
         Grid grid = new Grid(3);
+        grid.setCell(0, 0, new NormalCell(true));
+        grid.setCell(2, 2, new NormalCell(true));
+        grid.setCell(1, 1, new NormalCell(true));
+        grid.setCell(0, 2, new NormalCell(true));
+
+        grid.getCell(new Tuple(0, 0)).setState(false);;
+
+        
+        System.out.println("Nombre de voisins de (1,2) : " + grid.countNeighbors(1, 1));
         grid.displayGrid();
-        // grid.getCell(new Tuple(2,2)).viewCoordinates();
 
 
-        System.lineSeparator();
         System.out.println("FIN");
     }
 }
