@@ -7,16 +7,18 @@ public abstract class BasicCell implements Cell {
     protected boolean alive;
     protected int minNeighbors;
     protected int maxNeighbors;
+    protected int radius;
 
-    public BasicCell(Tuple coordinates, int minNeighbors, int maxNeighbors) {
+    public BasicCell(Tuple coordinates, int minNeighbors, int maxNeighbors, int radius) {
         this.coordinates = coordinates;
         this.alive = true;
         this.minNeighbors = minNeighbors;
         this.maxNeighbors = maxNeighbors;
+        this.radius = radius;
     }
 
     public BasicCell(Tuple coordinates) {
-        this(coordinates, 2, 3);
+        this(coordinates, 2, 3,1);
     }
 
     @Override
@@ -42,6 +44,10 @@ public abstract class BasicCell implements Cell {
 
     public int getCoordinateY() {
         return this.coordinates.getValue2();
+    }
+
+    public int getRadius() {
+        return radius;
     }
 
     public void setMinNeighbors(int newMin) {

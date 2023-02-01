@@ -13,6 +13,8 @@ public interface Cell {
 
     public int getCoordinateY();
 
+    public int getRadius();
+
     public void setMinNeighbors(int newMin);
 
     public int getMinNeighbors();
@@ -24,4 +26,7 @@ public interface Cell {
     public String infos();
 
     public void viewCoordinates();
+
+    @Override
+    public int hashCode();
 }

@@ -1,46 +1,59 @@
 package main.core;
 
-import java.util.ArrayList;
-import java.util.Random;
-
 import main.utils.Tuple;
 
 public class Grid {
-    private int rows;
-    private int columns;
-    private ArrayList<ArrayList<Cell>> board;
+    private Tuple size; 
+    private Cell[][] board;
 
-    public Grid(int rows, int columns) {
-        this.rows = rows;
-        this.columns = columns;
-        this.board = new ArrayList<ArrayList<Cell>>();
-        for (int i = 0; i < this.rows; i++) {
-            this.board.add(new ArrayList<Cell>());
-        }
+    public Grid(Tuple size) {
+        this.size = size;
+        this.board = new Cell[this.getHeight()][this.getWidth()];
+        for (int i = 0; i < getHeight(); i++)  {  
+            for (int j=0; j < getWidth(); j++){
+                this.board[i][j] = new NormalCell(new Tuple(i, j));
+            }  
+        }  
     }
 
     public Grid(int size) {
-        this(size, size);
+        this(new Tuple(size, size));
     }
 
     public Grid() {
-        this(15,15);
+        this(15);
     }
 
-    public int getRows() {
-        return this.rows;
+    public Tuple getSize(){
+        return this.size;
     }
 
-    public int getColumns() {
-        return this.columns;
+    public int getWidth(){
+        return getSize().getValue1();
+    }
+
+    public int getHeight(){
+        return getSize().getValue2();
+    }
+
+    public Cell[] getRows(int row) {
+        return this.board[row];
+    }
+
+    public Cell[] getColumns(int column) {
+        Cell[] result = new Cell[getHeight()];
+        for (int i = 0; i < getHeight(); i++) {
+            result[i] = this.board[i][column];
+        }
+        return result;
     }
 
     public String getCellInfos(int row, int column) {
-        return this.board.get(row).get(column).infos();
+        return this.board[row][column].infos();
     }
 
     public void displayGrid() {
-        for (ArrayList<Cell> row : this.board) {
+        for (Cell[] row : this.board) {
             for (Cell cell : row) {
                 System.out.print(cell.getCoordinates().toString() + " ");
             }
@@ -49,7 +62,7 @@ public class Grid {
     }
 
     public Cell getCell(Tuple coordinates) {
-        Cell cell = this.board.get(coordinates.getValue1()).get(coordinates.getValue2());
+        Cell cell = this.board[coordinates.getValue1()][coordinates.getValue2()];
         if (Cell.class.isInstance(cell)) {
             return cell;
         }
@@ -57,26 +70,27 @@ public class Grid {
     }
 
     public void setCell(int x, int y, Cell cell) {
-        Cell c = this.board.get(x).get(y);
-        c = cell;
+        this.board[x][y] = cell;
     }
 
-    public ArrayList<Cell> getNeighbors(Cell cell, int radius) {
+    public int countNeighbors(Cell cell) {
         int x = cell.getCoordinateX();
         int y = cell.getCoordinateY();
-        int diameter = 2 * radius + 1;
-        ArrayList<Cell> neighbors = new ArrayList<Cell>();
+        int radius = cell.getRadius();
         
-        for (int i=0; i < diameter; i++) {
-            for (int j=0; j < diameter; j++) {
-                if (Cell.class.isInstance(this.board.get(i).get(j))) {
-                    System.out.print(this.board.get(i).get(j).getCoordinates().toString());
+        int countNeighbors = 0;
 
-                }
+        int firstRow = (x-radius < 0) ? 0 : x-radius;
+        int lastRow = (x+radius > getHeight()-1) ? getHeight() : x+radius;  
+        int firstColumn = (y-radius < 0) ? 0 : y-radius;
+        int lastColumn= (y+radius > getWidth()-1) ? getWidth() : y+radius;  
+
+        for(int i = firstRow; i < lastRow; i++){
+            for(int j = firstColumn; j < lastColumn; j++){
+                countNeighbors += (this.board[i][j].isAlive()) ? 1 : 0;
             }
-            System.lineSeparator();
         }
-        
-        return neighbors;
+
+        return countNeighbors-1;
     }
 }

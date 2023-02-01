@@ -6,7 +6,7 @@ import main.utils.Tuple;
 public class Gol {
 
     public static Grid genGrid(int size) {
-        Grid grid = new Grid(size, size);
+        Grid grid = new Grid(size);
 
         for (int i=0; i<size; i++) {
             for (int j = 0; j < size; j++) {
@@ -27,7 +27,7 @@ public class Gol {
         System.lineSeparator();
         cell.setState(false);
 
-        Grid grid = new Grid(3, 3);
+        Grid grid = new Grid(3);
         grid.displayGrid();
         // grid.getCell(new Tuple(2,2)).viewCoordinates();
 
