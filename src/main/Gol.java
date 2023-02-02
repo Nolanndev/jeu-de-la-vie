@@ -1,7 +1,6 @@
 package main;
 
 import main.core.*;
-import main.utils.Tuple;
 
 public class Gol {
 
@@ -15,17 +14,20 @@ public class Gol {
         System.out.println("-----------------");
         cell.setState(true);
 
-        Grid grid = new Grid(3);
-        grid.setCell(0, 0, new NormalCell(true));
-        grid.setCell(2, 2, new NormalCell(true));
-        grid.setCell(1, 1, new NormalCell(true));
-        grid.setCell(0, 2, new NormalCell(true));
+        Grid grid = new Grid(20);
+        grid.setCell(4, 1, new NormalCell(true));
+        grid.setCell(4, 2, new NormalCell(true));
+        grid.setCell(5, 1, new NormalCell(true));
+        grid.setCell(4, 4, new NormalCell(true));
+        grid.setCell(5, 4, new NormalCell(true));
+        grid.setCell(6, 3, new NormalCell(true));
+        grid.setCell(6, 5, new NormalCell(true));
+        grid.setCell(6, 6, new NormalCell(true));
 
-        grid.getCell(new Tuple(0, 0)).setState(false);;
 
         System.out.println("Nombre de voisins de (1,2) : " + grid.countNeighbors(1, 2));
         
-        for (int i = 1; i <= 3; i++) {
+        for (int i = 1; i <= 10; i++) {
             System.out.println("-----------------");
             System.out.println("Gen " + i + " : ");
             grid.displayGrid();

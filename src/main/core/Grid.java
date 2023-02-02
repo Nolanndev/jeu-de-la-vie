@@ -1,7 +1,5 @@
 package main.core;
 
-import java.lang.ref.Cleaner.Cleanable;
-
 import main.utils.Tuple;
 
 public class Grid {
