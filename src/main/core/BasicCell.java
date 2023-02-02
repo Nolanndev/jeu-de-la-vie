@@ -54,5 +54,4 @@ public abstract class BasicCell implements Cell {
         return "Status: " + this.alive + "\nNeighbors\n\tmin: "
                 + this.minNeighbors + "\n\tmax: " + this.maxNeighbors;
     }
-
 }
