@@ -1,6 +1,7 @@
 package main;
 
 import main.core.*;
+import main.utils.Quadtree;
 
 public class Gol {
 
@@ -34,6 +35,15 @@ public class Gol {
             grid.nextGen();
         }
 
+
+        HashLife hashLife = new HashLife();
+        Quadtree on = new Quadtree(null, null, null, null, 0, 1);
+        Quadtree off = new Quadtree(null, null, null, null, 0, 0);
+ 
+        Quadtree q = new Quadtree(off, on ,on , on, 1, 3);
+        System.out.println(q);
+        Quadtree res = hashLife.centre(q);
+        System.out.println(hashLife.life_4x4(res));
 
         System.out.println("FIN");
     }

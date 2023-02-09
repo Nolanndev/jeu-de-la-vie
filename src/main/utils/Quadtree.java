@@ -1,5 +1,7 @@
 package main.utils;
 
+import java.text.MessageFormat;
+
 public class Quadtree {
 
     private Quadtree nw;
@@ -75,4 +77,14 @@ public class Quadtree {
         return this.getNw() == q.getNw() && this.getNe() == q.getNe() && this.getSe() == q.getSe() && this.getSw() == q.getSw();
     }
 
+    @Override
+    public String toString() {
+        return MessageFormat.format("nw: {0}, ne: {1}, se: {2}, sw: {3} nbAlive: {4}",
+            this.getNw(),
+            this.getNe(),
+            this.getSe(),
+            this.getSw(),
+            this.getNumberAlive()    
+        );
+    }
 }
