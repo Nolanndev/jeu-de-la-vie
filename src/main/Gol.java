@@ -1,5 +1,6 @@
 package main;
 
+
 import main.core.*;
 import main.utils.Quadtree;
 
@@ -37,14 +38,14 @@ public class Gol {
 
 
         HashLife hashLife = new HashLife();
-        Quadtree on = new Quadtree(null, null, null, null, 0, 1);
-        Quadtree off = new Quadtree(null, null, null, null, 0, 0);
- 
-        Quadtree q = new Quadtree(off, on ,on , on, 1, 3);
-        System.out.println(q);
-        Quadtree res = hashLife.centre(q);
-        System.out.println(hashLife.life_4x4(res));
-
+        Quadtree q1 = hashLife.join(HashLife.on, HashLife.on, HashLife.on, HashLife.off);
+        Quadtree q2 = hashLife.join(HashLife.off, HashLife.off, HashLife.on, HashLife.off);
+        Quadtree q3 = hashLife.join(HashLife.on, HashLife.on, HashLife.off, HashLife.off);
+        Quadtree q4 = hashLife.join(HashLife.on, HashLife.on, HashLife.on, HashLife.on);
+        
+        Quadtree q = hashLife.join(q1, q2, q3, q4);
+        System.out.println(q1);
+        System.out.println(hashLife.successor(q1, null));
         System.out.println("FIN");
     }
 }

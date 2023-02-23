@@ -11,7 +11,7 @@ public class Quadtree {
     private int depth;
     private int numberAlive;
     
-    public Quadtree(Quadtree nw, Quadtree ne, Quadtree se, Quadtree sw, int depth, int numberAlive) {
+    public Quadtree(Quadtree nw, Quadtree ne, Quadtree sw, Quadtree se, int depth, int numberAlive) {
         this.nw = nw;
         this.ne = ne;
         this.se = se;
@@ -20,8 +20,13 @@ public class Quadtree {
         this.numberAlive = numberAlive;
     }
 
+    public Quadtree(Quadtree nw, Quadtree ne, Quadtree se, Quadtree sw) {
+        this(nw, ne, sw, se, nw.getDepth()+1, 0);
+        this.numberAlive = nw.getNumberAlive() + ne.getNumberAlive() + se.getNumberAlive() + sw.getNumberAlive();
+    }
+
     public Quadtree(){
-        this(null, null, null, null, 0, 0);
+        this(null, null, null, null, 1, 0);
     }
 
     public Quadtree getNe() {
@@ -79,11 +84,8 @@ public class Quadtree {
 
     @Override
     public String toString() {
-        return MessageFormat.format("nw: {0}, ne: {1}, se: {2}, sw: {3} nbAlive: {4}",
-            this.getNw(),
-            this.getNe(),
-            this.getSe(),
-            this.getSw(),
+        return MessageFormat.format("depth : {0},  nbAlive: {1}",
+            this.getDepth(),
             this.getNumberAlive()    
         );
     }
