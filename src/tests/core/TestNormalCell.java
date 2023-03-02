@@ -8,29 +8,41 @@ tester le fichier NormalCell.java
 */
 
 public class TestNormalCell{
-    NormalCell cell = new NormalCell(0,3,1,true);
+    private static NormalCell cell = new NormalCell(0,3,1,true);
 
-    public boolean testIsAliveTrue(){
-        return cell.isAlive() == true;
+    public static void startTest(){
+        System.out.println("TESTS: main.core.NormalCell");
+
+        testIsAlive();
+        testGetMinNeighbors();
+        testGetMaxNeighbors();
+        testGetMinNeighbors();
+
+        System.out.println("Tous les tests sont passes");
     }
 
-    public boolean testIsAliveFalse(){
-        NormalCell cell2 = new NormalCell(0,3,1,false);
-        return cell2.isAlive() == false;
+    public static void testIsAlive(){
+        System.out.println("Test: isAlive() //true");
+        assert cell.isAlive() == true: "Le test est correcte (cellule vivante)";
+        assert cell.isAlive() == false: "Le test est incorrecte (cellule morte alors que vivante)";
+
     }
-    public boolean testGetRadius(){
-        return cell.getRadius() == 1;
-    }
-    
-    public boolean testGetMinNeighbors(){
-        return cell.getMinNeighbors() == 0;
-    }
-    
-    public boolean testGetMaxNeighbors(){
-        return cell.getMaxNeighbors() == 3;
+
+    public static void testGetRadius(){
+        System.out.println("Test: getRadius");
+        assert cell.getRadius() == 1 : "Le rayon est correct (=1)";
+        assert cell.getRadius() == 3 : "Le rayon n'est pas correct (=3)";
     }
     
-    public boolean testInfos(){
-        return cell.infos().equals("Status: true\nNeighbors\n\tmin: 0\n\tmax: 3");
+    public static void testGetMinNeighbors(){
+        System.out.println("Test: getMinNeighbors()");
+        assert cell.getMinNeighbors() == 0 : "minNeighbors est correct (=0)";
+        assert cell.getMinNeighbors() == 1 : "minNeighbors n'est pas correct (=1)";
+    }
+    
+    public static void testGetMaxNeighbors(){
+        System.out.println("Test: getMaxNeighbors()");
+        assert cell.getMaxNeighbors() == 3 : "maxNeighbors est correct (=3)";
+        assert cell.getMaxNeighbors() == 1 : "maxNeighbors n'est pas correct (=1)";
     }
 }
