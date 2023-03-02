@@ -6,6 +6,14 @@ public abstract class BasicCell implements Cell {
     protected int maxNeighbors;
     protected int radius;
 
+    /*
+    BasicCell prend 4 parametres dans son constructeur : 
+        le nombre mimimum de voisin pour vivre
+        le nombre maximum de voision pour mourir
+        la portée prise en compte pour compter les cellules
+        son statut de vie : mort ou en vie
+     */
+
     public BasicCell(int minNeighbors, int maxNeighbors, int radius, boolean alive) {
         this.alive = alive;
         this.minNeighbors = minNeighbors;

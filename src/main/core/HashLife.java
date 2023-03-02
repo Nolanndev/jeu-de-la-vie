@@ -16,10 +16,24 @@ public class HashLife extends Quadtree{
     public HashLife() {
         super();
     }
+    
+    /* fonction recursive
+    si la profondeur est inferieure ou egale à 0, on appelle le constructeur de la classe mere
+    sinon on verifie le quadtree en diminuant la profondeur de -1
+     */
 
     public Quadtree getZero(int depth){
         return (depth <= 0) ? HashLife.off : this.join(getZero(depth-1), getZero(depth-1),getZero(depth-1), getZero(depth-1));
     }
+
+    /* 
+    si un fils est null on retourne null
+    sinon, on retourne un nouveau Quadtree 
+    avec les quatres fils, la profondeur du fils n
+    tout à gauche (nordOuest) + 1 et la somme 
+    de toutes les cellules encore en vie qui
+    sont presentes dans les autres quadtrees
+    */
 
     public Quadtree join(Quadtree no, Quadtree ne, Quadtree se, Quadtree so){
         if(so == null || se == null || ne == null || no == null){

@@ -10,13 +10,17 @@ public class Tuple {
         this.secondValue = b;
     }
 
+    // premiere valeur du Tuple 
     public int getValue1() {
         return this.firstValue;
     }
+
+    // deuxieme valeur du Tuple 
     public int getValue2() {
         return this.secondValue;
     }
 
+    // rendu : (premiereValeur,secondeValeur)
     public String toString() {
         return "(" + this.firstValue + "," + this.secondValue + ")";
     }

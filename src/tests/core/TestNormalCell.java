@@ -14,6 +14,7 @@ public class TestNormalCell{
         System.out.println("TESTS: main.core.NormalCell");
 
         testIsAlive();
+        testGetRadius();
         testGetMinNeighbors();
         testGetMaxNeighbors();
         testGetMinNeighbors();

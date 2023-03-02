@@ -4,6 +4,8 @@ import main.utils.Tuple;
 import main.core.*;
 
 import tests.utils.TestTuple;
+import tests.utils.TestQuadtree;
+
 import tests.core.TestGrid;
 import tests.core.TestNormalCell;
 
@@ -22,8 +24,10 @@ public class Test{
 
         TestTuple.startTest();
         TestNormalCell.startTest();
-        // --- test ok, en dessous plus trop =')
         TestGrid.startTest();
+        TestQuadtree.startTest(); // TestQuadtree à modifier
+
+        // --- test ok, en dessous plus trop =')    
     }
     
 }

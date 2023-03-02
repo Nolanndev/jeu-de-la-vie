@@ -4,7 +4,7 @@ import main.utils.Tuple;
 
 public class Grid {
     private Tuple size; 
-    private Cell[][] board;
+    private Cell[][] board; // grille de cellules
 
     public Grid(Tuple size) {
         this.size = size;
@@ -16,10 +16,12 @@ public class Grid {
         }  
     }
 
+    //grille initialisée de dimension size * size
     public Grid(int size) {
         this(new Tuple(size, size));
     }
 
+    // taille de base de la grille : 15 par 15
     public Grid() {
         this(15);
     }
@@ -61,6 +63,7 @@ public class Grid {
         return result;
     }
 
+    /* retourne les informations d'une cellule de coordonnées x = row et y = column */
     public String getCellInfos(int row, int column) {
         return this.board[row][column].infos();
     }
@@ -83,10 +86,12 @@ public class Grid {
         return null;
     }
 
+    /* initialise une cellule aux coordonnées x et y dans la grille */
     public void setCell(int x, int y, Cell cell) {
         this.board[x][y] = cell;
     }
 
+    /* compte les voisins d'une cellule coordonnées x et y dans la grille */
     public int countNeighbors(int x, int y) {
         int radius = getCell(new Tuple(x, y)).getRadius();
         
@@ -108,6 +113,7 @@ public class Grid {
         return countNeighbors;
     }
 
+    /* initialise la prochaine generation de cellule dans une nouvelle grille copyBoard*/
     public void nextGen(){
         Cell[][] copyBoard = copyBoard();
         for (int i = 0; i < getHeight() ; i++) {
@@ -119,6 +125,7 @@ public class Grid {
         setBoard(copyBoard);
     }
 
+    /* copie la grille actuelle dans copyBoard*/
     public Cell[][] copyBoard(){
         Cell[][] copyBoard = new Cell[this.getHeight()][this.getWidth()];
         for (int i = 0; i < getHeight() ; i++) {

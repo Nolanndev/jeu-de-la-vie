@@ -16,7 +16,7 @@ public class Gol {
         System.out.println("-----------------");
         cell.setState(true);
 
-        Grid grid = new Grid(20);
+        Grid grid = new Grid(20); // grille de 20 x 20 = 400 cases
         grid.setCell(4, 1, new NormalCell(true));
         grid.setCell(4, 2, new NormalCell(true));
         grid.setCell(5, 1, new NormalCell(true));

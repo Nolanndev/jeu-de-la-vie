@@ -57,7 +57,6 @@ public class TestGrid{
         assert grid1.getSize().equals(new Tuple(5, 10)) : "Probleme avec la taille de la grille";
         assert grid2.getSize().equals(new Tuple(10, 5)) : "Probleme avec la taille de la grille";
 
-        System.out.println("Test: ok");
     }
 
     public static void testGetSize(){
@@ -65,7 +64,6 @@ public class TestGrid{
         assert grid1.getSize().equals(new Tuple(5, 10)) : "Probleme avec la taille de la grille";
         assert grid2.getSize().equals(new Tuple(10, 5)) : "Probleme avec la taille de la grille";
 
-        System.out.println("Test: ok");
     }
 
     public static void testGetWidth(){
@@ -73,7 +71,6 @@ public class TestGrid{
         assert grid1.getWidth() == 5 : "Probleme avec la largeur de la grille";
         assert grid2.getWidth() == 10 : "Probleme avec la largeur de la grille";
 
-        System.out.println("Test: ok");
     }
 
     public static void testGetHeight(){
@@ -81,7 +78,6 @@ public class TestGrid{
         assert grid1.getHeight() == 10 : "Probleme avec la hauteur de la grille";
         assert grid2.getHeight() == 5 : "Probleme avec la hauteur de la grille";
 
-        System.out.println("Test: ok");
     }
 
     public static void testGetRows(){
@@ -110,7 +106,6 @@ public class TestGrid{
         assert row2.length == 10 : "Probleme avec le nombre de lignes retournees";
         assert row2.length == 5 : "Le test est bon";
 
-        System.out.println("Test: ok");
     }
 
     public static void testGetColumns(){
@@ -123,7 +118,6 @@ public class TestGrid{
 
         assert row2.length == 5 : "Le test est bon";
         assert row2.length == 10 : "Probleme avec le nombre de colonnes retournees";
-        System.out.println("Test: ok");
     }
 
 
@@ -153,7 +147,6 @@ public class TestGrid{
             }
         }
         assert is_equal : "copie de la grille incorrecte";
-        System.out.println("Test: ok");
     }
 
     public static void testCountNeighbors(){
