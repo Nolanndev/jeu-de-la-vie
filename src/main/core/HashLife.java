@@ -1,5 +1,7 @@
 package main.core;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import main.utils.Quadtree;
@@ -53,10 +55,6 @@ public class HashLife extends Quadtree{
 
     public Quadtree successor(Quadtree m, Integer j){
         Quadtree res;
-        if(m == null){
-            return null;
-        }
-        
         if(m.getNumberAlive() == 0){
             return m.getNe();
         }
@@ -103,4 +101,43 @@ public class HashLife extends Quadtree{
         return res;
     }
 
+    private boolean isPadded(Quadtree q){
+        return(
+            q.getNw().getNumberAlive() == q.getNw().getSe().getSe().getNumberAlive() &&
+            q.getNe().getNumberAlive() == q.getNe().getSw().getSw().getNumberAlive() &&
+            q.getSw().getNumberAlive() == q.getSw().getNe().getNe().getNumberAlive() &&
+            q.getSe().getNumberAlive() == q.getSe().getNw().getNw().getNumberAlive()
+        );
+    }
+
+    public Quadtree pad(Quadtree q){
+        if (q.getDepth() <= 3 || !isPadded(q)){
+            return pad(centre(q));
+        }
+        return q;
+    }
+
+    public Quadtree advance(Quadtree q, int n){
+        if(n == 0){
+            return q;
+        }
+        ArrayList<Integer> bits = new ArrayList<Integer>();
+
+        while(n>0){
+            bits.add(n & 1);
+            n = n >> 1;
+            q = centre(q);
+        }
+
+        q = centre(q);
+
+        for (int i = 0; i < bits.size(); i++) {
+            int bit = bits.get(bits.size() - i - 1);
+            int j = bits.size() - i - 1;
+            if(bit >=1){
+                q = successor(q, j);
+            }
+        }
+        return q;
+    }
 }

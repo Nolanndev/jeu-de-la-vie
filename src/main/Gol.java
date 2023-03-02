@@ -38,14 +38,14 @@ public class Gol {
 
 
         HashLife hashLife = new HashLife();
-        Quadtree q1 = hashLife.join(HashLife.on, HashLife.on, HashLife.on, HashLife.off);
-        Quadtree q2 = hashLife.join(HashLife.off, HashLife.off, HashLife.on, HashLife.off);
-        Quadtree q3 = hashLife.join(HashLife.on, HashLife.on, HashLife.off, HashLife.off);
-        Quadtree q4 = hashLife.join(HashLife.on, HashLife.on, HashLife.on, HashLife.on);
+        Quadtree q1 = hashLife.join(HashLife.on, HashLife.on, HashLife.off, HashLife.on);
+        Quadtree q2 = hashLife.join(HashLife.off, HashLife.on, HashLife.on, HashLife.off);
+        Quadtree q3 = hashLife.join(HashLife.off, HashLife.off, HashLife.on, HashLife.on);
+        Quadtree q4 = hashLife.join(HashLife.on, HashLife.off, HashLife.off, HashLife.on);
         
         Quadtree q = hashLife.join(q1, q2, q3, q4);
         System.out.println(q1);
-        System.out.println(hashLife.successor(q1, null));
+        System.out.println(hashLife.advance(q,389));
         System.out.println("FIN");
     }
 }
