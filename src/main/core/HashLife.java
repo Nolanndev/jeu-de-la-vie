@@ -1,6 +1,5 @@
 package main.core;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -17,7 +16,7 @@ public class HashLife extends Quadtree{
         super();
     }
     
-    /* fonction recursive
+    /*
     si la profondeur est inferieure ou egale à 0, on appelle le constructeur de la classe mere
     sinon on verifie le quadtree en diminuant la profondeur de -1
      */

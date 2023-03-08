@@ -1,10 +1,13 @@
 package main.core;
 
+import java.util.ArrayList;
+
 import main.utils.Tuple;
 
 public class Grid {
     private Tuple size; 
     private Cell[][] board; // grille de cellules
+    private ArrayList<GirdListener> listeners = new ArrayList<GirdListener>();
 
     public Grid(Tuple size) {
         this.size = size;
@@ -37,6 +40,7 @@ public class Grid {
 
     public void setBoard(Cell[][] board) {
         this.board = board;
+        this.fireChange();
     }
 
     public Tuple getSize(){
@@ -86,9 +90,14 @@ public class Grid {
         return null;
     }
 
+    public Cell getCell(int x, int y){
+        return this.getCell(new Tuple(x, y));
+    }
+
     /* initialise une cellule aux coordonnées x et y dans la grille */
     public void setCell(int x, int y, Cell cell) {
         this.board[x][y] = cell;
+        this.fireChange();  
     }
 
     /* compte les voisins d'une cellule coordonnées x et y dans la grille */
@@ -123,6 +132,7 @@ public class Grid {
             }
         }
         setBoard(copyBoard);
+        this.fireChange();
     }
 
     /* copie la grille actuelle dans copyBoard*/
@@ -134,6 +144,20 @@ public class Grid {
             }
         }
         return copyBoard;
+    }
+
+    public void addListener(GirdListener e){
+        this.listeners.add(e);
+    }
+
+    public void removeListener(GirdListener e){
+        this.listeners.remove(e);
+    }
+
+    private void fireChange(){
+        for (GirdListener listener : this.listeners) {
+            listener.changeOccured();
+        }
     }
 
 }
