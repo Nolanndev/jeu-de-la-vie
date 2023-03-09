@@ -24,7 +24,7 @@ public class Window{
         this.window.setResizable(false);
         
 
-        Grid grid = new Grid(new Tuple(100, 100)); // grille de 20 x 20 = 400 cases
+        Grid grid = new Grid(new Tuple(200, 200)); // grille de 20 x 20 = 400 cases
         grid.setCell(0, 0, new NormalCell(true));
         grid.setCell(4, 2, new NormalCell(true));
         grid.setCell(5, 1, new NormalCell(true));
@@ -33,6 +33,7 @@ public class Window{
         grid.setCell(6, 3, new NormalCell(true));
         grid.setCell(6, 5, new NormalCell(true));
         grid.setCell(80, 9, new NormalCell(true));
+        grid.setCell(180, 180, new NormalCell(true));
 
         Dimension dim = new Dimension((int) (screenSize.getWidth()*0.75), (int)screenSize.getHeight()-50);
         VueGrid vueGrid = new VueGrid(grid, dim,true);

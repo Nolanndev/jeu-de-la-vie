@@ -1,4 +1,4 @@
-package main.util;
+package main.utils;
 
 public class Globals {
     public static String currentPath = System.getProperty("user.dir");

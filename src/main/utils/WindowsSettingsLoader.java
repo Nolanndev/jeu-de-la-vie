@@ -1,8 +1,9 @@
-package main.util;
+package main.utils;
 
 import java.io.*;
 import org.json.simple.*;
 import org.json.simple.parser.*;
+
 
 public class WindowsSettingsLoader {
     public String TITLE = "Projet - Jeu de la Vie";
