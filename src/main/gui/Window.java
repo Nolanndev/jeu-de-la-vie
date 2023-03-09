@@ -33,7 +33,7 @@ public class Window{
         grid.setCell(6, 3, new NormalCell(true));
         grid.setCell(6, 5, new NormalCell(true));
         grid.setCell(80, 9, new NormalCell(true));
-        grid.setCell(180, 180, new NormalCell(true));
+        // grid.setCell(180, 180, new NormalCell(true));
 
         Dimension dim = new Dimension((int) (screenSize.getWidth()*0.75), (int)screenSize.getHeight()-50);
         VueGrid vueGrid = new VueGrid(grid, dim,true);
