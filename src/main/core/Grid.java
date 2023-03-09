@@ -7,7 +7,7 @@ import main.utils.Tuple;
 public class Grid {
     private Tuple size; 
     private Cell[][] board; // grille de cellules
-    private ArrayList<GirdListener> listeners = new ArrayList<GirdListener>();
+    private ArrayList<GridListener> listeners = new ArrayList<GridListener>();
 
     public Grid(Tuple size) {
         this.size = size;
@@ -146,16 +146,16 @@ public class Grid {
         return copyBoard;
     }
 
-    public void addListener(GirdListener e){
+    public void addListener(GridListener e){
         this.listeners.add(e);
     }
 
-    public void removeListener(GirdListener e){
+    public void removeListener(GridListener e){
         this.listeners.remove(e);
     }
 
     private void fireChange(){
-        for (GirdListener listener : this.listeners) {
+        for (GridListener listener : this.listeners) {
             listener.changeOccured();
         }
     }

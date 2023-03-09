@@ -1,5 +1,5 @@
 package main.core;
 
-public interface GirdListener {
+public interface GridListener {
     public void changeOccured();
 }
