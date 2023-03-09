@@ -40,7 +40,7 @@ public class Grid {
 
     public void setBoard(Cell[][] board) {
         this.board = board;
-        this.fireChange();
+        this.gridChange();
     }
 
     public Tuple getSize(){
@@ -97,7 +97,7 @@ public class Grid {
     /* initialise une cellule aux coordonnées x et y dans la grille */
     public void setCell(int x, int y, Cell cell) {
         this.board[x][y] = cell;
-        this.fireChange();  
+        this.gridChange();  
     }
 
     /* compte les voisins d'une cellule coordonnées x et y dans la grille */
@@ -132,7 +132,7 @@ public class Grid {
             }
         }
         setBoard(copyBoard);
-        this.fireChange();
+        this.gridChange();
     }
 
     /* copie la grille actuelle dans copyBoard*/
@@ -154,7 +154,7 @@ public class Grid {
         this.listeners.remove(e);
     }
 
-    private void fireChange(){
+    private void gridChange(){
         for (GridListener listener : this.listeners) {
             listener.changeOccured();
         }
