@@ -1,61 +1,75 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="ExampleAnt" default="compile" basedir=".">
-    
-    <!-- PROPRIETES -->
-    <property name="projet.sources.dir" value="src"/>
-    <property name="projet.bin.dir" value="bin"/>
-    <property name="projet.lib.dir" value="lib"/>
-    <property name="projet.execution.class" value="main.Gol"/>
+<project name="gameOfLife" default="compile" basedir=".">
+    <description>
+        fichier xml pour compiler, lancer et construire le projet
+    </description>
 
-    <!-- CLASSPATH -->
-    <path id="projet.classpath">
-        <fileset dir="${projet.lib.dir}">
+    <property name="project.src.dir" location="src"/>
+    <property name="project.bin.dir" location="bin"/>
+    <property name="project.lib.dir" location="lib"/>
+    <property name="project.dist.dir" location="dist"/>
+    <property name="project.doc.dir" location="doc"/>
+
+    <!-- classpath -->
+    <path id="project.classpath">
+        <fileset dir="${project.lib.dir}">
            <include name="*.jar"/>
         </fileset>
-        <pathelement location="${projet.bin.dir}" />
+        <pathelement location="${project.bin.dir}" />
     </path>
 
-    <!-- COMPILATION -->
-    <target name="compil" description="Compilation du projet">
-        <javac srcdir="${projet.sources.dir}" destdir="${projet.bin.dir}" debug="on" optimize="off" deprecation="on">
-            <classpath refid="projet.classpath"/>
+    <!--  init  -->
+    <target name="init">
+        <tstamp />
+        <mkdir dir="${project.bin.dir}" />
+        <mkdir dir="${project.dist.dir}" />
+        <mkdir dir="${project.doc.dir}" />
+    </target>
+
+    <!-- compile -->
+    <target name="compile" description="compile the source" depends="init">
+        <javac srcdir="${project.src.dir}" destdir="${project.bin.dir}">
+            <classpath refid="project.classpath"/>
         </javac>
     </target>
 
-    <!-- EXECUTION -->
-    <target name="run" description="Execution du projet">
-        <java classname="${projet.execution.class}">
-            <classpath refid="projet.classpath"/>
+    <!-- run -->
+    <target name="run" description="execution" depends="compile">
+        <java classname="main.Gol" fork="true">
+            <classpath refid="project.classpath"/>
         </java>
     </target>
 
-    <!-- COMPILATION & EXECUTION -->
-    <target name="runa" description="Compilation et execution du projet" depends="compil">
-        <java classname="${projet.execution.class}">
-            <classpath refid="projet.classpath"/>
+    <!--  build  -->
+    <target name="build" description="generate the distribution" depends="compile">
+        <jar
+            jarfile="${project.dist.dir}/game-of-life.jar"
+            basedir="${project.bin.dir}"
+            manifest="META-INF/MANIFEST.mf"/>
+    </target>
+
+    <!--  test  -->
+    <target name="test" depends="compile">
+        <java classname="test.Gol" fork="true">
+            <classpath refid="project.classpath" />
         </java>
     </target>
 
-    <!-- CONSTRUCTION -->
-    <target name="jar" description="Create .jar file for the project" depends="compil">
-        <jar jarfile="gol.jar" basedir="${projet.bin.dir}" manifest="META-INF/MANIFEST.mf" />
-    </target>
-
-    <!-- CONSTRUCTION & LANCEMENT -->
-    <!-- <target name="jara" description="Create .jar file for the project" depends="jar">
-        <java classname="gol.jar">
-            <classpath refid="projet.classpath"/>
-        </java>
-    </target> -->
-
-    <!-- JAVADOC -->
-    <target name="doc" >
-        <javadoc sourcepath="src" destdir="doc">
-            <fileset dir="src" defaultexcludes="yes">
+    <!--  doc  -->
+    <target name="doc" description="generate documentation" depends="init">
+        <javadoc sourcepath="src" destdir="${project.doc.dir}">
+            <fileset dir="${project.src.dir}" defaultexcludes="yes">
                 <include name="*.java" />
             </fileset>
         </javadoc>
     </target>
 
+    <!--  clean  -->
+    <target name="clean" description="clean up the project">
+        <echo message="nettoyage" />
+        <delete dir="${project.bin.dir}" />
+        <delete dir="${project.dist.dir}" />
+        <delete dir="${project.doc.dir}" />
+    </target>
 
 </project>

@@ -3,6 +3,7 @@ package main;
 
 import main.core.*;
 import main.utils.Quadtree;
+import main.gui.*;
 
 public class Gol {
 
@@ -47,5 +48,8 @@ public class Gol {
         System.out.println(q1);
         System.out.println(hashLife.advance(q,389));
         System.out.println("FIN");
+
+        new Window("Test");
+
     }
 }

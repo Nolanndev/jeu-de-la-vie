@@ -41,9 +41,9 @@ public class Window{
         this.window.add(vueGrid, BorderLayout.CENTER);
     }
 
-
-    public static void main(String[] args) {
-        new Window("Tes");
+    public Window() {
+        this("Met un putain de titre");
     }
+
 
 }
