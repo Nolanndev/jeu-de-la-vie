@@ -1,0 +1,8 @@
+{
+    "title": "Projet - Jeu de la vie",
+    "width": 1200,
+    "height": 700,
+    "resizable": false,
+    "iconPath": ".\\src\\main\\ressources\\assets\\icon.png",
+    "fileOverridePreventionMessage": true
+}
