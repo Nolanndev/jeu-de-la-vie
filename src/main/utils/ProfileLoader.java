@@ -1,4 +1,4 @@
-package main.util;
+package main.utils;
 
 import java.io.*;
 import org.json.simple.*;
