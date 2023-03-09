@@ -8,6 +8,7 @@ import tests.utils.TestQuadtree;
 
 import tests.core.TestGrid;
 import tests.core.TestNormalCell;
+import tests.core.TestHashLife;
 
 /*
 Ce fichier sert a tester toutes les fonctions du projet, il sera donc
@@ -27,7 +28,8 @@ public class Test{
         TestGrid.startTest();
         TestQuadtree.startTest(); // TestQuadtree à modifier
 
-        // --- test ok, en dessous plus trop =')    
+        // --- test ok au dessus, en dessous plus trop =')
+        TestHashLife.startTest();    
     }
     
 }
