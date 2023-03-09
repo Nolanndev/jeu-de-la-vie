@@ -17,22 +17,19 @@ public class HashLife extends Quadtree{
         super();
     }
     
-    /* fonction recursive
-    si la profondeur est inferieure ou egale à 0, on appelle le constructeur de la classe mere
-    sinon on verifie le quadtree en diminuant la profondeur de -1
-     */
-
+    /* 
+    fonction recursive
+    si la profondeur est inferieure ou egale à 0, on retourne un quadtree null
+    sinon on retourne un noeud vide au niveau k
+    */
     public Quadtree getZero(int depth){
-        return (depth <= 0) ? HashLife.off : this.join(getZero(depth-1), getZero(depth-1),getZero(depth-1), getZero(depth-1));
+        return (depth <= 0) ? HashLife.off : this.join(getZero(depth-1), getZero(depth-1), getZero(depth-1), getZero(depth-1));
     }
 
     /* 
-    si un fils est null on retourne null
-    sinon, on retourne un nouveau Quadtree 
-    avec les quatres fils, la profondeur du fils n
-    tout à gauche (nordOuest) + 1 et la somme 
-    de toutes les cellules encore en vie qui
-    sont presentes dans les autres quadtrees
+    combine quatre enfants au niveau k-1 à un nouveau noeud au niveau k. 
+    Si c’est mis en cache, retourne le noeud mis en cache. 
+    Sinon, créez un nouveau noeud et ajoutez-le au cache
     */
 
     public Quadtree join(Quadtree no, Quadtree ne, Quadtree se, Quadtree so){
@@ -43,12 +40,24 @@ public class HashLife extends Quadtree{
         return new Quadtree(no, ne, se, so, no.getDepth()+1, numberAlive );
     }
 
+    /*
+    renvoie un noeud au niveau k+1, qui est centré sur le noeud quadtree donné :
+    */
+    
     public Quadtree centre(Quadtree centre){
         Quadtree zero = getZero(centre.getNe().getDepth());
-        return this.join(join(zero, zero, zero, centre.getNw()), join(zero, zero, centre.getNe(), zero), join(zero, centre.getSw(), zero, zero), join(centre.getSe(), zero, zero, zero));
-        
+        return this.join(join(zero, zero, zero, centre.getNw()), join(zero, zero, centre.getNe(), zero), join(zero, centre.getSw(), zero, zero), join(centre.getSe(), zero, zero, zero)); 
     }
 
+    /* 
+    ... : tableau de Quadtree  
+    retourne la prochaine génération d’une cellule k=2. 
+    Pour mettre fin à la récursion, au niveau de la base, 
+    si nous avons un bloc k=2 4x4, nous pouvons calculer les 2x2 
+    successeurs centraux en itérant sur les 3x3 sous-quartiers de 1x1 
+    cellules en utilisant la règle de vie standard (ou toute autre 
+    règle d’automate cellulaire binaire de quartier Moore que nous choisissons)
+    */
     public Quadtree life(Quadtree centre ,Quadtree... neighboors){
         int neighboorsAlive = 0;
         for (Quadtree quadtree : neighboors) {
@@ -67,6 +76,9 @@ public class HashLife extends Quadtree{
         return join(nw, ne, sw, se);
     }
 
+    /*
+    retourne le successeur central d’un noeud au moment t+2**k-2.
+    */
     public Quadtree successor(Quadtree m, Integer j){
         Quadtree res;
         if(m.getNumberAlive() == 0){
@@ -131,6 +143,12 @@ public class HashLife extends Quadtree{
         return q;
     }
 
+    /*
+    trouve le nième successeur d’un noeud donné. 
+    Depuis que nous calculons n’importe quelle étape avancée de 2**j, jusqu’à 2**k-2, de 
+    un noeud de niveau k, on peut avancer par n trouver son successeur
+    en utilisant les conversions binaires.
+    */
     public Quadtree advance(Quadtree q, int n){
         if(n == 0){
             return q;
