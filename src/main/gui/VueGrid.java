@@ -10,7 +10,7 @@ import main.core.GridListener;
 import main.core.Grid;
 import main.core.NormalCell;
 
-public class VueGrid extends JPanel implements MouseListener, MouseMotionListener, GridListener{
+public class VueGrid extends JPanel implements MouseListener, MouseMotionListener, MouseWheelListener, GridListener{
     
     private Grid grid;
     public Dimension dimension;
@@ -31,10 +31,11 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
     public VueGrid(Grid grid, Dimension dimension, Boolean drawLine){
         addMouseListener(this);
         addMouseMotionListener(this);
+        addMouseWheelListener(this);
 
 
         this.grid = grid;
-        this.dimension = dimension;
+        this.setDimension(dimension);
         this.drawLine = drawLine;
         super.setPreferredSize(dimension);
         this.setSizeCase(15);
@@ -45,6 +46,15 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
 
     public VueGrid(Dimension dimension){
         this(new Grid(), dimension, true);
+    }
+
+    public void setDimension(Dimension dimension) {
+        if(dimension.getWidth() <= 0 || dimension.getHeight() <= 0){
+            this.dimension = new Dimension(0, 0);
+        }
+        else{
+            this.dimension = dimension;
+        }
     }
 
     public void setSizeCase(int sizeCase) {
@@ -229,6 +239,11 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
     @Override
     public void mouseMoved(MouseEvent e) {
         ;
+    }
+
+    @Override
+    public void mouseWheelMoved(MouseWheelEvent e) {
+        System.out.println(e.getScrollType());
     }
 
     

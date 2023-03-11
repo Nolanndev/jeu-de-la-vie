@@ -6,17 +6,20 @@ import main.utils.Tuple;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 
-public class Window{
+public class Window implements ComponentListener{
 
     JFrame window;
     VueGrid vueGrid;
 
     public Window(String title) {
-
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
         this.window = new JFrame();
+
+        this.window.addComponentListener(this);
+
         this.window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
         this.window.setTitle(title);
         this.window.setSize(new Dimension( (int)(screenSize.getWidth()) ,(int)screenSize.getHeight()));
@@ -37,17 +40,36 @@ public class Window{
 
 
 
+        Dimension dim = new Dimension((int) (this.window.getSize().getWidth()*0.75), (int)this.window.getSize().getHeight()-this.window.getInsets().top);
+        this.vueGrid = new VueGrid(grid, dim,true);
 
-
-
-        Dimension dim = new Dimension((int) (screenSize.getWidth()*0.75), (int)screenSize.getHeight()-100);
-        VueGrid vueGrid = new VueGrid(grid, dim,true);
-
-        this.window.add(vueGrid, BorderLayout.CENTER);
+        this.window.add(this.vueGrid, BorderLayout.CENTER);
     }
 
     public Window() {
         this("Met un putain de titre");
+    }
+
+    @Override
+    public void componentResized(ComponentEvent e) {
+        if(this.vueGrid != null){
+            this.vueGrid.setDimension(new Dimension((int) (this.window.getSize().getWidth()*0.75), (int)this.window.getSize().getHeight()-this.window.getInsets().top));
+        }
+    }
+
+    @Override
+    public void componentMoved(ComponentEvent e) {
+        ;
+    }
+
+    @Override
+    public void componentShown(ComponentEvent e) {
+        ;
+    }
+
+    @Override
+    public void componentHidden(ComponentEvent e) {
+        ;
     }
 
 
