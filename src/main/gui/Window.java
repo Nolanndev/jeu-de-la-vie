@@ -19,12 +19,12 @@ public class Window{
         this.window = new JFrame();
         this.window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
         this.window.setTitle(title);
-        this.window.setSize(new Dimension( (int)(screenSize.getWidth()) ,(int)screenSize.getHeight()-50));
+        this.window.setSize(new Dimension( (int)(screenSize.getWidth()) ,(int)screenSize.getHeight()));
         this.window.setVisible(true);
-        this.window.setResizable(false);
+        this.window.setResizable(true);
         
 
-        Grid grid = new Grid(new Tuple(200, 200)); // grille de 20 x 20 = 400 cases
+        Grid grid = new Grid(new Tuple(200, 150)); // grille de 20 x 20 = 400 cases
         grid.setCell(0, 0, new NormalCell(true));
         grid.setCell(4, 2, new NormalCell(true));
         grid.setCell(5, 1, new NormalCell(true));
@@ -32,10 +32,15 @@ public class Window{
         grid.setCell(5, 4, new NormalCell(true));
         grid.setCell(6, 3, new NormalCell(true));
         grid.setCell(6, 5, new NormalCell(true));
-        grid.setCell(80, 9, new NormalCell(true));
-        // grid.setCell(180, 180, new NormalCell(true));
+        grid.setCell(1, 149, new NormalCell(true));
+        grid.setCell(199, 149, new NormalCell(true));
 
-        Dimension dim = new Dimension((int) (screenSize.getWidth()*0.75), (int)screenSize.getHeight()-50);
+
+
+
+
+
+        Dimension dim = new Dimension((int) (screenSize.getWidth()*0.75), (int)screenSize.getHeight()-100);
         VueGrid vueGrid = new VueGrid(grid, dim,true);
 
         this.window.add(vueGrid, BorderLayout.CENTER);

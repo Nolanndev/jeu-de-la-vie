@@ -91,12 +91,12 @@ public class Grid {
     }
 
     public Cell getCell(int x, int y){
-        return this.getCell(new Tuple(x, y));
+        return this.getCell(new Tuple(y, x));
     }
 
     /* initialise une cellule aux coordonnées x et y dans la grille */
     public void setCell(int x, int y, Cell cell) {
-        this.board[x][y] = cell;
+        this.board[y][x] = cell;
         this.gridChange();  
     }
 
