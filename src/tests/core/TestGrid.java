@@ -1,11 +1,11 @@
 package tests.core;
 
 import java.util.Arrays;
+import java.awt.Dimension;
 
 import main.core.Cell;
 import main.core.Grid;
 import main.core.NormalCell;
-import main.utils.Tuple;
 import main.core.BasicCell;
 
 
@@ -22,12 +22,12 @@ public class TestGrid{
     private static Cell[] row1;
     private static Cell[] row2;
 
-    private static Tuple tuple1;
-    private static Tuple tuple2;
-    private static Tuple tuple3;
-    private static Tuple tuple4;
-    private static Tuple tuple5;
-    private static Tuple tuple6;
+    private static Dimension tuple1;
+    private static Dimension tuple2;
+    private static Dimension tuple3;
+    private static Dimension tuple4;
+    private static Dimension tuple5;
+    private static Dimension tuple6;
 
 
     public static void startTest(){
@@ -48,21 +48,21 @@ public class TestGrid{
 
     public static void testConstructor(){
         System.out.println("Test: constructor");
-        tuple1 = new Tuple(5, 10);
-        tuple2 = new Tuple(10, 5);
+        tuple1 = new Dimension(5, 10);
+        tuple2 = new Dimension(10, 5);
 
         grid1 = new Grid(tuple1);
         grid2 = new Grid(tuple2);
 
-        assert grid1.getSize().equals(new Tuple(5, 10)) : "Probleme avec la taille de la grille";
-        assert grid2.getSize().equals(new Tuple(10, 5)) : "Probleme avec la taille de la grille";
+        assert grid1.getSize().equals(new Dimension(5, 10)) : "Probleme avec la taille de la grille";
+        assert grid2.getSize().equals(new Dimension(10, 5)) : "Probleme avec la taille de la grille";
 
     }
 
     public static void testGetSize(){
         System.out.println("Test: getSize()");
-        assert grid1.getSize().equals(new Tuple(5, 10)) : "Probleme avec la taille de la grille";
-        assert grid2.getSize().equals(new Tuple(10, 5)) : "Probleme avec la taille de la grille";
+        assert grid1.getSize().equals(new Dimension(5, 10)) : "Probleme avec la taille de la grille";
+        assert grid2.getSize().equals(new Dimension(10, 5)) : "Probleme avec la taille de la grille";
 
     }
 
@@ -123,7 +123,7 @@ public class TestGrid{
 
     public static void testCopyBoard(){
         System.out.println("Test: copyBoard()");
-        tuple3 = new Tuple(3, 3);
+        tuple3 = new Dimension(3, 3);
         Grid grid = new Grid(tuple3);
 
         // ajout de cellule à grid 
@@ -136,7 +136,7 @@ public class TestGrid{
 
         for (int i = 0; i < grid.getHeight(); i++){
             for (int j = 0; j < grid.getWidth(); j++){
-                tuple4 = new Tuple(i, j);
+                tuple4 = new Dimension(i, j);
                 if (grid.getCell(tuple4).isAlive() != copy[i][j].isAlive()){
                     is_equal = false;
                     break;
@@ -151,7 +151,7 @@ public class TestGrid{
 
     public static void testCountNeighbors(){
         System.out.println("Test: countNeighbors()");
-        tuple5 = new Tuple(2,2);
+        tuple5 = new Dimension(2,2);
 
         grid5 = new Grid(tuple5);
         for (int i = 0; i < 2; i++){
@@ -170,7 +170,7 @@ public class TestGrid{
 
     public static void testGetCell(){
         System.out.println("Test: getCell()");
-        tuple5 = new Tuple(2,2);
+        tuple5 = new Dimension(2,2);
 
         grid5 = new Grid(tuple5);
         for (int i = 0; i < 2; i++){
@@ -179,7 +179,7 @@ public class TestGrid{
             }
         }
 
-        tuple6 = new Tuple(0, 0);
+        tuple6 = new Dimension(0, 0);
 
         assert grid5.getCell(tuple6) == new NormalCell(0, 3, 4, true): "La cellule est correcte";
     

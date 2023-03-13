@@ -1,9 +1,7 @@
 package tests;
 
-import main.utils.Tuple;
 import main.core.*;
 
-import tests.utils.TestTuple;
 import tests.utils.TestQuadtree;
 
 import tests.core.TestGrid;
@@ -23,7 +21,6 @@ public class Test{
 
     public static void main(String[] args){
 
-        TestTuple.startTest();
         TestNormalCell.startTest();
         TestGrid.startTest();
         TestQuadtree.startTest(); // TestQuadtree à modifier
