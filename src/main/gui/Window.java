@@ -2,7 +2,6 @@ package main.gui;
 
 import main.core.Grid;
 import main.core.NormalCell;
-import main.utils.Tuple;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,7 +27,7 @@ public class Window implements ComponentListener{
         this.window.setVisible(true);
         
 
-        Grid grid = new Grid(new Tuple(1200, 700));
+        Grid grid = new Grid(new Dimension(200, 150)); // grille de 20 x 20 = 400 cases
         grid.setCell(0, 0, new NormalCell(true));
         grid.setCell(4, 2, new NormalCell(true));
         grid.setCell(5, 1, new NormalCell(true));
