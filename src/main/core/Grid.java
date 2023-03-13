@@ -1,15 +1,14 @@
 package main.core;
 
 import java.util.ArrayList;
-
-import main.utils.Tuple;
+import java.awt.Dimension;
 
 public class Grid {
-    private Tuple size; 
+    private Dimension size; 
     private Cell[][] board; // grille de cellules
     private ArrayList<GridListener> listeners = new ArrayList<GridListener>();
 
-    public Grid(Tuple size) {
+    public Grid(Dimension size) {
         this.size = size;
         this.board = new Cell[this.getHeight()][this.getWidth()];
         for (int i = 0; i < getHeight(); i++)  {  
@@ -21,7 +20,7 @@ public class Grid {
 
     //grille initialisée de dimension size * size
     public Grid(int size) {
-        this(new Tuple(size, size));
+        this(new Dimension(size, size));
     }
 
     // taille de base de la grille : 15 par 15
@@ -31,7 +30,7 @@ public class Grid {
 
     public Grid(Cell[][] board) {
         this.board = board;
-        this.size = new Tuple(board.length, board[0].length);
+        this.size = new Dimension(board.length, board[0].length);
     }
 
     public Cell[][] getBoard() {
@@ -43,16 +42,16 @@ public class Grid {
         this.gridChange();
     }
 
-    public Tuple getSize(){
+    public Dimension getSize(){
         return this.size;
     }
 
     public int getWidth(){
-        return getSize().getValue1();
+        return (int) getSize().getWidth();
     }
 
     public int getHeight(){
-        return getSize().getValue2();
+        return (int) getSize().getHeight();
     }
 
     public Cell[] getRows(int row) {
@@ -82,8 +81,8 @@ public class Grid {
         }
     }
 
-    public Cell getCell(Tuple coordinates) {
-        Cell cell = this.board[coordinates.getValue1()][coordinates.getValue2()];
+    public Cell getCell(Dimension coordinates) {
+        Cell cell = this.board[(int) coordinates.getWidth()][(int) coordinates.getHeight()];
         if (Cell.class.isInstance(cell)) {
             return cell;
         }
@@ -91,7 +90,7 @@ public class Grid {
     }
 
     public Cell getCell(int x, int y){
-        return this.getCell(new Tuple(y, x));
+        return this.getCell(new Dimension(y, x));
     }
 
     /* initialise une cellule aux coordonnées x et y dans la grille */
@@ -102,7 +101,7 @@ public class Grid {
 
     /* compte les voisins d'une cellule coordonnées x et y dans la grille */
     public int countNeighbors(int x, int y) {
-        int radius = getCell(new Tuple(x, y)).getRadius();
+        int radius = getCell(new Dimension(x, y)).getRadius();
         
         int countNeighbors = 0;
 
