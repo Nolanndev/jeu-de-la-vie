@@ -97,7 +97,7 @@ public class Grid {
     /* initialise une cellule aux coordonnées x et y dans la grille */
     public void setCell(int x, int y, Cell cell) {
         this.board[y][x] = cell;
-        this.gridChange();  
+        this.changeCell(x, y);  
     }
 
     /* compte les voisins d'une cellule coordonnées x et y dans la grille */
@@ -157,6 +157,12 @@ public class Grid {
     private void gridChange(){
         for (GridListener listener : this.listeners) {
             listener.changeOccured();
+        }
+    }
+
+    private void changeCell(int x, int y){
+        for (GridListener listener : this.listeners) {
+            listener.changeCell(x, y);
         }
     }
 

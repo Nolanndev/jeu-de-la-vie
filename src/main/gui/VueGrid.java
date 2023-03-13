@@ -22,10 +22,7 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
     Integer lastX;
     Integer lastY;
 
-
-    private int sizeCase;
-
-
+    private Integer sizeCase;
 
 
     public VueGrid(Grid grid, Dimension dimension, Boolean drawLine){
@@ -38,7 +35,7 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
         this.setDimension(dimension);
         this.drawLine = drawLine;
         super.setPreferredSize(dimension);
-        this.setSizeCase(15);
+        this.setSizeCase(10);
 
 
         this.grid.addListener(this);
@@ -58,15 +55,34 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
     }
 
     public void setSizeCase(int sizeCase) {
-        if(sizeCase <= 1){
-            this.drawLine = false;
+        if(this.sizeCase == null){
+            this.sizeCase = sizeCase;
+        }
+        int posX = Math.min((int)((this.dimension.getWidth()/this.sizeCase) + this.posUX),this.grid.getWidth())/2;   //Convert position of mouse in position in grid
+        int posY = Math.min((int)((this.dimension.getHeight()/this.sizeCase) + this.posUY),this.grid.getHeight())/2;
+
+        if(sizeCase*(this.grid.getWidth()-this.posUX+1) < (int)this.dimension.getWidth() && sizeCase*(this.grid.getHeight()-this.posUY+1) < (int)this.dimension.getHeight()){
+            this.sizeCase = Math.min((int)this.dimension.getWidth()/this.grid.getWidth()+1 , (int)this.dimension.getHeight()/this.grid.getHeight()+1);
+        }
+        
+        else if(sizeCase <= 1){
             this.sizeCase = 1;
         }
-        else if (sizeCase >= Math.min(this.dimension.getWidth(), this.dimension.getHeight())){
-            this.sizeCase = (int) Math.min(this.dimension.getWidth(), this.dimension.getHeight());
+
+        else if (sizeCase >= 100){
+            this.sizeCase = 100;
+        }
+        else{
+            this.sizeCase = sizeCase;
         }
 
-        this.sizeCase = sizeCase;
+        int posX2 = Math.min((int)((this.dimension.getWidth()/this.sizeCase) + this.posUX),this.grid.getWidth())/2;   //Convert position of mouse in position in grid
+        int posY2 = Math.min((int)((this.dimension.getHeight()/this.sizeCase) + this.posUY),this.grid.getHeight())/2;
+
+        setPosUX(this.posUX + posX-posX2);
+        setPosUY(this.posUY + posY-posY2);
+
+        System.out.println(this.sizeCase );
     }
 
     private void setPosUX(int posUX) {
@@ -103,7 +119,9 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
         super.paintComponent(g);
 
         g.setColor(Color.black);
-        g.fillRect(0, 0, (int)this.dimension.getWidth(), (int)this.dimension.getHeight()); // Background
+        if(this.drawLine && this.sizeCase>3){
+            g.fillRect(0, 0, (int)this.dimension.getWidth(), (int)this.dimension.getHeight()); // Background
+        }
 
         this.drawGrid(g);
         
@@ -113,17 +131,23 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
         for(int x = 0; x<Math.min((int)this.dimension.getWidth()/this.sizeCase,this.grid.getWidth()); x++){
             for(int y = 0; y<Math.min((int)this.dimension.getHeight()/this.sizeCase, this.grid.getHeight()); y++){
                 
-                Color c = (this.grid.getCell(x+this.posUX, y+this.posUY).isAlive()) ? Color.red : Color. white; // Red for Alive Cell, White for dead Cell
-                g.setColor(c);
+                try{
+                    Color c = (this.grid.getCell(x+this.posUX, y+this.posUY).isAlive()) ? Color.red : Color. white; // Red for Alive Cell, White for dead Cell
+                    g.setColor(c);
 
-                if((x+1)*this.sizeCase <= this.dimension.getWidth() && (y+1)*this.sizeCase <= this.dimension.getHeight()){ // 20 is size of one pixel
-                    if(this.drawLine){
-                        g.fillRect(x*this.sizeCase, y*this.sizeCase, this.sizeCase-1, this.sizeCase-1);
-                    }
-                    else{
-                        g.fillRect(x*this.sizeCase, y*this.sizeCase, this.sizeCase, this.sizeCase);
+                    if((x+1)*this.sizeCase <= this.dimension.getWidth() && (y+1)*this.sizeCase <= this.dimension.getHeight()){ // 20 is size of one pixel
+                        if(this.drawLine && this.sizeCase>3){
+                            g.fillRect(x*this.sizeCase, y*this.sizeCase, this.sizeCase-1, this.sizeCase-1);
+                        }
+                        else{
+                            g.fillRect(x*this.sizeCase, y*this.sizeCase, this.sizeCase, this.sizeCase);
+                        }
                     }
                 }
+                catch(java.lang.ArrayIndexOutOfBoundsException e){
+                    break;
+                }
+                
             }
         }   
     }
@@ -132,6 +156,29 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
     public void changeOccured() {
         this.drawGrid(getGraphics());
     }
+
+    @Override
+    public void changeCell(int x, int y) {
+        System.out.print(x);
+        System.out.print("   ");
+        System.out.println(y);
+
+
+        Graphics g = getGraphics();
+        if(x >= this.posUX && x<this.posUX + (int)(this.dimension.getWidth()/this.sizeCase) && y >= this.posUY && y<this.posUY + (int)(this.dimension.getHeight()/this.sizeCase)){
+            Color c = (this.grid.getCell(x, y).isAlive()) ? Color.red : Color.white; // Red for Alive Cell, White for dead Cell
+            g.setColor(c);
+            
+            if(this.drawLine && this.sizeCase>3){
+                g.fillRect((x-this.posUX)*this.sizeCase, (y-this.posUY)*this.sizeCase, this.sizeCase-1, this.sizeCase-1);
+            }
+            else{
+                g.fillRect(x*this.sizeCase, y*this.sizeCase, this.sizeCase, this.sizeCase);
+            }
+        }
+    }
+
+
 
     
 
@@ -243,10 +290,22 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
-        System.out.println(e.getScrollType());
+        switch (e.getWheelRotation()) {
+            case 1:    //Wheel down
+                this.setSizeCase(this.sizeCase-1);
+                break;
+        
+            case -1: //Wheel up
+                this.setSizeCase(this.sizeCase+1);
+                break;
+
+            default:
+                break;
+        }
+        this.paintComponent(getGraphics());
     }
 
-    
+
 
     
 

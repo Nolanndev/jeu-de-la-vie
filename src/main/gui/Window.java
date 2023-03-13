@@ -18,16 +18,17 @@ public class Window implements ComponentListener{
 
         this.window = new JFrame();
 
-        this.window.addComponentListener(this);
+        this.window.addComponentListener(this); //resize Event listener
 
         this.window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
         this.window.setTitle(title);
-        this.window.setSize(new Dimension( (int)(screenSize.getWidth()) ,(int)screenSize.getHeight()));
-        this.window.setVisible(true);
+        this.window.setSize(new Dimension( (int)(screenSize.getWidth()*0.8) ,(int)(screenSize.getHeight()*0.8))); // 80% of screen size
+        this.window.setLocation((int)(screenSize.getWidth()-this.window.getWidth())/2, (int)(screenSize.getHeight()-this.window.getHeight())/2); // Center on screen
         this.window.setResizable(true);
+        this.window.setVisible(true);
         
 
-        Grid grid = new Grid(new Tuple(200, 150)); // grille de 20 x 20 = 400 cases
+        Grid grid = new Grid(new Tuple(1200, 700));
         grid.setCell(0, 0, new NormalCell(true));
         grid.setCell(4, 2, new NormalCell(true));
         grid.setCell(5, 1, new NormalCell(true));
@@ -35,8 +36,8 @@ public class Window implements ComponentListener{
         grid.setCell(5, 4, new NormalCell(true));
         grid.setCell(6, 3, new NormalCell(true));
         grid.setCell(6, 5, new NormalCell(true));
-        grid.setCell(1, 149, new NormalCell(true));
-        grid.setCell(199, 149, new NormalCell(true));
+        // grid.setCell(1, 149, new NormalCell(true));
+        // grid.setCell(199, 149, new NormalCell(true));
 
 
 
@@ -44,6 +45,7 @@ public class Window implements ComponentListener{
         this.vueGrid = new VueGrid(grid, dim,true);
 
         this.window.add(this.vueGrid, BorderLayout.CENTER);
+
     }
 
     public Window() {
