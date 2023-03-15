@@ -12,20 +12,20 @@ public class Gol {
         System.out.println("DEBUT");
         System.lineSeparator();
 
-        NormalCell cell = new NormalCell();
+        Cell cell = new Cell(false);
         System.out.println(cell.infos());
         System.out.println("-----------------");
         cell.setState(true);
 
         Grid grid = new Grid(20); // grille de 20 x 20 = 400 cases
-        grid.setCell(4, 1, new NormalCell(true));
-        grid.setCell(4, 2, new NormalCell(true));
-        grid.setCell(5, 1, new NormalCell(true));
-        grid.setCell(4, 4, new NormalCell(true));
-        grid.setCell(5, 4, new NormalCell(true));
-        grid.setCell(6, 3, new NormalCell(true));
-        grid.setCell(6, 5, new NormalCell(true));
-        grid.setCell(6, 6, new NormalCell(true));
+        grid.setCell(4, 1, new Cell(true));
+        grid.setCell(4, 2, new Cell(true));
+        grid.setCell(5, 1, new Cell(true));
+        grid.setCell(4, 4, new Cell(true));
+        grid.setCell(5, 4, new Cell(true));
+        grid.setCell(6, 3, new Cell(true));
+        grid.setCell(6, 5, new Cell(true));
+        grid.setCell(6, 6, new Cell(true));
 
 
         System.out.println("Nombre de voisins de (1,2) : " + grid.countNeighbors(1, 2));

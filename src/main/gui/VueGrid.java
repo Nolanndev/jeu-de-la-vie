@@ -8,7 +8,7 @@ import java.awt.event.*;
 
 import main.core.GridListener;
 import main.core.Grid;
-import main.core.NormalCell;
+import main.core.Cell;
 
 public class VueGrid extends JPanel implements MouseListener, MouseMotionListener, MouseWheelListener, GridListener{
     
@@ -165,7 +165,7 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
 
 
         Graphics g = getGraphics();
-        if(x >= this.posUX && x<this.posUX + (int)(this.dimension.getWidth()/this.sizeCase) && y >= this.posUY && y<this.posUY + (int)(this.dimension.getHeight()/this.sizeCase)){
+        if(x >= this.posUX && x<this.posUX + (int)(this.dimension.getWidth()/this.sizeCase) && y >= this.posUY && y<    this.posUY + (int)(this.dimension.getHeight()/this.sizeCase)){
             Color c = (this.grid.getCell(x, y).isAlive()) ? Color.red : Color.white; // Red for Alive Cell, White for dead Cell
             g.setColor(c);
             
@@ -195,13 +195,13 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
 
                 if(SwingUtilities.isLeftMouseButton(e)){ //Left click
                     if(!this.grid.getCell(posCellX ,posCellY).isAlive()){
-                        this.grid.setCell(posCellX, posCellY, new NormalCell(true));
+                        this.grid.setCell(posCellX, posCellY, new Cell(true));
                     }
                 }
                 
                 if(SwingUtilities.isRightMouseButton(e)){ //Left click
                     if(this.grid.getCell(posCellX,posCellY).isAlive()){
-                        this.grid.setCell(posCellX, posCellY, new NormalCell(false));
+                        this.grid.setCell(posCellX, posCellY, new Cell(false));
                     }
                 }
 
@@ -255,13 +255,13 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
 
                 if(SwingUtilities.isLeftMouseButton(e)){ //posX/Y is use to not change the same Cell during the drag
                     if(!this.grid.getCell(posCellX,posCellY).isAlive()){
-                        this.grid.setCell(posCellX, posCellY, new NormalCell(true));
+                        this.grid.setCell(posCellX, posCellY, new Cell(true));
                     }
                 }
 
                 if(SwingUtilities.isRightMouseButton(e)){ //Left click
                     if(this.grid.getCell(posCellX,posCellY).isAlive()){
-                        this.grid.setCell(posCellX, posCellY, new NormalCell(false));
+                        this.grid.setCell(posCellX, posCellY, new Cell(false));
                     }
                 }
 
