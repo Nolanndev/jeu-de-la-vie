@@ -1,7 +1,7 @@
 package main.gui;
 
 import main.core.Grid;
-import main.core.NormalCell;
+import main.core.Cell;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,13 +28,13 @@ public class Window implements ComponentListener{
         
 
         Grid grid = new Grid(new Dimension(200, 150)); // grille de 20 x 20 = 400 cases
-        grid.setCell(0, 0, new NormalCell(true));
-        grid.setCell(4, 2, new NormalCell(true));
-        grid.setCell(5, 1, new NormalCell(true));
-        grid.setCell(4, 4, new NormalCell(true));
-        grid.setCell(5, 4, new NormalCell(true));
-        grid.setCell(6, 3, new NormalCell(true));
-        grid.setCell(6, 5, new NormalCell(true));
+        grid.setCell(0, 0, new Cell(true));
+        grid.setCell(4, 2, new Cell(true));
+        grid.setCell(5, 1, new Cell(true));
+        grid.setCell(4, 4, new Cell(true));
+        grid.setCell(5, 4, new Cell(true));
+        grid.setCell(6, 3, new Cell(true));
+        grid.setCell(6, 5, new Cell(true));
         // grid.setCell(1, 149, new NormalCell(true));
         // grid.setCell(199, 149, new NormalCell(true));
 

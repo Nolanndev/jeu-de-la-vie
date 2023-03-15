@@ -13,7 +13,7 @@ public class Grid {
         this.board = new Cell[this.getHeight()][this.getWidth()];
         for (int i = 0; i < getHeight(); i++)  {  
             for (int j=0; j < getWidth(); j++){
-                this.board[i][j] = new NormalCell();
+                this.board[i][j] = new Cell(false);
             }  
         }  
     }
@@ -139,7 +139,7 @@ public class Grid {
         Cell[][] copyBoard = new Cell[this.getHeight()][this.getWidth()];
         for (int i = 0; i < getHeight() ; i++) {
             for (int j = 0; j < getWidth(); j++) {
-                copyBoard[i][j] = new NormalCell(this.board[i][j].isAlive());
+                copyBoard[i][j] = new Cell(this.board[i][j].isAlive());
             }
         }
         return copyBoard;

@@ -1,6 +1,6 @@
 package tests.core;
 
-import main.core.NormalCell;
+import main.core.Cell;
 
 /* 
 Ce fichier servira juste à 
@@ -8,7 +8,7 @@ tester le fichier NormalCell.java
 */
 
 public class TestNormalCell{
-    private static NormalCell cell = new NormalCell(0,3,1,true);
+    private static Cell cell = new Cell(true);
 
     public static void startTest(){
         System.out.println("TESTS: main.core.NormalCell");

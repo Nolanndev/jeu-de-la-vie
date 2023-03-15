@@ -5,8 +5,7 @@ import java.awt.Dimension;
 
 import main.core.Cell;
 import main.core.Grid;
-import main.core.NormalCell;
-import main.core.BasicCell;
+import main.core.Cell;
 
 
 /* test la classe Grid */
@@ -87,13 +86,13 @@ public class TestGrid{
 
         for (int i = 0; i < 10 ;i++){
             for (int j = 0; j < 5; j++){
-                grid3.setCell(i, j, new NormalCell(true));
+                grid3.setCell(i, j, new Cell(true));
             }
         }
 
         for (int i = 0; i < 5 ;i++){
             for (int j = 0; j < 10; j++){
-                grid4.setCell(i, j, new NormalCell(true));
+                grid4.setCell(i, j, new Cell(true));
             }
         }
 
@@ -127,9 +126,9 @@ public class TestGrid{
         Grid grid = new Grid(tuple3);
 
         // ajout de cellule à grid 
-        grid.setCell(0, 0, new NormalCell(true)); 
-        grid.setCell(1, 1, new NormalCell(true));
-        grid.setCell(2, 2, new NormalCell(true));
+        grid.setCell(0, 0, new Cell(true)); 
+        grid.setCell(1, 1, new Cell(true));
+        grid.setCell(2, 2, new Cell(true));
 
         Cell[][] copy = grid.copyBoard();
         boolean is_equal = true;
@@ -156,11 +155,11 @@ public class TestGrid{
         grid5 = new Grid(tuple5);
         for (int i = 0; i < 2; i++){
             for (int j = 0; j < 2; j++){
-                grid5.setCell(i, j, new NormalCell(true));
+                grid5.setCell(i, j, new Cell(true));
             }
         }
 
-        NormalCell cell = new NormalCell(0, 3, 10, true);
+        Cell cell = new Cell(true);
         grid5.setCell(0, 0, cell);
 
         assert grid5.countNeighbors(1, 1) == 10 : "Le nombre de voisins n'est pas correct";
@@ -175,17 +174,17 @@ public class TestGrid{
         grid5 = new Grid(tuple5);
         for (int i = 0; i < 2; i++){
             for (int j = 0; j < 2; j++){
-                grid5.setCell(i, j, new NormalCell(0, 3, 4, true));
+                grid5.setCell(i, j, new Cell(true));
             }
         }
 
         tuple6 = new Dimension(0, 0);
 
-        assert grid5.getCell(tuple6) == new NormalCell(0, 3, 4, true): "La cellule est correcte";
+        assert grid5.getCell(tuple6) == new Cell(true): "La cellule est correcte";
     
-        assert grid5.getCell(tuple6) == new NormalCell(1, 3, 4, true): "minNeighbors est incorrecte";
-        assert grid5.getCell(tuple6) == new NormalCell(0, 5, 4, true): "maxNeighbors est incorrecte";
-        assert grid5.getCell(tuple6) == new NormalCell(0, 3, 5, true): "radius est incorrecte";
-        assert grid5.getCell(tuple6) == new NormalCell(0, 3, 5, false): "alive est incorrecte";
+        assert grid5.getCell(tuple6) == new Cell(true): "minNeighbors est incorrecte";
+        assert grid5.getCell(tuple6) == new Cell(true): "maxNeighbors est incorrecte";
+        assert grid5.getCell(tuple6) == new Cell(true): "radius est incorrecte";
+        assert grid5.getCell(tuple6) == new Cell(false): "alive est incorrecte";
     }
 }    
