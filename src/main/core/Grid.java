@@ -49,7 +49,7 @@ public class Grid {
         setBoard(new Cell[this.getHeight()][this.getWidth()]);
         for (int i = 0; i < getHeight(); i++)  {  
             for (int j=0; j < getWidth(); j++){
-                this.board[i][j] = new Cell(cell.getMinNeighbors(), cell.getMaxNeighbors(), cell.getRadius(), cell.isAlive());
+                this.board[i][j] = new Cell(cell.getBornMinNeighbors(), cell.getBornMaxNeighbors(), cell.getDieMinNeighbors(), cell.getDieMaxNeighbors(), cell.getRadius(), cell.isAlive());
             }  
         }  
 
@@ -281,10 +281,13 @@ public class Grid {
         
         for (int i = 0; i < getHeight() ; i++) {
             for (int j = 0; j < getWidth(); j++) {
+                
                 int neighbors = copyGrid.countNeighbors(i,j);
                 Cell cell = copyGrid.getCell(i, j);
-                Boolean res = (neighbors == cell.getMaxNeighbors() || (neighbors == cell.getMinNeighbors() && cell.isAlive())); 
-                if(res != this.getCell(i, j).isAlive()){
+
+                Boolean res = ((cell.isAlive() && neighbors>=cell.getDieMinNeighbors() && neighbors<=cell.getDieMaxNeighbors()) || (!cell.isAlive() && neighbors>=cell.getBornMinNeighbors() && neighbors<=cell.getBornMaxNeighbors())); //respecte les conditions de vie déinie dans la Cellule cell
+                
+                if(res != this.getCell(i, j).isAlive()){ //si l'etat de la cellule a la prochaine génération est différent de l'état actuelle, on change la cellule. 
                     this.setCell(i, j, new Cell(res));
                     this.changeCell(i, j);
                 }
