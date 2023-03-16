@@ -4,7 +4,7 @@ import java.util.*;
 import java.io.*;
 import java.io.IOException;
 import java.util.regex.*;
-import main.exeptions.*;
+import main.exceptions.ProfileNameException;
 
 public class ProfileManager {
 

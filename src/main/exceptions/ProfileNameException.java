@@ -1,4 +1,4 @@
-package main.exeptions;
+package main.exceptions;
 
 public class ProfileNameException extends Exception {
     public ProfileNameException() {
