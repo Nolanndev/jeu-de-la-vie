@@ -6,15 +6,15 @@
 
     <property name="project.src.dir" location="src"/>
     <property name="project.bin.dir" location="bin"/>
-    <property name="project.lib.dir" location="lib"/>
+    <!-- <property name="project.lib.dir" location="lib"/> -->
     <property name="project.dist.dir" location="dist"/>
     <property name="project.doc.dir" location="doc"/>
 
     <!-- classpath -->
     <path id="project.classpath">
-        <fileset dir="${project.lib.dir}">
+        <!-- <fileset dir="${project.lib.dir}">
            <include name="*.jar"/>
-        </fileset>
+        </fileset> -->
         <pathelement location="${project.bin.dir}" />
     </path>
 
