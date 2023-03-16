@@ -1,7 +1,12 @@
 package main;
 
 
+import java.io.IOException;
+import java.util.HashMap;
+
 import main.core.*;
+import main.exeptions.ProfileNameException;
+import main.utils.ProfileManager;
 import main.utils.Quadtree;
 import main.gui.*;
 
@@ -9,15 +14,15 @@ public class Gol {
 
     
     public static void main(String[] args) {
-        System.out.println("DEBUT");
-        System.lineSeparator();
+        // System.out.println("DEBUT");
+        // System.lineSeparator();
 
         Cell cell = new Cell(false);
         System.out.println(cell.infos());
         System.out.println("-----------------");
         cell.setState(true);
 
-        Grid grid = new Grid(20); // grille de 20 x 20 = 400 cases
+        Grid grid = new Grid(20);
         grid.setCell(4, 1, new Cell(true));
         grid.setCell(4, 2, new Cell(true));
         grid.setCell(5, 1, new Cell(true));
@@ -50,6 +55,8 @@ public class Gol {
         System.out.println("FIN");
 
         new Window("Test");
+
+        
 
     }
 }

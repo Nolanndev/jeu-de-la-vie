@@ -104,3 +104,6 @@ main.core.Board -> classe concrète
 		- 
 	- méthodes
 		- 
+
+
+Faire la doc pour les extensions `.gol.profile`

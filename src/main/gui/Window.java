@@ -4,6 +4,8 @@ import main.core.Grid;
 import main.core.Cell;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -36,8 +38,8 @@ public class Window implements ComponentListener{
         grid.setCell(5, 4, new Cell(true));
         grid.setCell(6, 3, new Cell(true));
         grid.setCell(6, 5, new Cell(true));
-        // grid.setCell(1, 149, new NormalCell(true));
-        // grid.setCell(199, 149, new NormalCell(true));
+        grid.setCell(1, 149, new Cell(true));
+        grid.setCell(199, 149, new Cell(true));
 
         Dimension dimGrid = new Dimension((int) (this.window.getSize().getWidth()*0.75), (int)this.window.getSize().getHeight()-this.window.getInsets().top);
         this.vueGrid = new VueGrid(grid, dimGrid,true);
@@ -57,6 +59,9 @@ public class Window implements ComponentListener{
     public void componentResized(ComponentEvent e) {
         if(this.vueGrid != null){
             this.vueGrid.setDimension(new Dimension((int) (this.window.getSize().getWidth()*0.75), (int)this.window.getSize().getHeight()-this.window.getInsets().top));
+        }
+        if(this.sideMenu != null){
+            this.sideMenu.setDimension(new Dimension((int) (this.window.getSize().getWidth()*0.25), (int)this.window.getSize().getHeight()-this.window.getInsets().top));
         }
     }
 

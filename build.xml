@@ -50,7 +50,7 @@
 
     <!--  test  -->
     <target name="test" depends="compile">
-        <java classname="test.Gol" fork="true">
+        <java classname="tests.Test" fork="true">
             <classpath refid="project.classpath" />
         </java>
     </target>
