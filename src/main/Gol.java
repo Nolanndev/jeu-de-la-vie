@@ -1,9 +1,6 @@
 package main;
 
 
-import java.io.IOException;
-import java.util.HashMap;
-
 import main.core.*;
 import main.exceptions.ProfileNameException;
 import main.utils.ProfileManager;

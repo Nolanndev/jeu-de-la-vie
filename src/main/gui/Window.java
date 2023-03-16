@@ -56,9 +56,9 @@ public class Window implements ComponentListener{
         if(this.vueGrid != null){
             this.vueGrid.setDimension(new Dimension((int) (this.window.getSize().getWidth()*0.75), (int)this.window.getSize().getHeight()-this.window.getInsets().top));
         }
-        if(this.sideMenu != null){
-            this.sideMenu.setDimension(new Dimension((int) (this.window.getSize().getWidth()*0.25), (int)this.window.getSize().getHeight()-this.window.getInsets().top));
-        }
+        // if(this.sideMenu != null){
+        //     this.sideMenu.setDimension(new Dimension((int) (this.window.getSize().getWidth()*0.25), (int)this.window.getSize().getHeight()-this.window.getInsets().top));
+        // }
     }
 
     @Override
