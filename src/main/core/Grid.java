@@ -255,17 +255,17 @@ public class Grid {
         int countNeighbors = 0;
 
         int firstRow = (x-radius < 0) ? 0 : x-radius;
-        int lastRow = (x+radius > getHeight()-1) ? getHeight()-1 : x+radius;  
+        int lastRow = (x+radius > getWidth()-1) ? getWidth()-1 : x+radius;  
         int firstColumn = (y-radius < 0) ? 0 : y-radius;
-        int lastColumn= (y+radius > getWidth()-1) ? getWidth()-1 : y+radius;  
+        int lastColumn= (y+radius > getHeight()-1) ? getHeight()-1 : y+radius;  
 
         for(int i = firstRow; i <= lastRow; i++){
             for(int j = firstColumn; j <= lastColumn; j++){                
-                countNeighbors += (this.board[i][j].isAlive()) ? 1 : 0;
+                countNeighbors += (this.getCell(i, j).isAlive()) ? 1 : 0;
             }
         }
 
-        countNeighbors -= (this.board[x][y].isAlive()) ? 1 : 0;
+        countNeighbors -= (getCell(x, y).isAlive()) ? 1 : 0;
 
         return countNeighbors;
     }
@@ -274,19 +274,22 @@ public class Grid {
      * Compute the next generation of this Grid using the Game of Life rules.
      * matrix of this Grid is change to matrix of next generation.
      * 
-     * Call the function {@link GridListener#changeOccured()} for all listener in {@link #listeners}
+     * Call the function {@link GridListener#changeCell(int, int)} for all listener in {@link #listeners}
      */
     public void nextGen(){
-        Cell[][] copyBoard = copyBoard();
+        Grid copyGrid = new Grid(this.copyBoard());
         
         for (int i = 0; i < getHeight() ; i++) {
             for (int j = 0; j < getWidth(); j++) {
-                Boolean res = (countNeighbors(i, j) == getCell(i, j).getMaxNeighbors() || (countNeighbors(i, j) == getCell(i, j).getMinNeighbors() && this.board[i][j].isAlive()));
-                copyBoard[i][j] = new Cell(res);
+                int neighbors = copyGrid.countNeighbors(i,j);
+                Cell cell = copyGrid.getCell(i, j);
+                Boolean res = (neighbors == cell.getMaxNeighbors() || (neighbors == cell.getMinNeighbors() && cell.isAlive())); 
+                if(res != this.getCell(i, j).isAlive()){
+                    this.setCell(i, j, new Cell(res));
+                    this.changeCell(i, j);
+                }
             }
         }
-        setBoard(copyBoard);
-        this.gridChange();
     }
 
     /**

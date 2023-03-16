@@ -31,7 +31,7 @@ public class Gol {
         grid.setCell(6, 6, new Cell(true));
 
         System.out.println(grid.getCell(new Dimension(4,1)) == grid.getCell(4,1));
-        System.out.println("Nombre de voisins de (1,2) : " + grid.countNeighbors(1, 2));
+        System.out.println("Nombre de voisins de (4,2) : " + grid.countNeighbors(4, 2));
         
         for (int i = 1; i <= 10; i++) {
             System.out.println("-----------------");
