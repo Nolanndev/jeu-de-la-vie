@@ -86,7 +86,7 @@ public class Cell {
      * @param newMin new value of <b>minNeighbors</b>.
      * @throws ExceptionInInitializerError Occured if <b>newMin</b> is less than <b>0</b> or <b>newMin</b> are greater than <b>maxNeigbors</b>.
      */
-    public void setMinNeighbors(int newMin) throws ExceptionInInitializerError {
+    private void setMinNeighbors(int newMin) throws ExceptionInInitializerError {
         if(newMin < 0){
             throw new ExceptionInInitializerError("minNeighbors must be positive number.");
         }
@@ -111,7 +111,7 @@ public class Cell {
      * @param newMax new value of <b>maxNeighbors</b>.
      * @throws ExceptionInInitializerError Occured if maxNeighbors are less than minNeigbors.
     */
-    public void setMaxNeighbors(int newMax) throws ExceptionInInitializerError {
+    private void setMaxNeighbors(int newMax) throws ExceptionInInitializerError {
         if(this.minNeighbors != null &&  newMax < this.minNeighbors){
             throw new ExceptionInInitializerError("maxNeighbors must be superior to minNeighbors");
         }
@@ -132,7 +132,7 @@ public class Cell {
      * @param radius new value of <b>radius</b>.
      * @throws ExceptionInInitializerError Occured if <b>radius</b> are less than <b>0</b>.
      */
-    public void setRadius(int radius) throws ExceptionInInitializerError{
+    private void setRadius(int radius) throws ExceptionInInitializerError{
         if(radius < 0){
             throw new ExceptionInInitializerError("radius must be a positive number.");
         }
@@ -152,18 +152,17 @@ public class Cell {
      * Defined state of a cell. 
      * @param newState alive or not.
     */
-    public void setState(boolean newState) {
+    private void setState(boolean newState) {
         this.alive = newState;
     }
-
 
 
     /**
      * Access to representation of Cell in String.
      * @return representation of cell
      */
-    public String infos() {
-        return "Status: " + this.alive + "\nNeighbors\n\tmin: "
+    public String info() {
+        return "State: " + this.alive + "\nNeighbors\n\tmin: "
                 + this.minNeighbors + "\n\tmax: " + this.maxNeighbors + "\nradius : " + this.radius;
     }
 }

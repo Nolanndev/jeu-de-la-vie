@@ -13,27 +13,36 @@ public class SideMenu extends JPanel implements ActionListener{
     public SideMenu(Dimension dimension){
 
         this.dimension = dimension;
-        createSideMenu();
+        super.setPreferredSize(dimension);
     }
 
-    private void createSideMenu(){
+    public void setDimension(Dimension dimension) {
+        if(dimension.getWidth() <= 0 || dimension.getHeight() <= 0){
+            this.dimension = new Dimension(0, 0);
+        }
+        else{
+            this.dimension = dimension;
+        }
+    }
+
+    @Override
+    public void paintComponent(Graphics g){
+        super.paintComponent(g);
+        
+        g.setColor(Color.white);
+        g.fillRect(0, 0, (int)this.dimension.getWidth(), (int)this.dimension.getHeight()); // Background
+     
         menu = new JPanel();
 
-        playBtn = new JButton("Lancer");
+        playBtn = new JButton("▶");
         playBtn.setFont(new Font("Segoe UI Black", Font.BOLD, 20));
         playBtn.addActionListener(this);
         menu.add(playBtn);
         menu.setSize(this.dimension);
-    }
+        this.add(menu);
+        
 
-    // @Override
-    // public void paintComponent(Graphics g){
-    //     super.paintComponent(g);
-        
-    //     g.setColor(Color.red);
-    //     g.fillRect(0, 0, (int)this.dimension.getWidth(), (int)this.dimension.getHeight()); // Background
-        
-    // }
+    }
     
     public void actionPerformed(ActionEvent e) {
         if (e.getSource()==playBtn){
