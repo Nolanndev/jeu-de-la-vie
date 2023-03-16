@@ -6,10 +6,12 @@ import java.awt.event.*;
 
 public class SideMenu extends JPanel implements ActionListener{
     
-    private JPanel menu, commande, m1, situation, m2, cell, m3;
-    private JButton playBtn, stopBtn, clearBtn;
+    private JPanel menu, commands, m1, profile, settings, m2, cell, m3;
+    private JButton nextBtn, resetBtn, clearBtn, photoBtn, videoBtn, loadBtn;
     private Dimension dimension;
-    private JLabel commandeLablel, situationLablel, cellLablel;
+    private JLabel commandsLablel, profileLablel, settingsLablel, cellLablel;
+    private Icon play, stop, next, reset, clear, photo, video;
+    private JToggleButton playStopBtn;
 
     public SideMenu(Dimension dimension){
 
@@ -17,92 +19,117 @@ public class SideMenu extends JPanel implements ActionListener{
         createSideMenu();
     }
 
+    public void setDimension(Dimension dimension) {
+        if(dimension.getWidth() <= 0 || dimension.getHeight() <= 0){
+            this.dimension = new Dimension(0, 0);
+        }
+        else{
+            this.dimension = dimension;
+        }
+    }
+
     private void createSideMenu(){
         menu = new JPanel();
 
-        menu.setLayout(new GridLayout(3, 1));
+        menu.setLayout(new GridLayout(4, 1));
+        
+        Dimension dimBtn = new Dimension(40,40);
 
-        commande = new JPanel();
+        //Commands section
 
-        commande.setLayout(new GridLayout(2, 1));
-        commandeLablel = new JLabel("Commande");
-        commandeLablel.setFont(new Font("Segoe UI Black", Font.BOLD, 30));
+        commands = new JPanel();
 
-        commande.add(commandeLablel);
+        commands.setLayout(new GridLayout(2, 1));
+        commandsLablel = new JLabel("Commands");
+        commandsLablel.setFont(new Font("Segoe UI Black", Font.BOLD, 30));
+
+        commands.add(commandsLablel);
 
         m1 = new JPanel();
 
-        playBtn = new JButton("Play");
-        playBtn.setFont(new Font("Segoe UI Black", Font.BOLD, 20));
-        playBtn.addActionListener(this);
-        m1.add(playBtn);
+        play = new ImageIcon(System.getProperty("user.dir") + "\\src\\main\\assets\\button\\play.png");
+        stop = new ImageIcon(System.getProperty("user.dir") + "\\src\\main\\assets\\button\\stop.png");
+        playStopBtn = new JToggleButton(play);
+        playStopBtn.setPreferredSize(dimBtn);
+        playStopBtn.addActionListener(this);
+        m1.add(playStopBtn);
 
-        stopBtn = new JButton("Stop");
-        stopBtn.setFont(new Font("Segoe UI Black", Font.BOLD, 20));
-        stopBtn.addActionListener(this);
-        m1.add(stopBtn);
+        next = new ImageIcon(System.getProperty("user.dir") + "\\src\\main\\assets\\button\\next.png");
+        nextBtn = new JButton(next);
+        nextBtn.setPreferredSize(dimBtn);
+        nextBtn.addActionListener(this);
+        m1.add(nextBtn);
 
-        clearBtn = new JButton("Clear");
-        clearBtn.setFont(new Font("Segoe UI Black", Font.BOLD, 20));
+        reset = new ImageIcon(System.getProperty("user.dir") + "\\src\\main\\assets\\button\\reset.png");
+        resetBtn = new JButton(reset);
+        resetBtn.setPreferredSize(dimBtn);
+        resetBtn.addActionListener(this);
+        m1.add(resetBtn); 
+
+        clear = new ImageIcon(System.getProperty("user.dir") + "\\src\\main\\assets\\button\\clear.png");
+        clearBtn = new JButton(clear);
+        clearBtn.setPreferredSize(dimBtn);
         clearBtn.addActionListener(this);
-        m1.add(clearBtn);    
-        
-        commande.add(m1);
+        m1.add(clearBtn);
 
-        situation = new JPanel();
+        photo = new ImageIcon(System.getProperty("user.dir") + "\\src\\main\\assets\\button\\photo.png");
+        photoBtn = new JButton(photo);
+        photoBtn.setPreferredSize(dimBtn);
+        photoBtn.addActionListener(this);
+        m1.add(photoBtn);
 
-        situation.setLayout(new GridLayout(2, 1));
-        situationLablel = new JLabel("Situation");
-        situationLablel.setFont(new Font("Segoe UI Black", Font.BOLD, 30));
-        situation.add(situationLablel);
+        video = new ImageIcon(System.getProperty("user.dir") + "\\src\\main\\assets\\button\\video.png");
+        videoBtn = new JButton(video);
+        videoBtn.setPreferredSize(dimBtn);
+        videoBtn.addActionListener(this);
+        m1.add(videoBtn);
         
+        commands.add(m1);
+
+        //Profile section
+
+        profile = new JPanel();
+
+        profile.setLayout(new GridLayout(2, 1));
+        profileLablel = new JLabel("Profile");
+        profileLablel.setFont(new Font("Segoe UI Black", Font.BOLD, 30));
+        profile.add(profileLablel);
+
         m2 = new JPanel();
 
-        playBtn = new JButton("||");
-        playBtn.setFont(new Font("Segoe UI Black", Font.BOLD, 20));
-        playBtn.addActionListener(this);
-        m2.add(playBtn);
+        loadBtn = new JButton("Load");
+        loadBtn.setPreferredSize(dimBtn);
+        JFileChooser loadBtn = new JFileChooser();
+        loadBtn.addActionListener(this);
+        m2.add(loadBtn);
 
-        stopBtn = new JButton("Stop");
-        stopBtn.setFont(new Font("Segoe UI Black", Font.BOLD, 20));
-        stopBtn.addActionListener(this);
-        m2.add(stopBtn);
+        profile.add(m2);
 
-        clearBtn = new JButton("Clear");
-        clearBtn.setFont(new Font("Segoe UI Black", Font.BOLD, 20));
-        clearBtn.addActionListener(this);
-        m2.add(clearBtn);
+        //Settings section
 
-        situation.add(m2);
+        settings = new JPanel();
+
+        settings.setLayout(new GridLayout(2, 1));
+        settingsLablel = new JLabel("Settings");
+        settingsLablel.setFont(new Font("Segoe UI Black", Font.BOLD, 30));
+        settings.add(settingsLablel);
+        
+        //Cell section
 
         cell = new JPanel();
 
         cell.setLayout(new GridLayout(2, 1));
-        cellLablel = new JLabel("Cellule");
+        cellLablel = new JLabel("Cell");
         cellLablel.setFont(new Font("Segoe UI Black", Font.BOLD, 30));
         cell.add(cellLablel);
         
         m3 = new JPanel();
 
-        playBtn = new JButton("Play");
-        playBtn.setFont(new Font("Segoe UI Black", Font.BOLD, 20));
-        playBtn.addActionListener(this);
-        m3.add(playBtn);
-
-        stopBtn = new JButton("Stop");
-        stopBtn.setFont(new Font("Segoe UI Black", Font.BOLD, 20));
-        stopBtn.addActionListener(this);
-        m3.add(stopBtn);
-
-        clearBtn = new JButton("Clear");
-        clearBtn.setFont(new Font("Segoe UI Black", Font.BOLD, 20));
-        clearBtn.addActionListener(this);
-        m3.add(clearBtn);
-
         cell.add(m3);
 
-        menu.add(commande);
-        menu.add(situation);
+        menu.add(commands);
+        menu.add(profile);
+        menu.add(settings);
         menu.add(cell);
 
         menu.setSize(this.dimension);
@@ -119,14 +146,33 @@ public class SideMenu extends JPanel implements ActionListener{
     // }
     
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource()==playBtn){
-            System.out.println("Bouton Play");
+        if(e.getSource()==playStopBtn){
+            if (playStopBtn.isSelected()){
+                playStopBtn.setIcon(stop);
+                System.out.println("Bouton Play");
+            }
+            else{
+                playStopBtn.setIcon(play);
+                System.out.println("Bouton Stop");
+            }
         }
-        if (e.getSource()==stopBtn){
-            System.out.println("Bouton Stop");
+        if (e.getSource()==nextBtn){
+            System.out.println("Bouton Next");
+        }
+        if (e.getSource()==resetBtn){
+            System.out.println("Bouton Reset");
         }
         if (e.getSource()==clearBtn){
             System.out.println("Bouton Clear");
+        }
+        if (e.getSource()==photoBtn){
+            System.out.println("Bouton Photo");
+        }
+        if (e.getSource()==videoBtn){
+            System.out.println("Bouton Video");
+        }
+        if (e.getSource()==loadBtn){
+            System.out.println("Bouton Load");
         }
     }
 }

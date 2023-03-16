@@ -51,10 +51,6 @@ public class Window implements ComponentListener{
 
     }
 
-    public Window() {
-        this("Met un putain de titre");
-    }
-
     @Override
     public void componentResized(ComponentEvent e) {
         if(this.vueGrid != null){
