@@ -28,15 +28,6 @@ public class SideMenu extends JPanel implements ActionListener{
         }
     }
 
-    public void setDimension(Dimension dimension) {
-        if(dimension.getWidth() <= 0 || dimension.getHeight() <= 0){
-            this.dimension = new Dimension(0, 0);
-        }
-        else{
-            this.dimension = dimension;
-        }
-    }
-
     private void createSideMenu(){
         menu = new JPanel();
 
