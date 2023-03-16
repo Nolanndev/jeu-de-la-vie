@@ -11,6 +11,7 @@ public class Window implements ComponentListener{
 
     JFrame window;
     VueGrid vueGrid;
+    SideMenu sideMenu;
 
     public Window(String title) {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -38,12 +39,13 @@ public class Window implements ComponentListener{
         // grid.setCell(1, 149, new NormalCell(true));
         // grid.setCell(199, 149, new NormalCell(true));
 
+        Dimension dimGrid = new Dimension((int) (this.window.getSize().getWidth()*0.75), (int)this.window.getSize().getHeight()-this.window.getInsets().top);
+        this.vueGrid = new VueGrid(grid, dimGrid,true);
+        Dimension dimMenu = new Dimension((int) (this.window.getSize().getWidth()*0.75), (int)this.window.getSize().getHeight()-this.window.getInsets().top);
+        this.sideMenu = new SideMenu(dimMenu);
 
-
-        Dimension dim = new Dimension((int) (this.window.getSize().getWidth()*0.75), (int)this.window.getSize().getHeight()-this.window.getInsets().top);
-        this.vueGrid = new VueGrid(grid, dim,true);
-
-        this.window.add(this.vueGrid, BorderLayout.CENTER);
+        this.window.add(this.vueGrid, BorderLayout.WEST);
+        this.window.add(this.sideMenu, BorderLayout.EAST);
 
     }
 
