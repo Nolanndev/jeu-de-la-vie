@@ -20,7 +20,8 @@ public class Gol {
         System.out.println(cell.info());
         System.out.println("-----------------");
 
-        Grid grid = new Grid(new Dimension(20,20));
+        Grid grid = new Grid(new Dimension(10,20));
+        grid.setCell(0, 0, new Cell(true));
         grid.setCell(4, 1, new Cell(true));
         grid.setCell(4, 2, new Cell(true));
         grid.setCell(5, 1, new Cell(true));
@@ -29,9 +30,12 @@ public class Gol {
         grid.setCell(6, 3, new Cell(true));
         grid.setCell(6, 5, new Cell(true));
         grid.setCell(6, 6, new Cell(true));
+        grid.setCell(9, 19, new Cell(true));
+
+
 
         System.out.println(grid.getCell(new Dimension(4,1)) == grid.getCell(4,1));
-        System.out.println("Nombre de voisins de (4,2) : " + grid.countNeighbors(4, 2));
+        System.out.println("Nombre de voisins de (4,2) : " + grid.countNeighbors(0, 2));
         
         for (int i = 1; i <= 10; i++) {
             System.out.println("-----------------");
