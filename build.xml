@@ -41,7 +41,7 @@
     </target>
 
     <!--  build  -->
-    <target name="build" description="generate the distribution" depends="compile">
+    <target name="build" description="generate the distribution" depends="doc">
         <jar
             jarfile="${project.dist.dir}/game-of-life.jar"
             basedir="${project.bin.dir}"
@@ -52,11 +52,12 @@
     <target name="test" depends="compile">
         <java classname="tests.Test" fork="true">
             <classpath refid="project.classpath" />
+            <assertions><enable/></assertions> <!-- enable assertions -->
         </java>
     </target>
 
     <!--  doc  -->
-    <target name="doc" description="generate documentation" depends="init">
+    <target name="doc" description="generate documentation" depends="compile">
         <javadoc sourcepath="src" destdir="${project.doc.dir}">
             <fileset dir="${project.src.dir}" defaultexcludes="yes">
                 <include name="*.java" />

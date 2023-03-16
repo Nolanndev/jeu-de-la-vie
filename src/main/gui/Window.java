@@ -41,21 +41,14 @@ public class Window implements ComponentListener{
         grid.setCell(1, 149, new Cell(true));
         grid.setCell(199, 149, new Cell(true));
 
-
-
-        Dimension dim = new Dimension((int) (this.window.getSize().getWidth()*0.75), (int)this.window.getSize().getHeight()-this.window.getInsets().top);
-        this.vueGrid = new VueGrid(grid, dim,true);
-
-        Dimension d = new Dimension((int) (this.window.getSize().getWidth()*0.25), (int)this.window.getSize().getHeight()-this.window.getInsets().top);
-        this.sideMenu = new SideMenu(d);
+        Dimension dimGrid = new Dimension((int) (this.window.getSize().getWidth()*0.75), (int)this.window.getSize().getHeight()-this.window.getInsets().top);
+        this.vueGrid = new VueGrid(grid, dimGrid,true);
+        Dimension dimMenu = new Dimension((int) (this.window.getSize().getWidth()*0.75), (int)this.window.getSize().getHeight()-this.window.getInsets().top);
+        this.sideMenu = new SideMenu(dimMenu);
 
         this.window.add(this.vueGrid, BorderLayout.WEST);
-        this.window.add(this.sideMenu,BorderLayout.EAST);
+        this.window.add(this.sideMenu, BorderLayout.EAST);
 
-    }
-
-    public Window() {
-        this("Met un putain de titre");
     }
 
     @Override
@@ -63,9 +56,9 @@ public class Window implements ComponentListener{
         if(this.vueGrid != null){
             this.vueGrid.setDimension(new Dimension((int) (this.window.getSize().getWidth()*0.75), (int)this.window.getSize().getHeight()-this.window.getInsets().top));
         }
-        if(this.sideMenu != null){
-            this.sideMenu.setDimension(new Dimension((int) (this.window.getSize().getWidth()*0.25), (int)this.window.getSize().getHeight()-this.window.getInsets().top));
-        }
+        // if(this.sideMenu != null){
+        //     this.sideMenu.setDimension(new Dimension((int) (this.window.getSize().getWidth()*0.25), (int)this.window.getSize().getHeight()-this.window.getInsets().top));
+        // }
     }
 
     @Override

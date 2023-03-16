@@ -1,12 +1,10 @@
 package main;
 
 
-import java.io.IOException;
-import java.util.HashMap;
-
 import java.awt.Dimension;
 
 import main.core.*;
+import main.exceptions.ProfileNameException;
 import main.utils.ProfileManager;
 import main.utils.Quadtree;
 import main.gui.*;
@@ -54,7 +52,7 @@ public class Gol {
         System.out.println(hashLife.advance(q,389));
         System.out.println("FIN");
 
-        new Window("Test");
+        new Window("Game Of Life");
 
         
 
