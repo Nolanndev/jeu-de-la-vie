@@ -43,12 +43,12 @@ public class Window implements ComponentListener{
 
         Dimension dimGrid = new Dimension((int) (this.window.getSize().getWidth()*0.75), (int)this.window.getSize().getHeight()-this.window.getInsets().top);
         this.vueGrid = new VueGrid(grid, dimGrid,true);
-        Dimension dimMenu = new Dimension((int) (this.window.getSize().getWidth()*0.75), (int)this.window.getSize().getHeight()-this.window.getInsets().top);
+        Dimension dimMenu = new Dimension((int) (this.window.getSize().getWidth()*0.25), (int)this.window.getSize().getHeight()-this.window.getInsets().top);
         this.sideMenu = new SideMenu(dimMenu);
+        JScrollPane scrollMenu = new JScrollPane(this.sideMenu, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
         this.window.add(this.vueGrid, BorderLayout.WEST);
-        this.window.add(this.sideMenu, BorderLayout.EAST);
-
+        this.window.add(scrollMenu, BorderLayout.EAST);
     }
 
     @Override

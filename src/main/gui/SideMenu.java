@@ -6,12 +6,14 @@ import java.awt.event.*;
 
 public class SideMenu extends JPanel implements ActionListener{
     
-    private JPanel menu, commands, m1, profile, settings, m2, cell, m3;
-    private JButton nextBtn, resetBtn, clearBtn, photoBtn, videoBtn, loadBtn;
+    private JPanel menu, commands, m1, profile, settings, m2, cell, iterationP, timeItP, numberItP, startItP, cellMaxP, cellMinP, radiusP;
+    private JButton nextBtn, resetBtn, clearBtn, photoBtn, videoBtn, loadBtn, saveBtn;
     private Dimension dimension;
-    private JLabel commandsLablel, profileLablel, settingsLablel, cellLablel;
+    private JLabel commandsLablel, profileLablel, settingsLablel, cellLablel, iteration, timeIt, numberIt, startIt, cellMax, cellMin, radius;
     private Icon play, stop, next, reset, clear, photo, video;
     private JToggleButton playStopBtn;
+    private JTextArea timeItT, numberItT, startItT, cellMaxT, cellMinT, radiusT;
+    private JRadioButton infinite, finite ;
 
     public SideMenu(Dimension dimension){
 
@@ -34,6 +36,9 @@ public class SideMenu extends JPanel implements ActionListener{
         menu.setLayout(new GridLayout(4, 1));
         
         Dimension dimBtn = new Dimension(40,40);
+        Font fontTitle = new Font("Verdana", Font.BOLD, 30);
+        Font fontBtn = new Font("Verdana", Font.BOLD, 20);
+        Font fontText = new Font("Verdana", Font.PLAIN, 15);
 
         //Commands section
 
@@ -41,7 +46,7 @@ public class SideMenu extends JPanel implements ActionListener{
 
         commands.setLayout(new GridLayout(2, 1));
         commandsLablel = new JLabel("Commands");
-        commandsLablel.setFont(new Font("Segoe UI Black", Font.BOLD, 30));
+        commandsLablel.setFont(fontTitle);
 
         commands.add(commandsLablel);
 
@@ -89,44 +94,111 @@ public class SideMenu extends JPanel implements ActionListener{
         //Profile section
 
         profile = new JPanel();
-
         profile.setLayout(new GridLayout(2, 1));
         profileLablel = new JLabel("Profile");
-        profileLablel.setFont(new Font("Segoe UI Black", Font.BOLD, 30));
+        profileLablel.setFont(fontTitle);
         profile.add(profileLablel);
 
         m2 = new JPanel();
-
         loadBtn = new JButton("Load");
-        loadBtn.setPreferredSize(dimBtn);
-        JFileChooser loadBtn = new JFileChooser();
+        loadBtn.setFont(fontBtn);
         loadBtn.addActionListener(this);
         m2.add(loadBtn);
+
+        saveBtn = new JButton("Save");
+        saveBtn.setFont(fontBtn);
+        saveBtn.addActionListener(this);
+        m2.add(saveBtn);
 
         profile.add(m2);
 
         //Settings section
 
         settings = new JPanel();
-
-        settings.setLayout(new GridLayout(2, 1));
+        settings.setLayout(new GridLayout(6, 1));
         settingsLablel = new JLabel("Settings");
-        settingsLablel.setFont(new Font("Segoe UI Black", Font.BOLD, 30));
+        settingsLablel.setFont(fontTitle);
+        
+        iterationP = new JPanel();
+        iteration = new JLabel("Type of iteration :");
+        iteration.setFont(fontText);
+        infinite = new JRadioButton("Infinite");
+        infinite.addActionListener(this);
+        finite = new JRadioButton("Finite");
+        finite.addActionListener(this);
+        
+        iterationP.add(iteration);
+        iterationP.add(infinite);
+        iterationP.add(finite);
+
+        timeItP = new JPanel();
+        timeIt = new JLabel("Time between iteration :");
+        timeIt.setFont(fontText);
+        timeItT = new JTextArea(1,4);
+
+        timeItP.add(timeIt);
+        timeItP.add(timeItT);
+
+        numberItP = new JPanel();
+        numberIt = new JLabel("Number of iteration :");
+        numberIt.setFont(fontText);
+        numberItT = new JTextArea(1,4);
+
+        numberItP.add(numberIt);
+        numberItP.add(numberItT);
+
+        startItP = new JPanel();
+        startIt = new JLabel("Start to iteration :");
+        startIt.setFont(fontText);
+        startItT = new JTextArea(1,4);
+
+        startItP.add(startIt);
+        startItP.add(startItT);
+        
         settings.add(settingsLablel);
+        settings.add(iterationP);
+        settings.add(timeItP);
+        settings.add(numberItP);
+        settings.add(startItP);
         
         //Cell section
-
-        cell = new JPanel();
-
-        cell.setLayout(new GridLayout(2, 1));
-        cellLablel = new JLabel("Cell");
-        cellLablel.setFont(new Font("Segoe UI Black", Font.BOLD, 30));
-        cell.add(cellLablel);
         
-        m3 = new JPanel();
+        cell = new JPanel();
+        cell.setLayout(new GridLayout(4, 1));
+        cellLablel = new JLabel("Cell");
+        cellLablel.setFont(fontTitle);
+        
+        cellMaxP = new JPanel();
+        cellMax = new JLabel("Neighboring cell max :");
+        cellMax.setFont(fontText);
+        cellMaxT = new JTextArea(1,4);
 
-        cell.add(m3);
-
+        cellMaxP.add(cellMax);
+        cellMaxP.add(cellMaxT);
+        
+        cellMinP = new JPanel();
+        cellMin = new JLabel("Neighboring cell min :");
+        cellMin.setFont(fontText);
+        cellMinT = new JTextArea(1,4);
+        
+        cellMinP.add(cellMin);
+        cellMinP.add(cellMinT);
+        
+        radiusP = new JPanel();
+        radius = new JLabel("Radius :");
+        radius.setFont(fontText);
+        radiusT = new JTextArea(1,4);
+        
+        radiusP.add(radius);
+        radiusP.add(radiusT);
+        
+        cell.add(cellLablel);
+        cell.add(cellMaxP);
+        cell.add(cellMinP);
+        cell.add(radiusP);
+    
+        //add to main panel
+        
         menu.add(commands);
         menu.add(profile);
         menu.add(settings);
@@ -150,6 +222,20 @@ public class SideMenu extends JPanel implements ActionListener{
             if (playStopBtn.isSelected()){
                 playStopBtn.setIcon(stop);
                 System.out.println("Bouton Play");
+                if (infinite.isSelected() && finite.isSelected()){
+                    System.out.println("invalide");
+                    JOptionPane.showMessageDialog(this,"Invalide type");
+                }
+                else if (finite.isSelected()){
+                    System.out.println("Bouton finite");
+                }
+                else if (infinite.isSelected()){
+                    System.out.println("Bouton infinite");
+                }
+                else {
+                    System.out.println("unselect");
+                    JOptionPane.showMessageDialog(this,"Unselect type");
+                }
             }
             else{
                 playStopBtn.setIcon(play);
@@ -173,6 +259,9 @@ public class SideMenu extends JPanel implements ActionListener{
         }
         if (e.getSource()==loadBtn){
             System.out.println("Bouton Load");
+        }
+        if (e.getSource()==saveBtn){
+            System.out.println("Bouton Save");
         }
     }
 }
