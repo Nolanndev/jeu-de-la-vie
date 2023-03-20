@@ -52,8 +52,5 @@ public class Gol {
         System.out.println("FIN");
 
         new Window("Game Of Life");
-
-        
-
     }
 }
