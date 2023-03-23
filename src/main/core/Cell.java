@@ -4,8 +4,10 @@ package main.core;
  * Class which represent a Cell in game of life.
  * Cell is defined by : 
  * <ul>
- * <li> The minimum required neighbors to be alive </li>
- * <li> The maximum required neighbors to be alive </li>
+ * <li> The minimum required neighbors to born if Cell are dead </li>
+ * <li> The maximum required neighbors to born if Cell are dead</li>
+ * <li> The minimum required neighbors before die if Cell are alive </li>
+ * <li> The maximum required neighbors before die if Cell are alive</li>
  * <li> The radius of neighbors considered </li>
  * <li> Is state, alive or not</li>
  * 
@@ -19,14 +21,25 @@ public class Cell {
 
 
     /**
-     * the minimum required Neighbors to be alive
+     * the minimum required Neighbors to born if <b>Cell</b> are dead
      */
-    protected Integer minNeighbors;
+    protected Integer bornMinNeighbors;
 
     /**
-     * the maximum required Neighbors to be alive
+     * the maximum required Neighbors to born if <b>Cell</b> are dead
      */
-    protected Integer maxNeighbors;
+    protected Integer bornMaxNeighbors;
+
+    /**
+     * the minimum required Neighbors before die if <b>Cell</b> are alive
+     */
+    protected Integer dieMinNeighbors;
+
+    /**
+     * the maximum required Neighbors before die if <b>Cell</b> are alive
+     */
+    protected Integer dieMaxNeighbors;
+
 
     /**
      * the radius of neighbors considered
@@ -42,19 +55,24 @@ public class Cell {
     /**
      * Constructor which produce new Cell with specified value.
      * 
-     * @param minNeighbors  value of <b>minNeighbors</b>
-     * @param maxNeighbors  value of <b>maxNeighbors</b>
+     * @param bornMinNeighbors  value of <b>bornMinNeighbors</b>
+     * @param bornMaxNeighbors  value of <b>bornMaxNeighbors</b>
+     * @param dieMinNeighbors value of <b>dieMinNeighbors</b>
+     * @param dieMaxNeighbors value of <b>dieMaxNeighbors</b>
      * @param radius  value of <b>radius</b>
      * @param alive   value of <b>alive</b>
      * 
      * @see Cell
      * 
      * @author Parcheminer Nollan
+     * @author David Matthias
     */
-    public Cell(int minNeighbors, int maxNeighbors, int radius, boolean alive) {
+    public Cell(int bornMinNeighbors, int bornMaxNeighbors, int dieMinNeighbors, int dieMaxNeighbors, int radius, boolean alive) {
         setState(alive);
-        setMinNeighbors(minNeighbors);
-        setMaxNeighbors(maxNeighbors);
+        setBornMinNeighbors(bornMinNeighbors);
+        setBornMaxNeighbors(bornMaxNeighbors);
+        setDieMinNeighbors(dieMinNeighbors);
+        setDieMaxNeighbors(dieMaxNeighbors);
         setRadius(radius);
     }
 
@@ -62,62 +80,108 @@ public class Cell {
      * Constructor which produce new default Cell of game of life.
      * Cell have for value:
      * <ul>
-     * <li><b>minNeighbors</b> = 2</li>
-     * <li><b>maxNeighbors</b> = 3</li>
+     * <li><b>bornMinNeighbors</b> = 3</li>
+     * <li><b>bornMaxNeighbors</b> = 3</li>
+     * <li><b>dieMaxNeighbors</b> = 2</li>
+     * <li><b>dieMaxNeighbors</b> = 3</li>
      * <li><b>radius</b> = 1</li>
      * </ul>
      * @param alive value of <b>alive</b>
      */
     public Cell(boolean alive){
-        this(2,3,1,alive);
+        this(3,3,2,3,1,alive);
     }
 
 
     /**
-     * Accessor to the value of <b>minNeighbors</b>.
-     * @return value of <b>minNeighbors</b>.
+     * Accessor to the value of <b>bornMinNeighbors</b>.
+     * @return value of <b>bornMinNeighbors</b>.
     */
-    public int getMinNeighbors() {
-        return this.minNeighbors;
-    }
-
-    /**
-     * Defined <b>minNeighbors</b> value of a cell.
-     * @param newMin new value of <b>minNeighbors</b>.
-     * @throws ExceptionInInitializerError Occured if <b>newMin</b> is less than <b>0</b> or <b>newMin</b> are greater than <b>maxNeigbors</b>.
-     */
-    public void setMinNeighbors(int newMin) throws ExceptionInInitializerError {
-        if(newMin < 0){
-            throw new ExceptionInInitializerError("minNeighbors must be positive number.");
-        }
-        else if(this.maxNeighbors!=null && newMin > this.maxNeighbors){
-            throw new ExceptionInInitializerError("minNeighbors must be less than maxNeighbors.");
-        }
-        this.minNeighbors = newMin;
+    public int getBornMinNeighbors() {
+        return this.bornMinNeighbors;
     }
 
     
     /**
-     * Accessor to the value of <b>maxNeighbors</b>.
-     * @return value of <b>maxNeighbors</b>.
-    */
-    public int getMaxNeighbors() {
-        return this.maxNeighbors;
+     * Defined <b>bornMinNeighbors</b> value of a cell.
+     * @param newBornMin new value of <b>bornMinNeighbors</b>.
+     * @throws ExceptionInInitializerError Occured if <b>newBornMin</b> is less than <b>0</b> or <b>newBornMin</b> are greater than <b>bornMaxNeigbors</b>.
+     */
+    private void setBornMinNeighbors(int newBornMin) throws ExceptionInInitializerError {
+        if(newBornMin < 0){
+            throw new ExceptionInInitializerError("bornMinNeighbors must be positive number.");
+        }
+        else if(this.bornMaxNeighbors!=null && newBornMin > this.bornMaxNeighbors){
+            throw new ExceptionInInitializerError("bornMinNeighbors must be less than bornMaxNeighbors.");
+        }
+        this.bornMinNeighbors = newBornMin;
     }
-
+    
+    
+    /**
+     * Accessor to the value of <b>bornMaxNeighbors</b>.
+     * @return value of <b>bornMaxNeighbors</b>.
+    */
+    public int getBornMaxNeighbors() {
+        return this.bornMaxNeighbors;
+    }
 
     /**
-     * Defined <b>maxNeighbors</b> value of a cell.
-     * @param newMax new value of <b>maxNeighbors</b>.
-     * @throws ExceptionInInitializerError Occured if maxNeighbors are less than minNeigbors.
+     * Defined <b>bornMaxNeighbors</b> value of a cell.
+     * @param newBornMax new value of <b>bornMaxNeighbors</b>.
+     * @throws ExceptionInInitializerError Occured if bornMaxNeighbors are less than bornMinNeigbors.
     */
-    public void setMaxNeighbors(int newMax) throws ExceptionInInitializerError {
-        if(this.minNeighbors != null &&  newMax < this.minNeighbors){
-            throw new ExceptionInInitializerError("maxNeighbors must be superior to minNeighbors");
+    private void setBornMaxNeighbors(int newBornMax) throws ExceptionInInitializerError {
+        if(this.bornMinNeighbors != null &&  newBornMax < this.bornMinNeighbors){
+            throw new ExceptionInInitializerError("bornMaxNeighbors must be superior to bornMinNeighbors");
         }
-        this.maxNeighbors = newMax;
+        this.bornMaxNeighbors = newBornMax;
     }
 
+    /**
+     * Accessor to the value of <b>dieMinNeighbors</b>.
+     * @return value of <b>dieMinNeighbors</b>.
+    */
+    public int getDieMinNeighbors() {
+        return this.dieMinNeighbors;
+    }
+
+    
+    /**
+     * Defined <b>dieMinNeighbors</b> value of a cell.
+     * @param newDieMin new value of <b>dieMinNeighbors</b>.
+     * @throws ExceptionInInitializerError Occured if <b>newDieMin</b> is less than <b>0</b> or <b>newDieMin</b> are greater than <b>dieMaxNeigbors</b>.
+     */
+    private void setDieMinNeighbors(int newDieMin) throws ExceptionInInitializerError {
+        if(newDieMin < 0){
+            throw new ExceptionInInitializerError("dieMinNeighbors must be positive number.");
+        }
+        else if(this.dieMaxNeighbors!=null && newDieMin > this.dieMaxNeighbors){
+            throw new ExceptionInInitializerError("dieMinNeighbors must be less than dieMaxNeighbors.");
+        }
+        this.dieMinNeighbors = newDieMin;
+    }
+    
+    
+    /**
+     * Accessor to the value of <b>dieMaxNeighbors</b>.
+     * @return value of <b>dieMaxNeighbors</b>.
+    */
+    public int getDieMaxNeighbors() {
+        return this.dieMaxNeighbors;
+    }
+
+    /**
+     * Defined <b>dieMaxNeighbors</b> value of a cell.
+     * @param newDieMax new value of <b>dieMaxNeighbors</b>.
+     * @throws ExceptionInInitializerError Occured if dieMaxNeighbors are less than dieMinNeigbors.
+    */
+    private void setDieMaxNeighbors(int newDieMax) throws ExceptionInInitializerError {
+        if(this.dieMinNeighbors != null &&  newDieMax < this.dieMinNeighbors){
+            throw new ExceptionInInitializerError("dieMaxNeighbors must be superior to dieMinNeighbors");
+        }
+        this.dieMaxNeighbors = newDieMax;
+    }
 
     /**
      * Accessor to the value of <b>radius</b>.
@@ -132,7 +196,7 @@ public class Cell {
      * @param radius new value of <b>radius</b>.
      * @throws ExceptionInInitializerError Occured if <b>radius</b> are less than <b>0</b>.
      */
-    public void setRadius(int radius) throws ExceptionInInitializerError{
+    private void setRadius(int radius) throws ExceptionInInitializerError{
         if(radius < 0){
             throw new ExceptionInInitializerError("radius must be a positive number.");
         }
@@ -152,18 +216,17 @@ public class Cell {
      * Defined state of a cell. 
      * @param newState alive or not.
     */
-    public void setState(boolean newState) {
+    private void setState(boolean newState) {
         this.alive = newState;
     }
-
 
 
     /**
      * Access to representation of Cell in String.
      * @return representation of cell
      */
-    public String infos() {
-        return "Status: " + this.alive + "\nNeighbors\n\tmin: "
-                + this.minNeighbors + "\n\tmax: " + this.maxNeighbors + "\nradius : " + this.radius;
+    public String info() {
+        return "State: " + this.alive + "\nNeighbors\n\tmin to born: " + this.getBornMinNeighbors() + "\n\tmax to born: " + this.getBornMaxNeighbors() + 
+        "\n\tmin before die : " + this.getDieMinNeighbors() + "\n\tmax before die : " + this.getDieMaxNeighbors() +"\nradius : " + this.radius;
     }
 }

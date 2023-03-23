@@ -42,7 +42,7 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
     }
 
     public VueGrid(Dimension dimension){
-        this(new Grid(), dimension, true);
+        this(new Grid(new Dimension(100,100)), dimension, true);
     }
 
     public void setDimension(Dimension dimension) {

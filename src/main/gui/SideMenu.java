@@ -18,7 +18,7 @@ public class SideMenu extends JPanel implements ActionListener{
     public SideMenu(Dimension dimension){
 
         this.dimension = dimension;
-        createSideMenu();
+        super.setPreferredSize(dimension);
     }
 
     public void setDimension(Dimension dimension) {
@@ -205,7 +205,6 @@ public class SideMenu extends JPanel implements ActionListener{
         menu.add(cell);
 
         menu.setSize(this.dimension);
-        this.add(menu);
     }
 
     // @Override
