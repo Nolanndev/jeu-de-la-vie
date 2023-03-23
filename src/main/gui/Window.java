@@ -29,8 +29,6 @@ public class Window implements ComponentListener, KeyListener{
         this.window.setSize(new Dimension( (int)(screenSize.getWidth()*0.8) ,(int)(screenSize.getHeight()*0.8))); // 80% of screen size
         this.window.setLocation((int)(screenSize.getWidth()-this.window.getWidth())/2, (int)(screenSize.getHeight()-this.window.getHeight())/2); // Center on screen
         this.window.setResizable(true);
-        this.window.setVisible(true);
-        
 
         this.grid = new Grid(new Dimension(500, 500)); // grille de 20 x 20 = 400 cases
         grid.setCell(0, 0, new Cell(true));
@@ -51,6 +49,7 @@ public class Window implements ComponentListener, KeyListener{
 
         this.window.add(this.vueGrid, BorderLayout.WEST);
         this.window.add(scrollMenu, BorderLayout.EAST);
+        this.window.setVisible(true);
     }
 
     @Override
