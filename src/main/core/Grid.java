@@ -287,7 +287,8 @@ public class Grid {
                 int neighbors = copyGrid.countNeighbors(i,j);
                 Cell cell = copyGrid.getCell(i, j);
 
-                Boolean nextState = ((cell.isAlive() && neighbors>=cell.getDieMinNeighbors() && neighbors<=cell.getDieMaxNeighbors()) || (!cell.isAlive() && neighbors>=cell.getBornMinNeighbors() && neighbors<=cell.getBornMaxNeighbors())); //respecte les conditions de vie déinie dans la Cellule cell
+                Boolean nextState = ((cell.isAlive() && neighbors>=cell.getDieMinNeighbors() && neighbors<=cell.getDieMaxNeighbors()) || //respecte les conditions de mort déinie dans la Cellule cell
+                (!cell.isAlive() && neighbors>=cell.getBornMinNeighbors() && neighbors<=cell.getBornMaxNeighbors())); //ou respecte les conditions de naissance déinie dans la Cellule cell
                 
                 if(nextState != this.getCell(i, j).isAlive()){ //si l'etat de la cellule a la prochaine génération est différent de l'état actuelle, on change la cellule. 
                     this.setCell(i, j, new Cell(cell.getBornMinNeighbors(), cell.getBornMaxNeighbors(), cell.getDieMinNeighbors(), cell.getDieMaxNeighbors(),cell.getRadius(), nextState));

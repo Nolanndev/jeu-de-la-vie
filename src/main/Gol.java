@@ -4,8 +4,6 @@ package main;
 import java.awt.Dimension;
 
 import main.core.*;
-import main.exceptions.ProfileNameException;
-import main.utils.ProfileManager;
 import main.utils.Quadtree;
 import main.gui.*;
 

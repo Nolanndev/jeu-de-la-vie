@@ -9,11 +9,12 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
 
-public class Window implements ComponentListener{
+public class Window implements ComponentListener, KeyListener{
 
     JFrame window;
     VueGrid vueGrid;
     SideMenu sideMenu;
+    Grid grid;
 
     public Window(String title) {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -21,6 +22,7 @@ public class Window implements ComponentListener{
         this.window = new JFrame();
 
         this.window.addComponentListener(this); //resize Event listener
+        this.window.addKeyListener(this);
 
         this.window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
         this.window.setTitle(title);
@@ -30,7 +32,7 @@ public class Window implements ComponentListener{
         this.window.setVisible(true);
         
 
-        Grid grid = new Grid(new Dimension(200, 150)); // grille de 20 x 20 = 400 cases
+        this.grid = new Grid(new Dimension(500, 500)); // grille de 20 x 20 = 400 cases
         grid.setCell(0, 0, new Cell(true));
         grid.setCell(4, 2, new Cell(true));
         grid.setCell(5, 1, new Cell(true));
@@ -42,7 +44,7 @@ public class Window implements ComponentListener{
         grid.setCell(199, 149, new Cell(true));
 
         Dimension dimGrid = new Dimension((int) (this.window.getSize().getWidth()*0.75), (int)this.window.getSize().getHeight()-this.window.getInsets().top);
-        this.vueGrid = new VueGrid(grid, dimGrid,true);
+        this.vueGrid = new VueGrid(this.grid, dimGrid,true);
         Dimension dimMenu = new Dimension((int) (this.window.getSize().getWidth()*0.75), (int)this.window.getSize().getHeight()-this.window.getInsets().top);
         this.sideMenu = new SideMenu(dimMenu);
 
@@ -56,24 +58,37 @@ public class Window implements ComponentListener{
         if(this.vueGrid != null){
             this.vueGrid.setDimension(new Dimension((int) (this.window.getSize().getWidth()*0.75), (int)this.window.getSize().getHeight()-this.window.getInsets().top));
         }
-        // if(this.sideMenu != null){
-        //     this.sideMenu.setDimension(new Dimension((int) (this.window.getSize().getWidth()*0.25), (int)this.window.getSize().getHeight()-this.window.getInsets().top));
-        // }
+        if(this.sideMenu != null){
+            this.sideMenu.setDimension(new Dimension((int) (this.window.getSize().getWidth()*0.25), (int)this.window.getSize().getHeight()-this.window.getInsets().top));
+        }
     }
 
     @Override
     public void componentMoved(ComponentEvent e) {
-        ;
+        System.out.println("moved");
+        
     }
 
     @Override
     public void componentShown(ComponentEvent e) {
-        ;
+        System.out.println("Shown");
     }
 
     @Override
     public void componentHidden(ComponentEvent e) {
         ;
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        this.vueGrid.grid.nextGen();
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+    }
+    @Override
+    public void keyReleased(KeyEvent e) {
     }
 
 
