@@ -13,7 +13,7 @@ public class SideMenu extends JPanel implements ActionListener{
     private Icon play, stop, next, reset, clear, photo, video;
     private JToggleButton playStopBtn;
     private JTextArea timeItT, numberItT, startItT, cellMaxT, cellMinT, radiusT;
-    private JRadioButton infinite, finite ;
+    private JCheckBox infinite, finite ;
 
     public SideMenu(Dimension dimension){
 
@@ -122,9 +122,9 @@ public class SideMenu extends JPanel implements ActionListener{
         iterationP = new JPanel();
         iteration = new JLabel("Type of iteration :");
         iteration.setFont(fontText);
-        infinite = new JRadioButton("Infinite");
+        infinite = new JCheckBox("Infinite");
         infinite.addActionListener(this);
-        finite = new JRadioButton("Finite");
+        finite = new JCheckBox("Finite");
         finite.addActionListener(this);
         
         iterationP.add(iteration);
@@ -222,17 +222,7 @@ public class SideMenu extends JPanel implements ActionListener{
             if (playStopBtn.isSelected()){
                 playStopBtn.setIcon(stop);
                 System.out.println("Bouton Play");
-                if (infinite.isSelected() && finite.isSelected()){
-                    System.out.println("invalide");
-                    JOptionPane.showMessageDialog(this,"Invalide type");
-                }
-                else if (finite.isSelected()){
-                    System.out.println("Bouton finite");
-                }
-                else if (infinite.isSelected()){
-                    System.out.println("Bouton infinite");
-                }
-                else {
+                if (infinite.isSelected() == false && finite.isSelected() == false){
                     System.out.println("unselect");
                     JOptionPane.showMessageDialog(this,"Unselect type");
                 }
@@ -262,6 +252,14 @@ public class SideMenu extends JPanel implements ActionListener{
         }
         if (e.getSource()==saveBtn){
             System.out.println("Bouton Save");
+        }
+        if(e.getSource() == finite){
+            System.out.println("Bouton finite");
+            infinite.setSelected(false);
+        }
+        if (e.getSource() == infinite){
+            System.out.println("Bouton infinite");
+            finite.setSelected(false);
         }
     }
 }
