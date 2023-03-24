@@ -39,6 +39,7 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
 
 
         this.grid.addListener(this);
+        
     }
 
     public VueGrid(Dimension dimension){
@@ -64,7 +65,7 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
         int posX = Math.min((int)((this.dimension.getWidth()/this.sizeCase) + this.posUX),this.grid.getWidth())/2;   //Convert position of mouse in position in grid
         int posY = Math.min((int)((this.dimension.getHeight()/this.sizeCase) + this.posUY),this.grid.getHeight())/2;
 
-        if(sizeCase*(this.grid.getWidth()) < (int)this.dimension.getWidth() && sizeCase*(this.grid.getHeight()) < (int)this.dimension.getHeight()){
+        if(sizeCase*(this.grid.getWidth()-this.posUX) < (int)this.dimension.getWidth() || sizeCase*(this.grid.getHeight()-this.posUY) < (int)this.dimension.getHeight()){
             ;
         }
         else{
@@ -177,7 +178,7 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
                 g.fillRect((x-this.posUX)*this.sizeCase, (y-this.posUY)*this.sizeCase, this.sizeCase-1, this.sizeCase-1);
             }
             else{
-                g.fillRect(x*this.sizeCase, y*this.sizeCase, this.sizeCase, this.sizeCase);
+                g.fillRect((x-this.posUX)*this.sizeCase, (y-this.posUY)*this.sizeCase, this.sizeCase, this.sizeCase);
             }
         }
     }
