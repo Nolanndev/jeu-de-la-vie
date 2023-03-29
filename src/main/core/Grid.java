@@ -75,6 +75,50 @@ public class Grid {
     }
 
 
+    public Grid (Quadtree tree){
+        this(quadtreeToMatrix(tree));
+    }
+
+    private static Cell[][] quadtreeToMatrix(Quadtree tree){
+        if(tree == null){
+            return null;
+        }
+
+        Cell[][] board = new Cell[(int)Math.pow(2, tree.getDepth())][(int)Math.pow(2, tree.getDepth())];
+
+        if(tree.isLeaf()){
+            Cell cell = tree.getCell();
+            Boolean alive = (tree.getNumberAlive() == 1) ? true : false; 
+            board[0][0] = new Cell(cell.getBornMinNeighbors(), cell.getBornMaxNeighbors(), cell.getDieMinNeighbors(), cell.getDieMaxNeighbors(), cell.getRadius(), alive);
+            return board; 
+        }
+        else{
+            board = fusion(quadtreeToMatrix(tree.getNw()), quadtreeToMatrix(tree.getNe()), quadtreeToMatrix(tree.getSw()), quadtreeToMatrix(tree.getSe())); 
+            return board; 
+        }
+        
+    }
+
+    private static Cell[][] fusion(Cell[][] nw, Cell[][] ne, Cell[][] sw, Cell[][] se){
+        if(nw == null || ne == null || sw == null || se == null){
+            return null;
+        }
+
+        Dimension size = new Dimension(nw[0].length, nw.length);
+
+        Cell[][] board = new Cell[nw.length + sw.length][nw[0].length + sw[0].length];
+
+        for (int i = 0; i < size.getHeight(); i++) {
+            for (int j = 0; j < size.getWidth(); j++) {
+                board[i][j] = nw[i][j];
+                board[(int)size.getHeight()+i][j] = sw[i][j];
+                board[i][j+(int)size.getWidth()] = ne[i][j];
+                board[i+(int)size.getHeight()][j+(int)size.getWidth()] = se[i][j];
+            }
+        }
+        return board;
+    }
+
     /**
      * Accessor to the <b>Cell</b> matrix oh this <b>Grid</b>.
      * @return <b>Cell</b> matrix of this <b>Grid</b>.

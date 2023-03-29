@@ -1,6 +1,8 @@
 package main.gui;
 
 import main.core.Grid;
+import main.core.HashLife;
+import main.core.Quadtree;
 import main.core.Cell;
 
 import javax.swing.*;
@@ -29,16 +31,24 @@ public class Window implements ComponentListener, KeyListener{
         this.window.setLocation((int)(screenSize.getWidth()-this.window.getWidth())/2, (int)(screenSize.getHeight()-this.window.getHeight())/2); // Center on screen
         this.window.setResizable(true);
         
-        this.grid = new Grid(new Dimension(1000, 1000), new Cell(false)); // grille de 20 x 20 = 400 cases
-        grid.setCell(0, 0, new Cell(true));
-        grid.setCell(4, 2, new Cell(true));
-        grid.setCell(5, 1, new Cell(true));
-        grid.setCell(4, 4, new Cell(true));
-        grid.setCell(5, 4, new Cell(true));
-        grid.setCell(6, 3, new Cell(true));
-        grid.setCell(6, 5, new Cell(true));
-        grid.setCell(1, 149, new Cell(true));
-        grid.setCell(199, 149, new Cell(true));
+        Cell cell = new Cell(true);
+
+        Quadtree on = new Quadtree(null, null, null, null, 0, 1, cell);
+        Quadtree off = new Quadtree(null, null, null, null, 0, 0, new Cell(false));
+
+
+        Quadtree q1 = new Quadtree(on, on, off, on);
+
+
+        Quadtree q2 = new Quadtree(off, on, on, off);
+        Quadtree q3 = new Quadtree(off, off, on, on);
+        Quadtree q4 = new Quadtree(on, off, off, on);
+        
+        Quadtree q = new Quadtree(q1, q2, q3, q4);
+
+        HashLife hash = new HashLife(cell);
+
+        this.grid = new Grid(hash.advance(q, 220));
         
         Dimension dimGrid = new Dimension((int) (this.window.getSize().getWidth()), (int)this.window.getSize().getHeight()-this.window.getInsets().top);
         this.vueGrid = new VueGrid(this.grid, dimGrid,true);
@@ -48,6 +58,8 @@ public class Window implements ComponentListener, KeyListener{
 
         this.window.add(this.vueGrid, BorderLayout.WEST);
         this.window.add(scrollMenu, BorderLayout.EAST);
+
+        this.window.setVisible(true);
     }
 
     @Override
