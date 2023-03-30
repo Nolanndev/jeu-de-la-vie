@@ -1,4 +1,4 @@
-package main.utils;
+package main.core;
 
 import java.text.MessageFormat;
 
@@ -10,23 +10,20 @@ public class Quadtree {
     private Quadtree sw;
     private int depth;
     private int numberAlive;
+    private Cell cell;
     
-    public Quadtree(Quadtree nw, Quadtree ne, Quadtree sw, Quadtree se, int depth, int numberAlive) {
+    public Quadtree(Quadtree nw, Quadtree ne, Quadtree sw, Quadtree se, int depth, int numberAlive, Cell cell) {
         this.nw = nw;
         this.ne = ne;
         this.se = se;
         this.sw = sw;
         this.depth = depth;
         this.numberAlive = numberAlive;
+        this.cell = cell;
     }
 
-    public Quadtree(Quadtree nw, Quadtree ne, Quadtree se, Quadtree sw) {
-        this(nw, ne, sw, se, nw.getDepth()+1, 0);
-        this.numberAlive = nw.getNumberAlive() + ne.getNumberAlive() + se.getNumberAlive() + sw.getNumberAlive();
-    }
-
-    public Quadtree(){
-        this(null, null, null, null, 1, 0);
+    public Quadtree(Quadtree nw, Quadtree ne, Quadtree sw, Quadtree se) {
+        this(nw, ne, sw, se, nw.getDepth()+1, (nw.getNumberAlive() + ne.getNumberAlive() + se.getNumberAlive() + sw.getNumberAlive()), nw.getCell());
     }
 
     public Quadtree getNe() {
@@ -53,8 +50,20 @@ public class Quadtree {
         return numberAlive;
     }
 
+    public Cell getCell() {
+        return cell;
+    }
+
     public boolean isLeaf(){
         return getDepth() == 0;
+    }
+
+
+    public Quadtree deepCopy(){
+        if(this.isLeaf()){
+            return new Quadtree(this.nw, this.ne, this.se, this.sw, 0, this.numberAlive, this.cell);
+        }
+        return new Quadtree( this.nw.deepCopy(), this.ne.deepCopy(), this.se.deepCopy(), this.sw.deepCopy(), this.depth, this.numberAlive, this.cell);
     }
 
     @Override
@@ -86,7 +95,7 @@ public class Quadtree {
     public String toString() {
         return MessageFormat.format("depth : {0},  nbAlive: {1}",
             this.getDepth(),
-            this.getNumberAlive()    
+            this.getNumberAlive()
         );
     }
 }

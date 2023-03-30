@@ -34,16 +34,14 @@ public class TestProfileManager {
 
     public boolean testValidProfileName() throws ProfileNameException {
         System.out.print("Test : TestProfileManager.testValidProfileName()");
-        assert ProfileManager.validProfileName("DARK_SASUKE!!!") == false
-                : "DARK_SASUKE!!! n'est pas un nom de profile valide";
-        assert ProfileManager.validProfileName("DARK_ITACHI14") == true : "DARK_ITACHI14 est un nom de profile valide";
-        assert ProfileManager.validProfileName("TERREUR964") == true : "TERREUR964 est un nom de profile valide";
-        assert ProfileManager.validProfileName("DARKSLIPEUR93!!") == false
-                : "DARKSLIPEUR93!! n'est pas un nom de profile valide";
-        assert ProfileManager.validProfileName("SAKURA EST FAIBLE") == false
-                : "SAKURA EST FAIBLE n'est pas un nom de profile valide";
-        assert ProfileManager.validProfileName("") == false : "Le profile ne peut pas être vide";
-        assert ProfileManager.validProfileName(" ") == false : "Le profile ne peut pas etre un espace";
+        
+        assert ProfileManager.validProfileName("DARK_SASUKE!!!") == false : "DARK_SASUKE!!! n'est pas un nom de profil valide";
+        assert ProfileManager.validProfileName("DARK_ITACHI14") == true : "DARK_ITACHI14 est un nom de profil valide";
+        assert ProfileManager.validProfileName("TERREUR964") == true : "TERREUR964 est un nom de profil valide";
+        assert ProfileManager.validProfileName("DARKSLIPEUR93!!") == false : "DARKSLIPEUR93!! n'est pas un nom de profil valide";
+        assert ProfileManager.validProfileName("SAKURA EST FAIBLE") == false : "SAKURA EST FAIBLE n'est pas un nom de profil valide";
+        assert ProfileManager.validProfileName("") == false : "Le profil ne peut pas être vide";
+        assert ProfileManager.validProfileName(" ") == false : "Le profil ne peut pas etre un espace";
         assert ProfileManager.validProfileName("default") == false : "Default est un nom réservé";
         System.out.println(" - OK");
         return true;
@@ -53,8 +51,8 @@ public class TestProfileManager {
         System.out.print("Test : TestProfileManager.testSave()");
         HashMap<String, String> map = createMap();
         ProfileManager.save(map, "testSave");
-        File testFile = new File(
-                System.getProperty("user.dir") + "\\src\\main\\assets\\profiles\\testSave.gol.profile");
+        File testFile = new File(System.getProperty("user.dir") + "\\src\\main\\assets\\profiles\\testSave.gol.profile");
+
         assert testFile.exists() == true : "File doesn't exist, error at creation";
         System.out.println(" - OK");
         return true;

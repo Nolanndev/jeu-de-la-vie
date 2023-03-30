@@ -47,9 +47,9 @@ public class Grid {
     public Grid(Dimension size, Cell cell){
         setSize(size);
         setBoard(new Cell[this.getHeight()][this.getWidth()]);
-        for (int i = 0; i < getHeight(); i++)  {  
-            for (int j=0; j < getWidth(); j++){
-                this.board[i][j] = new Cell(cell.getBornMinNeighbors(), cell.getBornMaxNeighbors(), cell.getDieMinNeighbors(), cell.getDieMaxNeighbors(), cell.getRadius(), cell.isAlive());
+        for (int i = 0; i < getWidth(); i++)  {  
+            for (int j=0; j < getHeight(); j++){
+                setCell(i, j, new Cell(cell.getBornMinNeighbors(), cell.getBornMaxNeighbors(), cell.getDieMinNeighbors(), cell.getDieMaxNeighbors(), cell.getRadius(), cell.isAlive()));
             }  
         }  
 
@@ -74,6 +74,50 @@ public class Grid {
         this.size = new Dimension(board.length, board[0].length);
     }
 
+
+    public Grid (Quadtree tree){
+        this(quadtreeToMatrix(tree));
+    }
+
+    private static Cell[][] quadtreeToMatrix(Quadtree tree){
+        if(tree == null){
+            return null;
+        }
+
+        Cell[][] board = new Cell[(int)Math.pow(2, tree.getDepth())][(int)Math.pow(2, tree.getDepth())];
+
+        if(tree.isLeaf()){
+            Cell cell = tree.getCell();
+            Boolean alive = (tree.getNumberAlive() == 1) ? true : false; 
+            board[0][0] = new Cell(cell.getBornMinNeighbors(), cell.getBornMaxNeighbors(), cell.getDieMinNeighbors(), cell.getDieMaxNeighbors(), cell.getRadius(), alive);
+            return board; 
+        }
+        else{
+            board = fusion(quadtreeToMatrix(tree.getNw()), quadtreeToMatrix(tree.getNe()), quadtreeToMatrix(tree.getSw()), quadtreeToMatrix(tree.getSe())); 
+            return board; 
+        }
+        
+    }
+
+    private static Cell[][] fusion(Cell[][] nw, Cell[][] ne, Cell[][] sw, Cell[][] se){
+        if(nw == null || ne == null || sw == null || se == null){
+            return null;
+        }
+
+        Dimension size = new Dimension(nw[0].length, nw.length);
+
+        Cell[][] board = new Cell[nw.length + sw.length][nw[0].length + sw[0].length];
+
+        for (int i = 0; i < size.getHeight(); i++) {
+            for (int j = 0; j < size.getWidth(); j++) {
+                board[i][j] = nw[i][j];
+                board[(int)size.getHeight()+i][j] = sw[i][j];
+                board[i][j+(int)size.getWidth()] = ne[i][j];
+                board[i+(int)size.getHeight()][j+(int)size.getWidth()] = se[i][j];
+            }
+        }
+        return board;
+    }
 
     /**
      * Accessor to the <b>Cell</b> matrix oh this <b>Grid</b>.
@@ -160,8 +204,8 @@ public class Grid {
      * Accessor to the given column of matrix
      * @param column index in the matrix
      * @return asked column of the matrix
-     * @throws IndexOutOfBoundsException if row given is greater than the width of his <b>Grid</b>
-     * @throws IndexOutOfBoundsException if row given is less than 0
+     * @throws IndexOutOfBoundsException if column given is greater than the width of his <b>Grid</b>
+     * @throws IndexOutOfBoundsException if column given is less than 0
      */
     public Cell[] getColumns(int column) {
         if(column > this.getWidth()){
@@ -172,7 +216,7 @@ public class Grid {
         }
         Cell[] result = new Cell[getHeight()];
         for (int i = 0; i < getHeight(); i++) {
-            result[i] = this.board[i][column];
+            result[i] = getCell(column,i);
         }
         return result;
     }
@@ -184,6 +228,7 @@ public class Grid {
      * @return <b>Cell</b> at the given coordinates.
      */
     public Cell getCell(Dimension coordinates) {
+    
         Cell cell = this.board[(int) coordinates.getHeight()][(int) coordinates.getWidth()];
         if (Cell.class.isInstance(cell)) {
             return cell;
@@ -252,19 +297,20 @@ public class Grid {
     public int countNeighbors(int x, int y) {
         int radius = getCell(x,y).getRadius();
         
+        
         int countNeighbors = 0;
 
         int firstRow = (x-radius < 0) ? 0 : x-radius;
-        int lastRow = (x+radius > getWidth()-1) ? getWidth()-1 : x+radius;  
+        int lastRow = (x+radius > getHeight()-1) ? getHeight()-1 : x+radius;  
         int firstColumn = (y-radius < 0) ? 0 : y-radius;
-        int lastColumn= (y+radius > getHeight()-1) ? getHeight()-1 : y+radius;  
-
+        int lastColumn= (y+radius > getWidth()-1) ? getWidth()-1 : y+radius;  
+        
         for(int i = firstRow; i <= lastRow; i++){
-            for(int j = firstColumn; j <= lastColumn; j++){                
+            for(int j = firstColumn; j <= lastColumn; j++){   
                 countNeighbors += (this.getCell(i, j).isAlive()) ? 1 : 0;
             }
         }
-
+        
         countNeighbors -= (getCell(x, y).isAlive()) ? 1 : 0;
 
         return countNeighbors;
@@ -279,16 +325,17 @@ public class Grid {
     public void nextGen(){
         Grid copyGrid = new Grid(this.copyBoard());
         
-        for (int i = 0; i < getHeight() ; i++) {
-            for (int j = 0; j < getWidth(); j++) {
+        for (int i = 0; i < getWidth() ; i++) {
+            for (int j = 0; j < getHeight(); j++) {
                 
                 int neighbors = copyGrid.countNeighbors(i,j);
                 Cell cell = copyGrid.getCell(i, j);
 
-                Boolean res = ((cell.isAlive() && neighbors>=cell.getDieMinNeighbors() && neighbors<=cell.getDieMaxNeighbors()) || (!cell.isAlive() && neighbors>=cell.getBornMinNeighbors() && neighbors<=cell.getBornMaxNeighbors())); //respecte les conditions de vie déinie dans la Cellule cell
+                Boolean nextState = ((cell.isAlive() && neighbors>=cell.getDieMinNeighbors() && neighbors<=cell.getDieMaxNeighbors()) || //respecte les conditions de mort déinie dans la Cellule cell
+                (!cell.isAlive() && neighbors>=cell.getBornMinNeighbors() && neighbors<=cell.getBornMaxNeighbors())); //ou respecte les conditions de naissance déinie dans la Cellule cell
                 
-                if(res != this.getCell(i, j).isAlive()){ //si l'etat de la cellule a la prochaine génération est différent de l'état actuelle, on change la cellule. 
-                    this.setCell(i, j, new Cell(res));
+                if(nextState != this.getCell(i, j).isAlive()){ //si l'etat de la cellule a la prochaine génération est différent de l'état actuelle, on change la cellule. 
+                    this.setCell(i, j, new Cell(cell.getBornMinNeighbors(), cell.getBornMaxNeighbors(), cell.getDieMinNeighbors(), cell.getDieMaxNeighbors(),cell.getRadius(), nextState));
                     this.changeCell(i, j);
                 }
             }
@@ -303,7 +350,8 @@ public class Grid {
         Cell[][] copyBoard = new Cell[this.getHeight()][this.getWidth()];
         for (int i = 0; i < getHeight() ; i++) {
             for (int j = 0; j < getWidth(); j++) {
-                copyBoard[i][j] = new Cell(this.board[i][j].isAlive());
+                Cell cell = this.getCell(j, i);
+                copyBoard[i][j] = new Cell(cell.getBornMinNeighbors(), cell.getBornMaxNeighbors(), cell.getDieMinNeighbors(), cell.getDieMaxNeighbors(),cell.getRadius(), cell.isAlive());
             }
         }
         return copyBoard;

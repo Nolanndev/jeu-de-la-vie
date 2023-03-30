@@ -4,9 +4,6 @@ package main;
 import java.awt.Dimension;
 
 import main.core.*;
-import main.exceptions.ProfileNameException;
-import main.utils.ProfileManager;
-import main.utils.Quadtree;
 import main.gui.*;
 
 public class Gol {
@@ -16,42 +13,54 @@ public class Gol {
         // System.out.println("DEBUT");
         // System.lineSeparator();
 
-        Cell cell = new Cell(false);
+        Cell cell = new Cell(true);
         System.out.println(cell.info());
         System.out.println("-----------------");
 
-        Grid grid = new Grid(new Dimension(20,20));
-        grid.setCell(4, 1, new Cell(true));
-        grid.setCell(4, 2, new Cell(true));
-        grid.setCell(5, 1, new Cell(true));
-        grid.setCell(4, 4, new Cell(true));
-        grid.setCell(5, 4, new Cell(true));
-        grid.setCell(6, 3, new Cell(true));
-        grid.setCell(6, 5, new Cell(true));
-        grid.setCell(6, 6, new Cell(true));
+        // Grid grid = new Grid(new Dimension(10,20));
+        // grid.setCell(0, 0, new Cell(true));
+        // grid.setCell(4, 1, new Cell(true));
+        // grid.setCell(4, 2, new Cell(true));
+        // grid.setCell(5, 1, new Cell(true));
+        // grid.setCell(4, 4, new Cell(true));
+        // grid.setCell(5, 4, new Cell(true));
+        // grid.setCell(6, 3, new Cell(true));
+        // grid.setCell(6, 5, new Cell(true));
+        // grid.setCell(6, 6, new Cell(true));
+        // grid.setCell(9, 19, new Cell(true));
 
-        System.out.println(grid.getCell(new Dimension(4,1)) == grid.getCell(4,1));
-        System.out.println("Nombre de voisins de (4,2) : " + grid.countNeighbors(4, 2));
+
+
+        // System.out.println(grid.getCell(new Dimension(4,1)) == grid.getCell(4,1));
+        // System.out.println("Nombre de voisins de (4,2) : " + grid.countNeighbors(0, 2));
         
-        for (int i = 1; i <= 10; i++) {
-            System.out.println("-----------------");
-            System.out.println("Gen " + i + " : ");
-            grid.displayGrid();
-            grid.nextGen();
-        }
+        // for (int i = 1; i <= 10; i++) {
+        //     System.out.println("-----------------");
+        //     System.out.println("Gen " + i + " : ");
+        //     grid.displayGrid();
+        //     grid.nextGen();
+        // }
 
 
-        HashLife hashLife = new HashLife();
-        Quadtree q1 = hashLife.join(HashLife.on, HashLife.on, HashLife.off, HashLife.on);
-        Quadtree q2 = hashLife.join(HashLife.off, HashLife.on, HashLife.on, HashLife.off);
-        Quadtree q3 = hashLife.join(HashLife.off, HashLife.off, HashLife.on, HashLife.on);
-        Quadtree q4 = hashLife.join(HashLife.on, HashLife.off, HashLife.off, HashLife.on);
+        Quadtree on = new Quadtree(null, null, null, null, 0, 1, cell);
+        Quadtree off = new Quadtree(null, null, null, null, 0, 0, new Cell(false));
+
+
+        Quadtree q1 = new Quadtree(on, on, off, on);
+        Quadtree q2 = new Quadtree(off, on, on, off);
+        Quadtree q3 = new Quadtree(off, off, on, on);
+        Quadtree q4 = new Quadtree(on, off, off, on);
         
-        Quadtree q = hashLife.join(q1, q2, q3, q4);
-        System.out.println(q1);
-        System.out.println(hashLife.advance(q,389));
-        System.out.println("FIN");
+        Quadtree q = new Quadtree(q1, q2, q3, q4);
 
-        new Window("Game Of Life");
+        HashLife hash = new HashLife(cell);
+
+        new Grid(q).displayGrid();
+        Quadtree advance = hash.advance(q, 30);
+
+        Grid fr = new Grid(advance);
+        fr.displayGrid();
+
+        // new Window("Game Of Life");
     }
 }

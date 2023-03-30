@@ -3,40 +3,29 @@ package main.core;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import main.utils.Quadtree;
-
-public class HashLife extends Quadtree{
-
-    private HashMap<Quadtree, Quadtree> cache; 
-    public static Quadtree on = new Quadtree(null, null, null, null, 0, 1);
-    public static Quadtree off = new Quadtree(null, null, null, null, 0, 0);
+public class HashLife{
 
 
-    public HashLife() {
-        super();
+    private Cell cell;
+    private HashMap<Quadtree, Quadtree> cache = new HashMap<Quadtree, Quadtree>(); 
+    public Quadtree on;
+    public Quadtree off;
+
+
+    public HashLife(Cell cell) {
+        this.cell = cell;
+        this.on = new Quadtree(null, null, null, null, 0, 1, cell);
+        this.off = new Quadtree(null, null, null, null, 0, 0, cell);
+
     }
-    
+
     /* 
     fonction recursive
     si la profondeur est inferieure ou egale à 0, on retourne un quadtree null
     sinon on retourne un noeud vide au niveau k
     */
     public Quadtree getZero(int depth){
-        return (depth <= 0) ? HashLife.off : this.join(getZero(depth-1), getZero(depth-1), getZero(depth-1), getZero(depth-1));
-    }
-
-    /* 
-    combine quatre enfants au niveau k-1 à un nouveau noeud au niveau k. 
-    Si c’est mis en cache, retourne le noeud mis en cache. 
-    Sinon, créez un nouveau noeud et ajoutez-le au cache
-    */
-
-    public Quadtree join(Quadtree no, Quadtree ne, Quadtree se, Quadtree so){
-        if(so == null || se == null || ne == null || no == null){
-            return null;
-        }
-        int numberAlive = no.getNumberAlive() + ne.getNumberAlive() + se.getNumberAlive() + so.getNumberAlive();  
-        return new Quadtree(no, ne, se, so, no.getDepth()+1, numberAlive );
+        return (depth <= 0) ? this.off : new Quadtree(getZero(depth-1), getZero(depth-1), getZero(depth-1), getZero(depth-1));
     }
 
     /*
@@ -45,7 +34,7 @@ public class HashLife extends Quadtree{
     
     public Quadtree centre(Quadtree centre){
         Quadtree zero = getZero(centre.getNe().getDepth());
-        return this.join(join(zero, zero, zero, centre.getNw()), join(zero, zero, centre.getNe(), zero), join(zero, centre.getSw(), zero, zero), join(centre.getSe(), zero, zero, zero)); 
+        return new Quadtree(new Quadtree(zero, zero, zero, centre.getNw()), new Quadtree(zero, zero, centre.getNe(), zero), new Quadtree(zero, centre.getSw(), zero, zero), new Quadtree(centre.getSe(), zero, zero, zero)); 
     }
 
     /* 
@@ -64,22 +53,27 @@ public class HashLife extends Quadtree{
                 neighboorsAlive += quadtree.getNumberAlive();
             }
         }
-        return ((neighboorsAlive == 2 && centre.getNumberAlive() == 1) || neighboorsAlive==3) ? on : off;
+        return ((centre.getNumberAlive() == 1 && neighboorsAlive >= cell.getDieMinNeighbors() && neighboorsAlive <= cell.getDieMaxNeighbors()) || (centre.getNumberAlive() == 0 && neighboorsAlive >= cell.getBornMinNeighbors() && neighboorsAlive <= cell.getBornMaxNeighbors())) ? on : off;
     }
 
-    public Quadtree life_4x4(Quadtree m){
+    private Quadtree life_4x4(Quadtree m){
         Quadtree nw = life(m.getNw().getSe(), m.getNw().getNw(), m.getNw().getNe(), m.getNe().getNw(), m.getNw().getSw(), m.getNe().getSw(), m.getSw().getNw(), m.getSw().getNe(), m.getSe().getNw());  
         Quadtree ne = life(m.getNe().getSw(), m.getNw().getNe(), m.getNe().getNw(), m.getNe().getNe(), m.getNw().getSe(), m.getNe().getSe(), m.getSw().getNe(), m.getSe().getNw(), m.getSe().getNe());  
         Quadtree sw = life(m.getSw().getNe(), m.getNw().getSw(), m.getNw().getSe(), m.getNe().getSw(), m.getSw().getNw(), m.getSe().getNw(), m.getSw().getSw(), m.getSw().getSe(), m.getSe().getSw()); 
         Quadtree se = life(m.getSe().getNw(), m.getNw().getSe(), m.getNe().getSw(), m.getNe().getSe(), m.getSw().getNe(), m.getSe().getNe(), m.getSw().getSe(), m.getSe().getSw(), m.getSe().getSe());  
-        return join(nw, ne, sw, se);
+        return new Quadtree(nw, ne, sw, se);
     }
 
     /*
     retourne le successeur central d’un noeud au moment t+2**k-2.
     */
-    public Quadtree successor(Quadtree m, Integer j){
+    private Quadtree successor(Quadtree m, Integer j){
         Quadtree res;
+
+        if(cache.containsKey(m)){
+            return cache.get(m);
+        }
+
         if(m.getNumberAlive() == 0){
             return m.getNe();
         }
@@ -95,34 +89,34 @@ public class HashLife extends Quadtree{
         else{
             j = (j == null) ? (m.getDepth() - 2) : Math.min(j, m.getDepth()-2);
 
-            Quadtree c1 = successor(join(m.getNw().getNw(), m.getNw().getNe(), m.getNw().getSw(), m.getNw().getSe()), j);
-            Quadtree c2 = successor(join(m.getNw().getNe(), m.getNe().getNw(), m.getNw().getSe(), m.getNe().getSw()), j);
-            Quadtree c3 = successor(join(m.getNe().getNw(), m.getNe().getNe(), m.getNe().getSw(), m.getNe().getSe()), j);
-            Quadtree c4 = successor(join(m.getNw().getSw(), m.getNw().getSe(), m.getSw().getNw(), m.getSw().getNe()), j);
-            Quadtree c5 = successor(join(m.getNw().getSe(), m.getNe().getSw(), m.getSw().getNe(), m.getSe().getNw()), j);
-            Quadtree c6 = successor(join(m.getNe().getSw(), m.getNe().getSe(), m.getSe().getNw(), m.getSe().getNe()), j);
-            Quadtree c7 = successor(join(m.getSw().getNw(), m.getSw().getNe(), m.getSw().getSw(), m.getSw().getSe()), j);
-            Quadtree c8 = successor(join(m.getSw().getNe(), m.getSe().getNw(), m.getSw().getSe(), m.getSe().getSw()), j);
-            Quadtree c9 = successor(join(m.getSe().getNw(), m.getSe().getNe(), m.getSe().getSw(), m.getSe().getSe()), j);
+            Quadtree c1 = successor(new Quadtree(m.getNw().getNw(), m.getNw().getNe(), m.getNw().getSw(), m.getNw().getSe()), j);
+            Quadtree c2 = successor(new Quadtree(m.getNw().getNe(), m.getNe().getNw(), m.getNw().getSe(), m.getNe().getSw()), j);
+            Quadtree c3 = successor(new Quadtree(m.getNe().getNw(), m.getNe().getNe(), m.getNe().getSw(), m.getNe().getSe()), j);
+            Quadtree c4 = successor(new Quadtree(m.getNw().getSw(), m.getNw().getSe(), m.getSw().getNw(), m.getSw().getNe()), j);
+            Quadtree c5 = successor(new Quadtree(m.getNw().getSe(), m.getNe().getSw(), m.getSw().getNe(), m.getSe().getNw()), j);
+            Quadtree c6 = successor(new Quadtree(m.getNe().getSw(), m.getNe().getSe(), m.getSe().getNw(), m.getSe().getNe()), j);
+            Quadtree c7 = successor(new Quadtree(m.getSw().getNw(), m.getSw().getNe(), m.getSw().getSw(), m.getSw().getSe()), j);
+            Quadtree c8 = successor(new Quadtree(m.getSw().getNe(), m.getSe().getNw(), m.getSw().getSe(), m.getSe().getSw()), j);
+            Quadtree c9 = successor(new Quadtree(m.getSe().getNw(), m.getSe().getNe(), m.getSe().getSw(), m.getSe().getSe()), j);
             
             if(j < (m.getDepth()-2)){
-                res = join(
-                        (join(c1.getSe(), c2.getSw(), c4.getNe(), c5.getNw())),
-                        (join(c2.getSe(), c3.getSw(), c5.getNe(), c6.getNw())),
-                        (join(c4.getSe(), c5.getSw(), c7.getNe(), c8.getNw())),
-                        (join(c5.getSe(), c6.getSw(), c8.getNe(), c9.getNw()))
+                res = new Quadtree(
+                        (new Quadtree(c1.getSe(), c2.getSw(), c4.getNe(), c5.getNw())),
+                        (new Quadtree(c2.getSe(), c3.getSw(), c5.getNe(), c6.getNw())),
+                        (new Quadtree(c4.getSe(), c5.getSw(), c7.getNe(), c8.getNw())),
+                        (new Quadtree(c5.getSe(), c6.getSw(), c8.getNe(), c9.getNw()))
                     );
             }
             else{
-                res = join(
-                        successor(join(c1, c2, c4, c5), j),
-                        successor(join(c2, c3, c5, c6), j),
-                        successor(join(c4, c5, c7, c8), j),
-                        successor(join(c5, c6, c8, c9), j)
+                res = new Quadtree(
+                        successor(new Quadtree(c1, c2, c4, c5), j),
+                        successor(new Quadtree(c2, c3, c5, c6), j),
+                        successor(new Quadtree(c4, c5, c7, c8), j),
+                        successor(new Quadtree(c5, c6, c8, c9), j)
                     );
             }
         }
-
+        cache.put(m, res);
         return res;
     }
 
@@ -142,6 +136,18 @@ public class HashLife extends Quadtree{
         return q;
     }
 
+    public Quadtree inner(Quadtree q){
+        return new Quadtree(q.getNw().getSe(), q.getNe().getSw(), q.getSw().getNe(), q.getSe().getNw());
+    }
+
+    public Quadtree crop(Quadtree q){
+        if(q.getDepth() <= 3 || !isPadded(q)){
+            return q; 
+        }
+
+        return crop(inner(q));
+    }
+
     /*
     trouve le nième successeur d’un noeud donné. 
     Depuis que nous calculons n’importe quelle étape avancée de 2**j, jusqu’à 2**k-2, de 
@@ -152,6 +158,7 @@ public class HashLife extends Quadtree{
         if(n == 0){
             return q;
         }
+
         ArrayList<Integer> bits = new ArrayList<Integer>();
 
         while(n>0){

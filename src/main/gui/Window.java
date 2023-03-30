@@ -31,6 +31,7 @@ public class Window implements ActionListener,KeyListener, ComponentListener {
         this.window = new JFrame();
 
         this.window.addComponentListener(this); //resize Event listener
+        this.window.addKeyListener(this);
 
         this.window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
         this.window.setTitle(title);
@@ -104,6 +105,7 @@ public class Window implements ActionListener,KeyListener, ComponentListener {
     @Override
     public void componentResized(ComponentEvent e) {
         if(this.vueGrid != null){
+            this.vueGrid.setDimension(new Dimension((int) (this.window.getSize().getWidth()), (int)this.window.getSize().getHeight()-this.window.getInsets().top));
             this.vueGrid.setDimension(new Dimension((int) (this.window.getSize().getWidth()), (int)this.window.getSize().getHeight()-this.window.getInsets().top));
         }
     }
