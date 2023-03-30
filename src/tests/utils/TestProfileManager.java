@@ -43,7 +43,6 @@ public class TestProfileManager {
         assert ProfileManager.validProfileName("") == false : "Le profil ne peut pas être vide";
         assert ProfileManager.validProfileName(" ") == false : "Le profil ne peut pas etre un espace";
         assert ProfileManager.validProfileName("default") == false : "Default est un nom réservé";
-        System.out.println(" - OK");
         return true;
     }
 
@@ -51,10 +50,9 @@ public class TestProfileManager {
         System.out.print("Test : TestProfileManager.testSave()");
         HashMap<String, String> map = createMap();
         ProfileManager.save(map, "testSave");
-        File testFile = new File(System.getProperty("user.dir") + "\\src\\main\\assets\\profiles\\testSave.gol.profile");
+        File testFile = new File("src/main/assets/profiles/testSave.gol.profile");
 
-        assert testFile.exists() == true : "File doesn't exist, error at creation";
-        System.out.println(" - OK");
+        assert testFile.exists() == true : "le fichier n'existe pas";
         return true;
     }
 }

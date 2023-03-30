@@ -19,8 +19,10 @@ public class Test {
     public static void main(String[] args) throws IOException, ProfileNameException {
 
         boolean ok = true;
+        
+        System.out.println("-------------");
 
-        // TestProfilManager
+        // All test OK
         TestProfileManager profileManagerTester = new TestProfileManager();
         ok = ok && profileManagerTester.testLoad();
         ok = ok && profileManagerTester.testValidProfileName();
