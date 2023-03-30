@@ -1,11 +1,9 @@
 package tests.core;
 
-import java.util.Arrays;
 import java.awt.Dimension;
 
 import main.core.Cell;
 import main.core.Grid;
-import main.core.Cell;
 
 
 /* test la classe Grid */
@@ -29,23 +27,7 @@ public class TestGrid{
     private static Dimension tuple6;
 
 
-    public static void startTest(){
-        System.out.println("TESTS: main.core.Grid");
-
-        testConstructor();
-        testGetSize();
-        testGetWidth();
-        testGetHeight();
-        testGetRows();
-        testGetColumns();
-        testCopyBoard();
-        testCountNeighbors();
-        testGetCell();
-
-        System.out.println("Tous les tests sont passes");
-    }
-
-    public static void testConstructor(){
+    public boolean testGetters(){
         System.out.println("Test: constructor");
         tuple1 = new Dimension(5, 10);
         tuple2 = new Dimension(10, 5);
@@ -56,71 +38,70 @@ public class TestGrid{
         assert grid1.getSize().equals(new Dimension(5, 10)) : "Probleme avec la taille de la grille";
         assert grid2.getSize().equals(new Dimension(10, 5)) : "Probleme avec la taille de la grille";
 
+        return true;
     }
 
-    public static void testGetSize(){
+    public boolean testGetSize(){
         System.out.println("Test: getSize()");
+        int x = 0;
         assert grid1.getSize().equals(new Dimension(5, 10)) : "Probleme avec la taille de la grille";
         assert grid2.getSize().equals(new Dimension(10, 5)) : "Probleme avec la taille de la grille";
 
+        assert grid1.getSize().equals(new Dimension(x, x)) == false : "Probleme avec la taille de la grille";
+        assert grid2.getSize().equals(new Dimension(x, x)) == false : "Probleme avec la taille de la grille";
+
+        return true;
     }
 
-    public static void testGetWidth(){
+    public boolean testGetWidth(){
         System.out.println("Test: getWidth()");
         assert grid1.getWidth() == 5 : "Probleme avec la largeur de la grille";
         assert grid2.getWidth() == 10 : "Probleme avec la largeur de la grille";
 
+        return true;
     }
 
-    public static void testGetHeight(){
+    public boolean testGetHeight(){
         System.out.println("Test: getHeight()");
         assert grid1.getHeight() == 10 : "Probleme avec la hauteur de la grille";
         assert grid2.getHeight() == 5 : "Probleme avec la hauteur de la grille";
-
+        
+        return true;
     }
 
-    public static void testGetRows(){
+    public boolean testGetRows(){
         System.out.println("Test: getRows()");
         grid3 = grid1;
         grid4 = grid2;
-
-        for (int i = 0; i < 10 ;i++){
-            for (int j = 0; j < 5; j++){
-                grid3.setCell(i, j, new Cell(true));
-            }
-        }
-
-        for (int i = 0; i < 5 ;i++){
-            for (int j = 0; j < 10; j++){
-                grid4.setCell(i, j, new Cell(true));
-            }
-        }
 
         row1 = grid3.getRows(3);
         row2 = grid4.getRows(1);
 
         assert row1.length == 5 : "Probleme avec le nombre de lignes retournees";
-        assert row1.length == 10 : "Le test est bon";
+        assert row1.length != 10 : "Le test est bon";
 
         assert row2.length == 10 : "Probleme avec le nombre de lignes retournees";
-        assert row2.length == 5 : "Le test est bon";
+        assert row2.length != 5 : "Le test est bon";
 
+        return true;
     }
 
-    public static void testGetColumns(){
+    public boolean testGetColumns(){
         System.out.println("Test: getColumns()");
         row1 = grid1.getColumns(2);
         row2 = grid2.getColumns(4);
 
         assert row1.length == 10 : "Le test est bon";
-        assert row1.length == 5 : "Probleme avec le nombre de colonnes retournees";
+        assert row1.length != 5 : "Probleme avec le nombre de colonnes retournees";
 
         assert row2.length == 5 : "Le test est bon";
-        assert row2.length == 10 : "Probleme avec le nombre de colonnes retournees";
+        assert row2.length != 10 : "Probleme avec le nombre de colonnes retournees";
+
+        return true;
     }
 
 
-    public static void testCopyBoard(){
+    public boolean testCopyBoard(){
         System.out.println("Test: copyBoard()");
         tuple3 = new Dimension(3, 3);
         Grid grid = new Grid(tuple3);
@@ -146,9 +127,11 @@ public class TestGrid{
             }
         }
         assert is_equal : "copie de la grille incorrecte";
+
+        return true;
     }
 
-    public static void testCountNeighbors(){
+    public boolean testCountNeighbors(){
         System.out.println("Test: countNeighbors()");
         tuple5 = new Dimension(2,2);
 
@@ -162,12 +145,14 @@ public class TestGrid{
         Cell cell = new Cell(true);
         grid5.setCell(0, 0, cell);
 
-        assert grid5.countNeighbors(1, 1) == 10 : "Le nombre de voisins n'est pas correct";
+        assert grid5.countNeighbors(1, 1) != 10 : "Le nombre de voisins n'est pas correct";
         assert grid5.countNeighbors(1, 1) == 3 : "Le nombre de voisins est correct";
-        assert grid5.countNeighbors(0, 0) == 10 : "Le rayon est grand mais le nombre de voisins est bon";
+        assert grid5.countNeighbors(0, 0) != 10 : "Le rayon est grand mais le nombre de voisins est bon";
+
+        return true;
     }
 
-    public static void testGetCell(){
+    public boolean testGetCell(){
         System.out.println("Test: getCell()");
         tuple5 = new Dimension(2,2);
 
@@ -180,11 +165,34 @@ public class TestGrid{
 
         tuple6 = new Dimension(0, 0);
 
-        assert grid5.getCell(tuple6) == new Cell(true): "La cellule est correcte";
-    
-        assert grid5.getCell(tuple6) == new Cell(true): "minNeighbors est incorrecte";
-        assert grid5.getCell(tuple6) == new Cell(true): "maxNeighbors est incorrecte";
-        assert grid5.getCell(tuple6) == new Cell(true): "radius est incorrecte";
-        assert grid5.getCell(tuple6) == new Cell(false): "alive est incorrecte";
+        assert grid5.getCell(tuple6) != new Cell(true): "La cellule est correcte";
+
+
+        for (int i = 0; i < 20 ; i ++){
+            if (i != 2){
+                assert grid5.getCell(tuple6).getMinNeighbors() != i: "minNeighbors est incorrecte";
+            }
+            if (i == 2){
+                assert grid5.getCell(tuple6).getMinNeighbors() == i: "minNeighbors est incorrecte";
+            }
+        }
+
+        for (int j = 0; j < 20; j++){
+            if (j != 3){
+                assert grid5.getCell(tuple6).getMaxNeighbors() != j: "maxNeighbors est incorrecte";
+            }
+
+            if (j == 3){
+                assert grid5.getCell(tuple6).getMaxNeighbors() == j: "maxNeighbors est incorrecte";
+            }
+        }
+
+        assert grid5.getCell(tuple6).getRadius() == 1: "radius est incorrecte";
+        assert grid5.getCell(tuple6).getRadius() != 10: "radius est incorrecte";
+
+        //assert grid5.getCell(tuple6).isAlive() == true: "alive est incorrecte";
+        //assert grid5.getCell(tuple6).isAlive() == false: "alive est incorrecte";
+
+        return true;
     }
 }    
