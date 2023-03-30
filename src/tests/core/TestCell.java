@@ -25,11 +25,10 @@ public class TestCell{
 
     public boolean testGetRadius(){
         System.out.println("Test: getRadius()");
-
-        Cell cell = new Cell(true);
-        Cell cell2 = new Cell(0, 1, 2, true);
-        Cell cell3 = new Cell(0, 1, 5, true);
-        Cell cell4 = new Cell(0, 1, 1, true);
+        Cell cell = new Cell(1, 1, 0, 3, 1, true);
+        Cell cell2 = new Cell(1, 1, 0, 1, 2, true);
+        Cell cell3 = new Cell(1, 1, 0, 1, 5, true);
+        Cell cell4 = new Cell(1, 1, 0, 1, 1, true);
 
 
         assert cell.getRadius() == 1 : "Le rayon est correct (=1)";
@@ -43,35 +42,66 @@ public class TestCell{
     }
     
     
-    public boolean testGetMinNeighbors(){
+    public boolean testGetBornMinNeighbors(){
         //maxNeighbors > minNeighbors => avoid triggering setMaxNeighbors
-        System.out.println("Test: getMinNeighbors()");
+        System.out.println("Test: getBornMinNeighbors()");
 
-        Cell cell1 = new Cell(0, 2, 1, true);
-        Cell cell2 = new Cell(1, 3, 0, true); 
-        Cell cell3 = new Cell(2, 4, 0, true); 
+        Cell cell1 = new Cell(0, 1, 0, 2, 1, true);
+        Cell cell2 = new Cell(1, 2, 0, 3, 0, true); 
+        Cell cell3 = new Cell(2, 3, 0, 4, 0, true); 
         
-        assert cell1.getMinNeighbors() == 0 : "minNeighbors est correct (=0)";
-        assert cell2.getMinNeighbors() == 1 : "minNeighbors est correct (=1)";
-        assert cell3.getMinNeighbors() == 2 : "minNeighbors est correct (=2)";
+        assert cell1.getBornMinNeighbors() == 0 : "minNeighbors est correct (=0)";
+        assert cell2.getBornMinNeighbors() == 1 : "minNeighbors est correct (=1)";
+        assert cell3.getBornMinNeighbors() == 2 : "minNeighbors est correct (=2)";
     
         return true;
     }
     
     
-    public boolean testGetMaxNeighbors(){
-        System.out.println("Test: getMaxNeighbors()");
+    public boolean testGetBornMaxNeighbors(){
+        System.out.println("Test: getBornMaxNeighbors()");
         
-        Cell cell1 = new Cell(0, 3, 1, true);
-        assert cell1.getMaxNeighbors() == 3 : "maxNeighbors est correct (=3)";
+        Cell cell1 = new Cell(0, 3, 0, 2, 1, true);
+        assert cell1.getBornMaxNeighbors() == 3 : "maxNeighbors est correct (=3)";
     
-        Cell cell2 = new Cell(0, 1, 1, true);
-        assert cell2.getMaxNeighbors() == 1 : "maxNeighbors est correct (=1)";
+        Cell cell2 = new Cell(0, 1, 0, 2, 1, true);
+        assert cell2.getBornMaxNeighbors() == 1 : "maxNeighbors est correct (=1)";
     
-        Cell cell3 = new Cell(0, 5, 1, true);
-        assert cell3.getMaxNeighbors() == 5 : "maxNeighbors est correct (=5)";
+        Cell cell3 = new Cell(0, 5, 0, 2, 1, true);
+        assert cell3.getBornMaxNeighbors() == 5 : "maxNeighbors est correct (=5)";
     
         return true;
     }
+
+    public boolean testGetDieMinNeighbors(){
+        System.out.println("Test: dieMinNeighbors()");
+        
+        Cell cell1 = new Cell(0, 0, 3, 5, 1, true);
+        assert cell1.getDieMinNeighbors() == 3 : "maxNeighbors est correct (=3)";
+    
+        Cell cell2 = new Cell(0, 1, 1, 2, 1, true);
+        assert cell2.getDieMinNeighbors() == 1 : "maxNeighbors est correct (=1)";
+    
+        Cell cell3 = new Cell(0, 0, 5, 6, 1, true);
+        assert cell3.getDieMinNeighbors() == 5 : "maxNeighbors est correct (=5)";
+    
+        return true;
+    }
+
+    public boolean testGetDieMaxNeighbors(){
+        System.out.println("Test: dieMaxNeighbors()");
+        
+        Cell cell1 = new Cell(0, 0, 3, 5, 1, true);
+        assert cell1.getDieMaxNeighbors() == 5 : "maxNeighbors est correct (=3)";
+    
+        Cell cell2 = new Cell(0, 1, 1, 2, 1, true);
+        assert cell2.getDieMaxNeighbors() == 2 : "maxNeighbors est correct (=1)";
+    
+        Cell cell3 = new Cell(0, 0, 5, 6, 1, true);
+        assert cell3.getDieMaxNeighbors() == 6 : "maxNeighbors est correct (=5)";
+    
+        return true;
+    }
+    
     
 }

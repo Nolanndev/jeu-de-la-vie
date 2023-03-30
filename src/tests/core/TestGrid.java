@@ -167,31 +167,32 @@ public class TestGrid{
 
         assert grid5.getCell(tuple6) != new Cell(true): "La cellule est correcte";
 
-
         for (int i = 0; i < 20 ; i ++){
             if (i != 2){
-                assert grid5.getCell(tuple6).getMinNeighbors() != i: "minNeighbors est incorrecte";
+                assert grid5.getCell(tuple6).getDieMinNeighbors() != i: "getDieMinNeighbors() est incorrecte";
             }
             if (i == 2){
-                assert grid5.getCell(tuple6).getMinNeighbors() == i: "minNeighbors est incorrecte";
+                assert grid5.getCell(tuple6).getDieMinNeighbors() == i: "getDieMinNeighbors() est incorrecte";
             }
         }
 
         for (int j = 0; j < 20; j++){
             if (j != 3){
-                assert grid5.getCell(tuple6).getMaxNeighbors() != j: "maxNeighbors est incorrecte";
+                assert grid5.getCell(tuple6).getBornMaxNeighbors() != j: "getBornMaxNeighbors est incorrecte"; 
+                assert grid5.getCell(tuple6).getBornMinNeighbors() != j: "getBornMinNeighbors est incorrecte";
+                assert grid5.getCell(tuple6).getDieMaxNeighbors() != j: "getDieMaxNeighbors est incorrecte";
+
             }
 
             if (j == 3){
-                assert grid5.getCell(tuple6).getMaxNeighbors() == j: "maxNeighbors est incorrecte";
+                assert grid5.getCell(tuple6).getBornMaxNeighbors() == j: "getBornMaxNeighbors est incorrecte";
+                assert grid5.getCell(tuple6).getBornMinNeighbors() == j: "getBornMinNeighbors est incorrecte";
+                assert grid5.getCell(tuple6).getDieMaxNeighbors() == j: "getDieMaxNeighbors est incorrecte";
             }
         }
 
         assert grid5.getCell(tuple6).getRadius() == 1: "radius est incorrecte";
         assert grid5.getCell(tuple6).getRadius() != 10: "radius est incorrecte";
-
-        //assert grid5.getCell(tuple6).isAlive() == true: "alive est incorrecte";
-        //assert grid5.getCell(tuple6).isAlive() == false: "alive est incorrecte";
 
         return true;
     }

@@ -95,7 +95,7 @@ public class Quadtree {
     public String toString() {
         return MessageFormat.format("depth : {0},  nbAlive: {1}",
             this.getDepth(),
-            this.getNumberAlive()    
+            this.getNumberAlive()
         );
     }
 }

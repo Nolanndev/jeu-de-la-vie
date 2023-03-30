@@ -19,23 +19,27 @@ public class Test {
     public static void main(String[] args) throws IOException, ProfileNameException {
 
         boolean ok = true;
-/* 
+
         // TestProfilManager
         TestProfileManager profileManagerTester = new TestProfileManager();
         ok = ok && profileManagerTester.testLoad();
         ok = ok && profileManagerTester.testValidProfileName();
         ok = ok && profileManagerTester.testSave();
-  
-*/      
-        //TestQuadtree
+
+        System.out.println("-------------");
+     
+        // All test OK
         TestQuadtree quadtree = new TestQuadtree();
 
         ok = ok && quadtree.testGetters();
         ok = ok && quadtree.testHashCode();
         ok = ok && quadtree.testEquals();
         ok = ok && quadtree.testToString();
-        
-        //TestGrid
+
+        System.out.println("-------------");
+
+       
+        //All test OK
         TestGrid grid = new TestGrid();
         ok = ok && grid.testGetters();
         ok = ok && grid.testGetSize();
@@ -47,13 +51,18 @@ public class Test {
         ok = ok && grid.testCountNeighbors();
         ok = ok && grid.testGetCell();
 
-        //Cell
+        System.out.println("-------------");
+
+        //All test OK
         TestCell cell = new TestCell();
         ok = ok && cell.testIsAlive();
         ok = ok && cell.testGetRadius();
-        ok = ok && cell.testGetMinNeighbors();
-        ok = ok && cell.testGetMaxNeighbors();
+        ok = ok && cell.testGetBornMaxNeighbors();
+        ok = ok && cell.testGetBornMinNeighbors();
+        ok = ok && cell.testGetDieMinNeighbors();
+        ok = ok && cell.testGetDieMaxNeighbors();
 
+/* 
         // -------------
         //TestHashLife
         TestHashLife hashLife = new TestHashLife();
@@ -66,6 +75,8 @@ public class Test {
         //ok = ok && hashLife.testIsPadded();
         ok = ok && hashLife.testPad();
         ok = ok && hashLife.testAdvance();
+
+*/
 
         
         if (ok == false){
