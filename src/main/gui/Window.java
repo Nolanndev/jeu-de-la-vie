@@ -16,13 +16,16 @@ public class Window implements ActionListener,KeyListener, ComponentListener {
     VueGrid vueGrid;
     JMenuBar menu;
     JMenu commandsMenu, profileMenu;
-    JMenuItem play, pause, reset, clear, photo, video, load, save, settingsMenu, cellMenu;
+    JMenuItem play, pause, next, reset, clear, photo, video, load, save, settingsMenu, cellMenu;
     JDialog settingDialog, cellDialog;
-    JPanel iterationP, timeItP, numberItP, startItP, cellMaxP, cellMinP, radiusP;
+    JPanel iterationP, timeItP, numberItP, startItP, cellMaxP, cellMinP, radiusP, icon;
     JLabel iteration, timeIt, numberIt, startIt, cellMax, cellMin, radius;
     JTextArea timeItT, numberItT, startItT, cellMaxT, cellMinT, radiusT;
     JCheckBox infinite, finite;
-    JButton confimSetting, confirmCell;
+    JButton confimSetting, confirmCell, nextBtn, resetBtn, clearBtn, photoBtn, videoBtn;
+    JToggleButton playPauseBtn;
+    Icon playIc, pauseIc, nextIc, resetIc, clearIc, photoIc, videoIc;
+    JLayeredPane iconMenu;
     Grid grid;
 
     public Window(String title) {
@@ -53,6 +56,7 @@ public class Window implements ActionListener,KeyListener, ComponentListener {
         Dimension dimGrid = new Dimension((int) (this.window.getSize().getWidth()*0.75), (int)this.window.getSize().getHeight()-this.window.getInsets().top);
         this.vueGrid = new VueGrid(grid, dimGrid,true);
         
+        //Bar Menu
         menu = new JMenuBar();
 
         menu.setLayout(new GridLayout(1,4));
@@ -66,6 +70,8 @@ public class Window implements ActionListener,KeyListener, ComponentListener {
         play.addActionListener(this);
         pause = new JMenuItem("Pause");
         pause.addActionListener(this);
+        next = new JMenuItem("Next");
+        next.addActionListener(this);
         reset = new JMenuItem("Reset");
         reset.addActionListener(this);
         clear = new JMenuItem("Clear");
@@ -96,7 +102,43 @@ public class Window implements ActionListener,KeyListener, ComponentListener {
         settingsMenu.addActionListener(this);
         menu.add(cellMenu);
         cellMenu.addActionListener(this);
-        
+
+        //Icon Menu
+
+        iconMenu = this.window.getLayeredPane();
+        icon = new JPanel();
+        int w = 300;
+        int h = 50;
+        icon.setBounds((this.window.getWidth()-w)/2, (this.window.getHeight()-h*2), w, h);
+
+        playIc = new ImageIcon(System.getProperty("user.dir") + "\\src\\main\\assets\\button\\play.png");
+        pauseIc = new ImageIcon(System.getProperty("user.dir") + "\\src\\main\\assets\\button\\stop.png");
+        icon.add(playPauseBtn = new JToggleButton(playIc));
+        playPauseBtn.addActionListener(this);
+
+        nextIc = new ImageIcon(System.getProperty("user.dir") + "\\src\\main\\assets\\button\\next.png");
+        icon.add(nextBtn = new JButton(nextIc));
+        nextBtn.addActionListener(this);
+
+        resetIc = new ImageIcon(System.getProperty("user.dir") + "\\src\\main\\assets\\button\\reset.png");
+        icon.add(resetBtn = new JButton(resetIc));
+        resetBtn.addActionListener(this);
+
+        clearIc = new ImageIcon(System.getProperty("user.dir") + "\\src\\main\\assets\\button\\clear.png");
+        icon.add(clearBtn = new JButton(clearIc));
+        clearBtn.addActionListener(this);
+
+        photoIc = new ImageIcon(System.getProperty("user.dir") + "\\src\\main\\assets\\button\\photo.png");
+        icon.add(photoBtn = new JButton(photoIc));
+        photoBtn.addActionListener(this);
+
+        videoIc = new ImageIcon(System.getProperty("user.dir") + "\\src\\main\\assets\\button\\video.png");
+        icon.add(videoBtn = new JButton(videoIc));
+        videoBtn.addActionListener(this);
+
+        icon.setLayout(new GridLayout(1, 7));
+        iconMenu.add(icon);
+
         this.window.add(this.vueGrid, BorderLayout.CENTER);
         this.window.setJMenuBar(menu);
         this.window.setVisible(true);
@@ -105,7 +147,6 @@ public class Window implements ActionListener,KeyListener, ComponentListener {
     @Override
     public void componentResized(ComponentEvent e) {
         if(this.vueGrid != null){
-            this.vueGrid.setDimension(new Dimension((int) (this.window.getSize().getWidth()), (int)this.window.getSize().getHeight()-this.window.getInsets().top));
             this.vueGrid.setDimension(new Dimension((int) (this.window.getSize().getWidth()), (int)this.window.getSize().getHeight()-this.window.getInsets().top));
         }
     }
@@ -128,22 +169,35 @@ public class Window implements ActionListener,KeyListener, ComponentListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if(e.getSource()==playPauseBtn){
+            if (playPauseBtn.isSelected()){
+                playPauseBtn.setIcon(pauseIc);
+                System.out.println("Bouton Play");
+            }
+            else{
+                playPauseBtn.setIcon(playIc);
+                System.out.println("Bouton Stop");
+            }
+        }
         if (e.getSource()==play){
             System.out.println("Bouton Play");
         }
         if (e.getSource()==pause){
             System.out.println("Bouton Pause");
         }
-        if (e.getSource()==reset){
+        if (e.getSource()==next || e.getSource()==nextBtn){
+            System.out.println("Bouton Next");
+        }
+        if (e.getSource()==reset || e.getSource()==resetBtn){
             System.out.println("Bouton Reset");
         }
-        if (e.getSource()==clear){
+        if (e.getSource()==clear || e.getSource()==clearBtn){
             System.out.println("Bouton Clear");
         }
-        if (e.getSource()==photo){
+        if (e.getSource()==photo || e.getSource()==photoBtn){
             System.out.println("Bouton Photo");
         }
-        if (e.getSource()==video){
+        if (e.getSource()==video || e.getSource()==videoBtn){
             System.out.println("Bouton Video");
         }
         if (e.getSource()==load){
