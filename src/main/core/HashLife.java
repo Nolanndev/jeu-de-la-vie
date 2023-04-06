@@ -53,10 +53,12 @@ public class HashLife{
                 neighboorsAlive += quadtree.getNumberAlive();
             }
         }
-        return ((centre.getNumberAlive() == 1 && neighboorsAlive >= cell.getDieMinNeighbors() && neighboorsAlive <= cell.getDieMaxNeighbors()) || (centre.getNumberAlive() == 0 && neighboorsAlive >= cell.getBornMinNeighbors() && neighboorsAlive <= cell.getBornMaxNeighbors())) ? on : off;
+        return ((centre.getNumberAlive() == 1 && neighboorsAlive >= cell.getDieMinNeighbors() && neighboorsAlive <= cell.getDieMaxNeighbors()) 
+                || (centre.getNumberAlive() == 0 
+                && neighboorsAlive >= cell.getBornMinNeighbors() && neighboorsAlive <= cell.getBornMaxNeighbors())) ? on : off;
     }
 
-    private Quadtree life_4x4(Quadtree m){
+    public Quadtree life_4x4(Quadtree m){
         Quadtree nw = life(m.getNw().getSe(), m.getNw().getNw(), m.getNw().getNe(), m.getNe().getNw(), m.getNw().getSw(), m.getNe().getSw(), m.getSw().getNw(), m.getSw().getNe(), m.getSe().getNw());  
         Quadtree ne = life(m.getNe().getSw(), m.getNw().getNe(), m.getNe().getNw(), m.getNe().getNe(), m.getNw().getSe(), m.getNe().getSe(), m.getSw().getNe(), m.getSe().getNw(), m.getSe().getNe());  
         Quadtree sw = life(m.getSw().getNe(), m.getNw().getSw(), m.getNw().getSe(), m.getNe().getSw(), m.getSw().getNw(), m.getSe().getNw(), m.getSw().getSw(), m.getSw().getSe(), m.getSe().getSw()); 
@@ -67,7 +69,8 @@ public class HashLife{
     /*
     retourne le successeur central d’un noeud au moment t+2**k-2.
     */
-    private Quadtree successor(Quadtree m, Integer j){
+    
+    public Quadtree successor(Quadtree m, Integer j){
         Quadtree res;
 
         if(cache.containsKey(m)){
@@ -120,7 +123,7 @@ public class HashLife{
         return res;
     }
 
-    private boolean isPadded(Quadtree q){
+    public boolean isPadded(Quadtree q){
         return(
             q.getNw().getNumberAlive() == q.getNw().getSe().getSe().getNumberAlive() &&
             q.getNe().getNumberAlive() == q.getNe().getSw().getSw().getNumberAlive() &&
@@ -137,6 +140,9 @@ public class HashLife{
     }
 
     public Quadtree inner(Quadtree q){
+        if (q.getDepth() < 2){
+            return null;
+        }
         return new Quadtree(q.getNw().getSe(), q.getNe().getSw(), q.getSw().getNe(), q.getSe().getNw());
     }
 

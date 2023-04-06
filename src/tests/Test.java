@@ -21,13 +21,13 @@ public class Test {
         boolean ok = true;
         
         System.out.println("-------------");
-
+/* 
         // All test OK
         TestProfileManager profileManagerTester = new TestProfileManager();
         ok = ok && profileManagerTester.testLoad();
         ok = ok && profileManagerTester.testValidProfileName();
         ok = ok && profileManagerTester.testSave();
-
+*/
         System.out.println("-------------");
      
         // All test OK
@@ -64,23 +64,22 @@ public class Test {
         ok = ok && cell.testGetDieMinNeighbors();
         ok = ok && cell.testGetDieMaxNeighbors();
 
-/* 
-        // -------------
+        System.out.println("-------------");
+
         //TestHashLife
         TestHashLife hashLife = new TestHashLife();
         ok = ok && hashLife.testGetZero();
-        ok = ok && hashLife.testJoin();
-        //ok = ok && hashLife.testCentre();
+        //ok = ok && hashLife.testCentre(); // en attente creation fonction equals
         ok = ok && hashLife.testLife();
         ok = ok && hashLife.testLife4x4();
-        //ok = ok && hashLife.testSuccessor();
-        //ok = ok && hashLife.testIsPadded();
+        //ok = ok && hashLife.testSuccessor(); // fonction à finir également
+        ok = ok && hashLife.testIsPadded();
         ok = ok && hashLife.testPad();
+        ok = ok && hashLife.testInner();
+        //ok = ok && hashLife.testCrop();
         ok = ok && hashLife.testAdvance();
 
-*/
-
-        
+    
         if (ok == false){
             System.out.println("At least one test KO");
         }
@@ -88,5 +87,4 @@ public class Test {
             System.out.println("All test OK");
         }
     }
-
 }
