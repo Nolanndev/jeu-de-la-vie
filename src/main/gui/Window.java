@@ -1,14 +1,14 @@
 package main.gui;
 
-import main.core.Grid;
-import main.core.HashLife;
-import main.core.Quadtree;
-import main.core.Cell;
+import main.core.*;
+import main.utils.*;
 
 import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
+
+import java.util.*;
 
 public class Window implements ActionListener,KeyListener, ComponentListener {
 
@@ -17,7 +17,7 @@ public class Window implements ActionListener,KeyListener, ComponentListener {
     JMenuBar menu;
     JMenu commandsMenu, profileMenu;
     JMenuItem play, pause, next, reset, clear, photo, video, load, save, settingsMenu, cellMenu;
-    JDialog settingDialog, cellDialog;
+    JDialog settingDialog, cellDialog, loadDialog, saveDialog;
     JPanel iterationP, timeItP, numberItP, startItP, cellMaxP, cellMinP, radiusP, icon;
     JLabel iteration, timeIt, numberIt, startIt, cellMax, cellMin, radius;
     JTextArea timeItT, numberItT, startItT, cellMaxT, cellMinT, radiusT;
@@ -27,6 +27,7 @@ public class Window implements ActionListener,KeyListener, ComponentListener {
     Icon playIc, pauseIc, nextIc, resetIc, clearIc, photoIc, videoIc;
     JLayeredPane iconMenu;
     Grid grid;
+    
 
     public Window(String title) {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -202,6 +203,8 @@ public class Window implements ActionListener,KeyListener, ComponentListener {
         }
         if (e.getSource()==load){
             System.out.println("Bouton Load");
+            // faire une fenetre qui affiches tous les profiles disponibles
+            this.loadProfiles();
         }
         if (e.getSource()==save){
             System.out.println("Bouton Save");
@@ -314,6 +317,11 @@ public class Window implements ActionListener,KeyListener, ComponentListener {
     }
     @Override
     public void keyReleased(KeyEvent e) {
+    }
+
+    void loadProfiles() {
+        loadDialog = new JDialog(new JFrame(), "Load Profile");
+    
     }
 
 
