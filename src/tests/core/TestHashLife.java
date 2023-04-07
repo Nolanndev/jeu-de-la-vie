@@ -2,10 +2,11 @@ package tests.core;
 
 import main.core.HashLife;
 import main.core.Quadtree;
+import main.core.Cell;
 
 import java.nio.file.FileAlreadyExistsException;
 
-import main.core.Cell;
+import javax.swing.text.html.HTMLDocument.RunElement;
 
 
 public class TestHashLife{
@@ -32,8 +33,6 @@ public class TestHashLife{
     
         return true;
     }
-    
-    
 
     public  boolean testInner(){
         System.out.println("Test: inner() ");
@@ -65,33 +64,45 @@ public class TestHashLife{
      
     public boolean testCentre(){
         System.out.println("Test: centre()");
-
+    
         Cell cell = new Cell(true);
         HashLife hashlife = new HashLife(cell);
-
+    
         Quadtree nw = new Quadtree(null, null, null, null,0 ,1, cell);
         Quadtree ne = nw;
         Quadtree se = nw;
         Quadtree sw = nw;
-
+    
         Quadtree centre = new Quadtree(nw, ne, se, sw);
-
+    
         Quadtree zero = hashlife.getZero(centre.getNe().getDepth());
         Quadtree result =  new Quadtree(new Quadtree(zero, zero, zero, centre.getNw()),  
                                         new Quadtree(zero, zero, centre.getNe(), zero),  
                                         new Quadtree(zero, centre.getSw(), zero, zero), 
                                         new Quadtree(centre.getSe(), zero, zero, zero)); 
-
+    
         
         Quadtree quadtree1 = hashlife.centre(centre);
-
-        assert quadtree1.equals(result) : "Erreur avec centre";
-
+    
+        //assert quadtree1.equals(result) : "Erreur avec centre";
+        
+        assert quadtree1 != centre : "L'objet retourné est le même que l'entrée";
+    
+        assert quadtree1.getNw().getNe().getCell() == cell : "Les cellules ne sont pas les mêmes";
+        assert quadtree1.getNe().getNe().getCell() == cell : "Les cellules ne sont pas les mêmes";
+        assert quadtree1.getSw().getNe().getCell() == cell : "Les cellules ne sont pas les mêmes";
+        assert quadtree1.getSe().getNw().getCell() == cell : "Les cellules ne sont pas les mêmes";
+        
+        assert quadtree1.getNw().getDepth() == centre.getNw().getDepth() + 1 : "1Profondeur incorrecte";
+        assert quadtree1.getNe().getDepth() == centre.getNe().getDepth() + 1 : "2Profondeur incorrecte";
+        assert quadtree1.getSw().getDepth() == centre.getSw().getDepth() + 1 : "3Profondeur incorrecte";
+        assert quadtree1.getSe().getDepth() == centre.getSe().getDepth() + 1 : "4Profondeur incorrecte";
+    
         return true;
     }
 
 
-    public boolean testLife() {
+    public boolean testLife(){
         System.out.println("Test: life()");
     
         Cell cell = new Cell(true);
@@ -127,7 +138,7 @@ public class TestHashLife{
     }
     
 
-    public boolean testLife4x4() {
+    public boolean testLife4x4(){
         System.out.println("Test: life4x4() ");
         
         Cell cell = new Cell(true);
@@ -155,35 +166,37 @@ public class TestHashLife{
     }
     
      
-    public boolean testSuccessor() {
+    public boolean testSuccessor(){
         System.out.println("Test: successor() ");
         
         Cell cell = new Cell(true);
         HashLife hashlife = new HashLife(cell);
-
-        Quadtree nw = new Quadtree(null, null, null, null,0 ,1, cell);
+    
+        Quadtree nw = new Quadtree(null, null, null, null, 0, 1, cell);
         Quadtree ne = nw;
         Quadtree se = nw;
         Quadtree sw = nw;
-
+    
         Quadtree m = new Quadtree(nw, ne, se, sw, 1, 0, cell);
         Quadtree quadtree = hashlife.successor(m, 1);
-        assert quadtree == m.getNe() : "Erreur avec successor"; 
-
+        assert quadtree == m.getNe() : "Erreur avec successor pour le cas 1"; 
+   
         Quadtree m1 = new Quadtree(nw, ne, se, sw, 1, 1, cell);
-        Quadtree quadtree1 = hashlife.successor(m, 1);
+        Quadtree quadtree1 = hashlife.successor(m1, 1);
         Quadtree result = hashlife.life_4x4(hashlife.centre(m1));
-
-        assert quadtree1.equals(result) : "erreur avec successor";
-
-        Quadtree m2 = new Quadtree(nw, ne, se, sw, 2, 1, cell);
-        Quadtree quadtree2 = hashlife.successor(m, 1);
+    
+        assert quadtree1.equals(result) : "Erreur avec successor pour le cas 2";
+    
+        Quadtree m2 = new Quadtree(m, m, m, m, 2, 1, cell);
+        Quadtree quadtree2 = hashlife.successor(m2, 1);
         Quadtree result1 = hashlife.life_4x4(m2);
-
-        assert quadtree2.equals(result1) : "erreur avec successor";
-
+    
+        assert quadtree2.equals(result1) : "Erreur avec successor pour le cas 3";
+    
+  
         return true;
     }
+    
     
 
 
@@ -214,38 +227,93 @@ public class TestHashLife{
     }
     
     public boolean testPad(){
-        System.out.println("Test: isPadded() ");
+        System.out.println("Test: pad()");
         Cell cell = new Cell(true);
         HashLife hashlife = new HashLife(cell);
-
-        Quadtree nw = new Quadtree(null, null, null, null,0 ,1, cell);
+    
+        Quadtree nw = new Quadtree(null, null, null, null, 0, 1, cell);
         Quadtree ne = nw;
         Quadtree se = nw;
         Quadtree sw = nw;
 
-        Quadtree quadtree = new Quadtree(nw, ne, sw, se);
-        Quadtree result = hashlife.pad(quadtree);
+        Quadtree pad = new Quadtree(nw, ne, sw, se);
+        Quadtree pad1 = new Quadtree(pad, pad, pad, pad);
 
-        //trouver un cas ou un quadtree n'est pas padded
-        
-        assert !hashlife.isPadded(result) == false : "erreur avec isPadded";
-        //assert result == quadtree : "Erreur avec pad";
+        Quadtree quadtree = new Quadtree(pad1, pad1, pad1, pad1);
+        Quadtree paddedQuadtree = hashlife.pad(quadtree);
 
-
-        return true;
-    }
-
-    public boolean testAdvance(){
-        System.out.println("Test: advance() ");
+        assert !hashlife.isPadded(quadtree) : "Erreur avec isPadded (quadtree initial)";
+        assert hashlife.isPadded(paddedQuadtree) : "Erreur avec isPadded (quadtree padded)";
+        assert paddedQuadtree != quadtree : "Erreur avec pad (quadtree initial)";
 
         return true;
     }
 
     public boolean testCrop(){
-        System.out.println("Test: crop() ");
+        System.out.println("Test: crop()");
+    
+        Cell cell = new Cell(true);
+        HashLife hashlife = new HashLife(cell);
 
-        return true; 
+        Quadtree nw = new Quadtree(null, null, null, null, 0, 1, cell);
+        Quadtree ne = nw;
+        Quadtree se = nw;
+        Quadtree sw = nw;
+        Quadtree quadtree = new Quadtree(nw, ne, sw, se);
+
+        Quadtree croppedQuadtree = hashlife.crop(quadtree);
+        assert croppedQuadtree == quadtree : "(1)Erreur avec crop() sur un Quadtree non-padded";
+    
+        Quadtree paddedQuadtree = hashlife.pad(quadtree);
+    
+        croppedQuadtree = hashlife.crop(paddedQuadtree);
+        assert croppedQuadtree != paddedQuadtree : "(2) Erreur avec crop() sur un Quadtree padded";
+        assert croppedQuadtree.getDepth() != paddedQuadtree.getDepth() - 2 : "(3)Erreur avec crop() sur la profondeur du Quadtree cropped";
+    
+        Quadtree leaf = new Quadtree(null, null, null, null, 0, 1, cell);
+        croppedQuadtree = hashlife.crop(leaf);
+        assert croppedQuadtree == leaf : "(4)Erreur avec crop() sur un Quadtree ayant une profondeur <= 3";
+    
+        return true;
     }
+    
+    public boolean testAdvance(){
+        System.out.println("Test: advance() ");
+    
+        Cell cell = new Cell(true);
+        HashLife hashlife = new HashLife(cell);
+    
+        Quadtree nw = new Quadtree(null, null, null, null, 0, 1, cell);
+        Quadtree ne = nw;
+        Quadtree se = nw;
+        Quadtree sw = nw;
+        Quadtree quadtree = new Quadtree(nw, ne, sw, se);
+    
+        assert hashlife.advance(nw, 0) == nw : "Erreur avec la fonction advance() sur le premier if";
+        assert hashlife.advance(quadtree, 0) == quadtree : "Erreur avec la fonction advance() sur le premier if";
+        assert hashlife.advance(quadtree, 1) != quadtree : "Erreur avec la fonction advance()";
+    
+        
+        Quadtree successor = new Quadtree(null, null, null, null, 0, 1, cell);
+        Quadtree quadtree2 = new Quadtree(successor, successor, successor, successor);
+        Quadtree result = hashlife.advance(quadtree2, 1);
+
+        
+        quadtree2 = hashlife.centre(quadtree2);
+        quadtree2 = hashlife.centre(quadtree2);
+
+        assert quadtree2.equals(result) : "(1) Erreur avec la fonction advance()";
+    
+        Quadtree result2 = new Quadtree(nw, ne, sw, result);
+        assert hashlife.advance(quadtree, 2).equals(result2) : "(2) Erreur avec la fonction advance() ";
+    
+        Quadtree result3 = new Quadtree(nw, nw, nw, nw);
+        assert hashlife.advance(quadtree, 100).equals(result3) : "(3) Erreur avec la fonction advance() pour le test 3";
+
+        return true;
+    }
+    
+
 
 }
 

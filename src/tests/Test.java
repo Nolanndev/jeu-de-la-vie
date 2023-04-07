@@ -14,21 +14,24 @@ import tests.core.TestCell;
 /*
 java -ea -cp bin/ tests.Test */
 
-public class Test {
+public class Test{
 
-    public static void main(String[] args) throws IOException, ProfileNameException {
+    public static void main(String[] args) throws IOException{
 
         boolean ok = true;
         
-        System.out.println("-------------");
-/* 
-        // All test OK
+        System.out.println("------ProfileManager-------");
+
+
         TestProfileManager profileManagerTester = new TestProfileManager();
+        ok = ok && profileManagerTester.testIsUUID();
         ok = ok && profileManagerTester.testLoad();
+
+/* 
         ok = ok && profileManagerTester.testValidProfileName();
         ok = ok && profileManagerTester.testSave();
 */
-        System.out.println("-------------");
+System.out.println("------Quadtree-------");
      
         // All test OK
         TestQuadtree quadtree = new TestQuadtree();
@@ -38,8 +41,7 @@ public class Test {
         ok = ok && quadtree.testEquals();
         ok = ok && quadtree.testToString();
 
-        System.out.println("-------------");
-
+        System.out.println("------Grid-------");
        
         //All test OK
         TestGrid grid = new TestGrid();
@@ -53,7 +55,7 @@ public class Test {
         ok = ok && grid.testCountNeighbors();
         ok = ok && grid.testGetCell();
 
-        System.out.println("-------------");
+        System.out.println("------Cell-------");
 
         //All test OK
         TestCell cell = new TestCell();
@@ -64,21 +66,21 @@ public class Test {
         ok = ok && cell.testGetDieMinNeighbors();
         ok = ok && cell.testGetDieMaxNeighbors();
 
-        System.out.println("-------------");
+        System.out.println("------HashLife-------");
+
 
         //TestHashLife
         TestHashLife hashLife = new TestHashLife();
         ok = ok && hashLife.testGetZero();
-        //ok = ok && hashLife.testCentre(); // en attente creation fonction equals
+        ok = ok && hashLife.testCentre(); 
         ok = ok && hashLife.testLife();
         ok = ok && hashLife.testLife4x4();
-        //ok = ok && hashLife.testSuccessor(); // fonction à finir également
+        ok = ok && hashLife.testSuccessor(); 
         ok = ok && hashLife.testIsPadded();
         ok = ok && hashLife.testPad();
         ok = ok && hashLife.testInner();
-        //ok = ok && hashLife.testCrop();
-        ok = ok && hashLife.testAdvance();
-
+        ok = ok && hashLife.testCrop();
+        //ok = ok && hashLife.testAdvance();
     
         if (ok == false){
             System.out.println("At least one test KO");

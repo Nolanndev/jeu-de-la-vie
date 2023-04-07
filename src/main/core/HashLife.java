@@ -12,7 +12,7 @@ public class HashLife{
     public Quadtree off;
 
 
-    public HashLife(Cell cell) {
+    public HashLife(Cell cell){
         this.cell = cell;
         this.on = new Quadtree(null, null, null, null, 0, 1, cell);
         this.off = new Quadtree(null, null, null, null, 0, 0, cell);
@@ -48,7 +48,7 @@ public class HashLife{
     */
     public Quadtree life(Quadtree centre ,Quadtree... neighboors){
         int neighboorsAlive = 0;
-        for (Quadtree quadtree : neighboors) {
+        for (Quadtree quadtree : neighboors){
             if(quadtree != null){
                 neighboorsAlive += quadtree.getNumberAlive();
             }
@@ -175,7 +175,7 @@ public class HashLife{
 
         q = centre(q);
 
-        for (int i = 0; i < bits.size(); i++) {
+        for (int i = 0; i < bits.size(); i++){
             int bit = bits.get(bits.size() - i - 1);
             int j = bits.size() - i - 1;
             if(bit >=1){

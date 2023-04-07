@@ -46,7 +46,7 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
         this(new Grid(new Dimension(100,100)), dimension, true);
     }
 
-    public void setDimension(Dimension dimension) {
+    public void setDimension(Dimension dimension){
         if(dimension.getWidth() <= 0 || dimension.getHeight() <= 0){
             this.dimension = new Dimension(0, 0);
         }
@@ -55,7 +55,7 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
         }
     }
 
-    public void setSizeCase(int sizeCase) {
+    public void setSizeCase(int sizeCase){
         if(this.sizeCase == null){
             this.sizeCase = sizeCase;
         }
@@ -93,7 +93,7 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
 
     }
 
-    private void setPosUX(int posUX) {
+    private void setPosUX(int posUX){
         if(posUX <= 0){
             this.posUX = 0;
         }
@@ -105,7 +105,7 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
         }
     }
 
-    private void setPosUY(int posUY) {
+    private void setPosUY(int posUY){
         if(posUY <= 0){
             this.posUY = 0;
         }
@@ -163,12 +163,12 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
     }
 
     @Override
-    public void changeOccured() {
+    public void changeOccured(){
         this.drawGrid(getGraphics());
     }
 
     @Override
-    public void changeCell(int x, int y) {
+    public void changeCell(int x, int y){
         Graphics g = getGraphics();
         if(x >= this.posUX && x<this.posUX + (int)(this.dimension.getWidth()/this.sizeCase) && y >= this.posUY && y<    this.posUY + (int)(this.dimension.getHeight()/this.sizeCase)){
             Color c = (this.grid.getCell(x, y).isAlive()) ? Color.red : Color.white; // Red for Alive Cell, White for dead Cell
@@ -188,7 +188,7 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
     
 
     @Override
-    public void mouseClicked(MouseEvent e) {
+    public void mouseClicked(MouseEvent e){
         if(e.getX()<=this.dimension.getWidth() && e.getY()<=this.dimension.getHeight()){ // Click on grid
             int posX = (int)(e.getX()/this.sizeCase);   //Convert position of mouse in position in grid
             int posY = (int)(e.getY()/this.sizeCase);
@@ -217,7 +217,7 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {
+    public void mousePressed(MouseEvent e){
         if(e.getX()<=this.dimension.getWidth() && e.getY()<=this.dimension.getHeight()){
             if(SwingUtilities.isMiddleMouseButton(e)){
                 this.lastX = (int)(e.getX()/this.sizeCase);
@@ -228,7 +228,7 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
     }
 
     @Override
-    public void mouseReleased(MouseEvent e) {
+    public void mouseReleased(MouseEvent e){
         if(e.getX()<=this.dimension.getWidth() && e.getY()<=this.dimension.getHeight()){
             if(SwingUtilities.isMiddleMouseButton(e)){
                 this.lastX = null;
@@ -239,17 +239,17 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
     }
 
     @Override
-    public void mouseEntered(MouseEvent e) {
+    public void mouseEntered(MouseEvent e){
         ;
     }
 
     @Override
-    public void mouseExited(MouseEvent e) {
+    public void mouseExited(MouseEvent e){
         ;
     }
 
     @Override
-    public void mouseDragged(MouseEvent e) {
+    public void mouseDragged(MouseEvent e){
         try{
             if(e.getX()<=this.dimension.getWidth() && e.getY()<=this.dimension.getHeight()){
                 int posX = (int)(e.getX()/this.sizeCase);
@@ -289,13 +289,13 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
     }
 
     @Override
-    public void mouseMoved(MouseEvent e) {
+    public void mouseMoved(MouseEvent e){
         ;
     }
 
     @Override
-    public void mouseWheelMoved(MouseWheelEvent e) {
-        switch (e.getWheelRotation()) {
+    public void mouseWheelMoved(MouseWheelEvent e){
+        switch (e.getWheelRotation()){
             case 1:    //Wheel down
                 this.setSizeCase(this.sizeCase-1);
                 break;

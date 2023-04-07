@@ -4,49 +4,52 @@ import main.utils.ProfileManager;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import main.exceptions.ProfileNameException;
 
-public class TestProfileManager {
+import javax.swing.plaf.TreeUI;
 
-    private HashMap<String, String> createMap() {
-        HashMap<String, String> base = new HashMap<>();
-        base.put("NAME", "test");
-        base.put("RADIUS", "5");
-        base.put("NEIGHBORS_MIN", "1");
-        base.put("NEIGHBORS_MAX", "3");
-        base.put("DELAY", "3000");
-        base.put("STATES", "15");
-        base.put("DIRECTION", "ALL");
-        base.put("EVOLUTION", "null");
-        return base;
-    }
+public class TestProfileManager{
 
-    public boolean testLoad() throws IOException {
-        System.out.print("Test : TestProfileManager.testLoad()");
-        HashMap<String, String> map = createMap();
+    public boolean testIsUUID(){
+        System.out.print("Test : isUUID()");
 
-        HashMap<String, String> res = ProfileManager.load("testBase");
+        String valid = "123e4567-e89b-12d3-a456-426655440000";
+        String invalid = "123e4567-e89b-12d3-a456-42665544";
 
-        assert map.equals(res) : "Profile loading went wrong";
-        System.out.println(" - OK");
+    
+        assert ProfileManager.isUUID(valid) : "erreur sur le nom valide";
+        assert !ProfileManager.isUUID(invalid) : "erreur sur le nom invalide";
+        assert !ProfileManager.isUUID("") : "erreur le nom ne peut pas être vide";
+        assert !ProfileManager.isUUID(null) : "erreur le nom est de type null";
+    
         return true;
     }
-
-    public boolean testValidProfileName() throws ProfileNameException {
-        System.out.print("Test : TestProfileManager.testValidProfileName()");
+    
+    public boolean testLoad(){
+        HashMap<String, HashMap<String, String>> map = ProfileManager.load();
+        File f = new File("invalidPath");
         
-        assert ProfileManager.validProfileName("DARK_SASUKE!!!") == false : "DARK_SASUKE!!! n'est pas un nom de profil valide";
-        assert ProfileManager.validProfileName("DARK_ITACHI14") == true : "DARK_ITACHI14 est un nom de profil valide";
-        assert ProfileManager.validProfileName("TERREUR964") == true : "TERREUR964 est un nom de profil valide";
-        assert ProfileManager.validProfileName("DARKSLIPEUR93!!") == false : "DARKSLIPEUR93!! n'est pas un nom de profil valide";
-        assert ProfileManager.validProfileName("SAKURA EST FAIBLE") == false : "SAKURA EST FAIBLE n'est pas un nom de profil valide";
-        assert ProfileManager.validProfileName("") == false : "Le profil ne peut pas être vide";
-        assert ProfileManager.validProfileName(" ") == false : "Le profil ne peut pas etre un espace";
-        assert ProfileManager.validProfileName("default") == false : "Default est un nom réservé";
+        assert map != null || !f.exists() : "Erreur : le fichier n'existe pas ou est vide";
+        if (map != null){
+            assert !map.isEmpty() : "Erreur : le map est vide";
+        }
+     
+        assert !f.exists() : "Erreur : le fichier existe";
+        
+        String emptyPath = System.getProperty("user.dir") + "\\src\\main\\assets\\emptyFile.txt";
+        File emptyFile = new File(emptyPath);
+        
+        if(emptyFile.exists()){
+            assert emptyFile.length() == 0 : "Erreur : le fichier n'est pas vide";
+        } 
+        else{
+            System.out.println("Le fichier emptyFile n'existe pas.");
+        }
+
         return true;
     }
+    /* 
 
-    public boolean testSave() throws IOException, ProfileNameException {
+    public boolean testSave() throws IOException, ProfileNameException{
         System.out.print("Test : TestProfileManager.testSave()");
         HashMap<String, String> map = createMap();
         ProfileManager.save(map, "testSave");
@@ -55,4 +58,7 @@ public class TestProfileManager {
         assert testFile.exists() == true : "le fichier n'existe pas";
         return true;
     }
+
+*/
+
 }

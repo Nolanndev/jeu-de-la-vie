@@ -9,10 +9,10 @@ import main.core.*;
 import main.gui.*;
 import main.utils.ProfileManager;
 
-public class Gol {
+public class Gol{
 
     
-    public static void main(String[] args) {
+    public static void main(String[] args){
         // System.out.println("DEBUT");
         // System.lineSeparator();
 
@@ -37,7 +37,7 @@ public class Gol {
         // System.out.println(grid.getCell(new Dimension(4,1)) == grid.getCell(4,1));
         // System.out.println("Nombre de voisins de (4,2) : " + grid.countNeighbors(0, 2));
         
-        // for (int i = 1; i <= 10; i++) {
+        // for (int i = 1; i <= 10; i++){
         //     System.out.println("-----------------");
         //     System.out.println("Gen " + i + " : ");
         //     grid.displayGrid();
@@ -67,9 +67,9 @@ public class Gol {
         // new Window("Game Of Life");
 
         HashMap<String, HashMap<String, String>> map = ProfileManager.load();
-        for (String id: map.keySet()) {
+        for (String id: map.keySet()){
             System.out.println(id);
-            for (String key: map.get(id).keySet()) {
+            for (String key: map.get(id).keySet()){
                 System.out.println(key + " : " + map.get(id).get(key));
             }
             System.out.println();

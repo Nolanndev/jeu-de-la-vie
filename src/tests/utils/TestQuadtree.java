@@ -16,7 +16,7 @@ public class TestQuadtree{
     private static Quadtree quad4;
     private static Cell cell; 
 
-    public boolean testGetters() {
+    public boolean testGetters(){
         System.out.println("Test: constructors X getters");
         cell = new Cell(true);
 
@@ -126,7 +126,7 @@ public class TestQuadtree{
         return true;
     }
     
-    public boolean testToString() {
+    public boolean testToString(){
         System.out.println("Test: toString()");
 
         leaf = new Quadtree(null, null, null, null, 0, 1, cell);
