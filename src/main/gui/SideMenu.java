@@ -21,7 +21,7 @@ public class SideMenu extends JPanel implements ActionListener{
         super.setPreferredSize(dimension);
     }
 
-    public void setDimension(Dimension dimension) {
+    public void setDimension(Dimension dimension){
         if(dimension.getWidth() <= 0 || dimension.getHeight() <= 0){
             this.dimension = new Dimension(0, 0);
         }
@@ -216,7 +216,7 @@ public class SideMenu extends JPanel implements ActionListener{
         
     // }
     
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e){
         if(e.getSource()==playStopBtn){
             if (playStopBtn.isSelected()){
                 playStopBtn.setIcon(stop);

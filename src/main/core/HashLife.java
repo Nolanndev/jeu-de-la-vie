@@ -12,7 +12,7 @@ public class HashLife{
     public Quadtree off;
 
 
-    public HashLife(Cell cell) {
+    public HashLife(Cell cell){
         this.cell = cell;
         this.on = new Quadtree(null, null, null, null, 0, 1, cell);
         this.off = new Quadtree(null, null, null, null, 0, 0, cell);
@@ -48,15 +48,17 @@ public class HashLife{
     */
     public Quadtree life(Quadtree centre ,Quadtree... neighboors){
         int neighboorsAlive = 0;
-        for (Quadtree quadtree : neighboors) {
+        for (Quadtree quadtree : neighboors){
             if(quadtree != null){
                 neighboorsAlive += quadtree.getNumberAlive();
             }
         }
-        return ((centre.getNumberAlive() == 1 && neighboorsAlive >= cell.getDieMinNeighbors() && neighboorsAlive <= cell.getDieMaxNeighbors()) || (centre.getNumberAlive() == 0 && neighboorsAlive >= cell.getBornMinNeighbors() && neighboorsAlive <= cell.getBornMaxNeighbors())) ? on : off;
+        return ((centre.getNumberAlive() == 1 && neighboorsAlive >= cell.getDieMinNeighbors() && neighboorsAlive <= cell.getDieMaxNeighbors()) 
+                || (centre.getNumberAlive() == 0 
+                && neighboorsAlive >= cell.getBornMinNeighbors() && neighboorsAlive <= cell.getBornMaxNeighbors())) ? on : off;
     }
 
-    private Quadtree life_4x4(Quadtree m){
+    public Quadtree life_4x4(Quadtree m){
         Quadtree nw = life(m.getNw().getSe(), m.getNw().getNw(), m.getNw().getNe(), m.getNe().getNw(), m.getNw().getSw(), m.getNe().getSw(), m.getSw().getNw(), m.getSw().getNe(), m.getSe().getNw());  
         Quadtree ne = life(m.getNe().getSw(), m.getNw().getNe(), m.getNe().getNw(), m.getNe().getNe(), m.getNw().getSe(), m.getNe().getSe(), m.getSw().getNe(), m.getSe().getNw(), m.getSe().getNe());  
         Quadtree sw = life(m.getSw().getNe(), m.getNw().getSw(), m.getNw().getSe(), m.getNe().getSw(), m.getSw().getNw(), m.getSe().getNw(), m.getSw().getSw(), m.getSw().getSe(), m.getSe().getSw()); 
@@ -67,7 +69,8 @@ public class HashLife{
     /*
     retourne le successeur central d’un noeud au moment t+2**k-2.
     */
-    private Quadtree successor(Quadtree m, Integer j){
+    
+    public Quadtree successor(Quadtree m, Integer j){
         Quadtree res;
 
         if(cache.containsKey(m)){
@@ -120,7 +123,7 @@ public class HashLife{
         return res;
     }
 
-    private boolean isPadded(Quadtree q){
+    public boolean isPadded(Quadtree q){
         return(
             q.getNw().getNumberAlive() == q.getNw().getSe().getSe().getNumberAlive() &&
             q.getNe().getNumberAlive() == q.getNe().getSw().getSw().getNumberAlive() &&
@@ -137,6 +140,9 @@ public class HashLife{
     }
 
     public Quadtree inner(Quadtree q){
+        if (q.getDepth() < 2){
+            return null;
+        }
         return new Quadtree(q.getNw().getSe(), q.getNe().getSw(), q.getSw().getNe(), q.getSe().getNw());
     }
 
@@ -169,7 +175,7 @@ public class HashLife{
 
         q = centre(q);
 
-        for (int i = 0; i < bits.size(); i++) {
+        for (int i = 0; i < bits.size(); i++){
             int bit = bits.get(bits.size() - i - 1);
             int j = bits.size() - i - 1;
             if(bit >=1){

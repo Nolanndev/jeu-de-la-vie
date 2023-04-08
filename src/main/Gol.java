@@ -9,10 +9,10 @@ import main.core.*;
 import main.gui.*;
 import main.utils.ProfileManager;
 
-public class Gol {
+public class Gol{
 
     
-    public static void main(String[] args) {
+    public static void main(String[] args){
         // System.out.println("DEBUT");
         // System.lineSeparator();
 

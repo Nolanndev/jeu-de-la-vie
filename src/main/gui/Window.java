@@ -10,7 +10,7 @@ import java.awt.event.*;
 
 import java.util.*;
 
-public class Window implements ActionListener,KeyListener, ComponentListener {
+public class Window implements ActionListener,KeyListener, ComponentListener{
 
     JFrame window, setting, cell;
     VueGrid vueGrid;
@@ -33,7 +33,7 @@ public class Window implements ActionListener,KeyListener, ComponentListener {
     
 
 
-    public Window(String title) {
+    public Window(String title){
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
         this.window = new JFrame();
@@ -150,30 +150,30 @@ public class Window implements ActionListener,KeyListener, ComponentListener {
     }
     
     @Override
-    public void componentResized(ComponentEvent e) {
+    public void componentResized(ComponentEvent e){
         if(this.vueGrid != null){
             this.vueGrid.setDimension(new Dimension((int) (this.window.getSize().getWidth()), (int)this.window.getSize().getHeight()-this.window.getInsets().top));
         }
     }
     
     @Override
-    public void componentMoved(ComponentEvent e) {
+    public void componentMoved(ComponentEvent e){
         System.out.println("moved");
         
     }
     
     @Override
-    public void componentShown(ComponentEvent e) {
+    public void componentShown(ComponentEvent e){
         
     }
 
     @Override
-    public void componentHidden(ComponentEvent e) {
+    public void componentHidden(ComponentEvent e){
         ;
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e){
         if(e.getSource()==playPauseBtn){
             if (playPauseBtn.isSelected()){
                 playPauseBtn.setIcon(pauseIc);
@@ -312,18 +312,18 @@ public class Window implements ActionListener,KeyListener, ComponentListener {
         }
     }
     @Override
-    public void keyTyped(KeyEvent e) {
+    public void keyTyped(KeyEvent e){
         this.grid.nextGen();
     }
 
     @Override
-    public void keyPressed(KeyEvent e) {
+    public void keyPressed(KeyEvent e){
     }
     @Override
-    public void keyReleased(KeyEvent e) {
+    public void keyReleased(KeyEvent e){
     }
 
-    void loadProfiles() {
+    void loadProfiles(){
         loadDialog = new JDialog(new JFrame(), "Load Profile");
     
     }
