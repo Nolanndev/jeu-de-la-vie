@@ -4,7 +4,6 @@ import java.util.*;
 import java.io.*;
 import java.io.IOException;
 import java.util.regex.*;
-import main.exceptions.*;
 
 public class ProfileManager {
 
@@ -67,20 +66,24 @@ public class ProfileManager {
                 throw new IOException("Le fichier n'existe pas");
             }
         } catch (IOException e) {
+            System.err.println("Erreur : null") ;
             return null;
         }
     }
 
     public static boolean save(HashMap<String, HashMap<String, String>> map) {
         try {
-            String path = System.getProperty("user.dir") + "\\src\\main\\assets\\profiles.gol.profile";
+            String path = System.getProperty("user.dir") + "\\src\\main\\assets\\profiless.gol.profile";
             FileWriter writer = new FileWriter(path);
             String file = "";
             for (String uuid : map.keySet()) {
                 file += uuid + "\n";
+                // System.out.println(uuid);
                 HashMap<String, String> key_val = map.get(uuid);
                 for (String key : key_val.keySet()) {
-                    file += "_" + key + ": " + key_val.get("key") + "\n";
+                    String var = "_" + key + ": " + key_val.get(key) + "\n";
+                    file += var;
+                    // System.out.print(var);
                 }
                 file += "\n";
             }
@@ -93,3 +96,27 @@ public class ProfileManager {
         }
     }
 }
+
+// b2dcdde9-794d-4a9e-bc3c-837207e33778
+// _RADIUS: 1
+// _NUMBER-OF-ITERATION: 10
+// _BEGIN-EVOLUTION-TO-ITERATION: 0
+// _NEIGHBORS-BIRTH-MIN: 2
+// _NEIGHBORS-DEATH-MIN: 2
+// _DELAY: 500
+// _INFINITE-EVOLUTION: true
+// _NAME: default
+// _NEIGHBORS-BIRTH-MAX: 3
+// _NEIGHBORS-DEATH-MAX: 3
+
+// f381ed37-0845-45c2-bcaf-4bb7270734d6
+// _RADIUS: 2
+// _NUMBER-OF-ITERATION: 50
+// _BEGIN-EVOLUTION-TO-ITERATION: 35
+// _NEIGHBORS-BIRTH-MIN: 3
+// _NEIGHBORS-DEATH-MIN: 3
+// _DELAY: 50
+// _INFINITE-EVOLUTION: true
+// _NAME: custom1
+// _NEIGHBORS-BIRTH-MAX: 4
+// _NEIGHBORS-DEATH-MAX: 4

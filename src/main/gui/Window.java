@@ -28,6 +28,10 @@ public class Window implements ActionListener,KeyListener, ComponentListener {
     JLayeredPane iconMenu;
     Grid grid;
     
+    int radiusValue, numberOfIteration, beginEvolutionToIteration, neighborsBirthMin, neighborsBirthMax, neighborsDeathMin, neighborsDeathMax, delay;
+    boolean infiteEvolution;
+    
+
 
     public Window(String title) {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();

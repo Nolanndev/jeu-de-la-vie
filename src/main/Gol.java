@@ -20,31 +20,6 @@ public class Gol {
         // System.out.println(cell.info());
         // System.out.println("-----------------");
 
-        // Grid grid = new Grid(new Dimension(10,20));
-        // grid.setCell(0, 0, new Cell(true));
-        // grid.setCell(4, 1, new Cell(true));
-        // grid.setCell(4, 2, new Cell(true));
-        // grid.setCell(5, 1, new Cell(true));
-        // grid.setCell(4, 4, new Cell(true));
-        // grid.setCell(5, 4, new Cell(true));
-        // grid.setCell(6, 3, new Cell(true));
-        // grid.setCell(6, 5, new Cell(true));
-        // grid.setCell(6, 6, new Cell(true));
-        // grid.setCell(9, 19, new Cell(true));
-
-
-
-        // System.out.println(grid.getCell(new Dimension(4,1)) == grid.getCell(4,1));
-        // System.out.println("Nombre de voisins de (4,2) : " + grid.countNeighbors(0, 2));
-        
-        // for (int i = 1; i <= 10; i++) {
-        //     System.out.println("-----------------");
-        //     System.out.println("Gen " + i + " : ");
-        //     grid.displayGrid();
-        //     grid.nextGen();
-        // }
-
-
         // Quadtree on = new Quadtree(null, null, null, null, 0, 1, cell);
         // Quadtree off = new Quadtree(null, null, null, null, 0, 0, new Cell(false));
 
@@ -66,14 +41,37 @@ public class Gol {
 
         // new Window("Game Of Life");
 
-        HashMap<String, HashMap<String, String>> map = ProfileManager.load();
-        for (String id: map.keySet()) {
-            System.out.println(id);
-            for (String key: map.get(id).keySet()) {
-                System.out.println(key + " : " + map.get(id).get(key));
-            }
-            System.out.println();
-        }
-        ProfileManager.save(map);
+        // HashMap<String, HashMap<String, String>> mapLoad = ProfileManager.load();
+        // System.out.println(mapLoad);
+        // for (String id: mapLoad.keySet()) {
+        //         System.out.println(id);
+        //         for (String key: mapLoad.get(id).keySet()) {
+        //                 System.out.println(key + " : " + mapLoad.get(id).get(key));
+        //             }
+        //             System.out.println();
+        // }
+        
+        // HashMap<String, HashMap<String, String>> mapSave = new HashMap<>();
+        // HashMap<String,String> values = new HashMap<>();
+        // values.put("RADIUS","1");
+        // values.put("NUMBER-OD-ITERATION","10");
+        // values.put("BEGIN-EVOLUTION-TO-ITERATION","0");
+        // values.put("NEIGHBORS-BIRTH-MIN","2");
+        // values.put("NEIGHBORS-DEATH-MIN","2");
+        // values.put("DELAY","500");
+        // values.put("INFINITE-EVOLUTION","true");
+        // values.put("NAME","default");
+        // values.put("NEIGHBORS-BIRTH-MAX","3");
+        // values.put("NEIGHBORS-DEATH-MAX","3");
+        // mapSave.put("b2dcdde9-794d-4a9e-bc3c-837207e33778",values);
+
+        // System.out.println(mapSave);
+        // System.out.println(mapLoad.equals(mapSave));
+        // System.out.println(Boolean.toString(true));
+        // System.out.println("ECRITURE");
+        // ProfileManager.save(mapSave);
+
+       ProfileManager.save(ProfileManager.load());
+
     }
 }
