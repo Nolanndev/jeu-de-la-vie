@@ -13,8 +13,10 @@ import main.core.Cell;
 public class VueGrid extends JPanel implements MouseListener, MouseMotionListener, MouseWheelListener, GridListener{
     
     public Grid grid;
-    public Dimension dimension;
+    public Dimension vueDimension;
     public Boolean drawLine; // Draw line to delimit each Cell
+
+    public Dimension dimGrid;
 
     private int posUX = 0;
     private int posUY = 0;
@@ -25,34 +27,31 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
     private Integer sizeCase;
 
 
-    public VueGrid(Grid grid, Dimension dimension, Boolean drawLine){
+    public VueGrid(Grid grid, Dimension vueDimension, Boolean drawLine){
         addMouseListener(this);
         addMouseMotionListener(this);
         addMouseWheelListener(this);
 
 
         this.grid = grid;
-        this.setDimension(dimension);
+        this.setVueDimension(vueDimension);
         this.drawLine = drawLine;
-        super.setPreferredSize(dimension);
+        super.setPreferredSize(vueDimension);
         this.setSizeCase(10);
-
 
         this.grid.addListener(this);
         
     }
 
-    public VueGrid(Dimension dimension){
-        this(new Grid(new Dimension(100,100)), dimension, true);
-    }
-
-    public void setDimension(Dimension dimension) {
-        if(dimension.getWidth() <= 0 || dimension.getHeight() <= 0){
-            this.dimension = new Dimension(0, 0);
+    public void setVueDimension(Dimension vueDimension) {
+        if(vueDimension.getWidth() <= 0 || vueDimension.getHeight() <= 0){
+            this.vueDimension = new Dimension(0, 0);
         }
         else{
-            this.dimension = dimension;
+            this.vueDimension = vueDimension;
         }
+
+        setDimGrid();
     }
 
     public void setSizeCase(int sizeCase) {
@@ -62,10 +61,10 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
         
         int sizeCaseBeforeChange = this.sizeCase;
 
-        int posX = Math.min((int)((this.dimension.getWidth()/this.sizeCase) + this.posUX),this.grid.getWidth())/2;   //Convert position of mouse in position in grid
-        int posY = Math.min((int)((this.dimension.getHeight()/this.sizeCase) + this.posUY),this.grid.getHeight())/2;
+        int posX = Math.min((int)((this.vueDimension.getWidth()/this.sizeCase) + this.posUX),this.grid.getWidth())/2;   //Convert position of mouse in position in grid
+        int posY = Math.min((int)((this.vueDimension.getHeight()/this.sizeCase) + this.posUY),this.grid.getHeight())/2;
 
-        if(sizeCase*(this.grid.getWidth()-this.posUX) < (int)this.dimension.getWidth() || sizeCase*(this.grid.getHeight()-this.posUY) < (int)this.dimension.getHeight()){
+        if(sizeCase*(this.grid.getWidth()-this.posUX) < (int)this.vueDimension.getWidth() || sizeCase*(this.grid.getHeight()-this.posUY) < (int)this.vueDimension.getHeight()){
             ;
         }
         else{
@@ -79,17 +78,17 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
             else{
                 this.sizeCase = sizeCase;
             }
-            int posX2 = Math.min((int)((this.dimension.getWidth()/this.sizeCase) + this.posUX),this.grid.getWidth())/2;   //Convert position of mouse in position in grid
-            int posY2 = Math.min((int)((this.dimension.getHeight()/this.sizeCase) + this.posUY),this.grid.getHeight())/2;
+            int posX2 = Math.min((int)((this.vueDimension.getWidth()/this.sizeCase) + this.posUX),this.grid.getWidth())/2;   //Convert position of mouse in position in grid
+            int posY2 = Math.min((int)((this.vueDimension.getHeight()/this.sizeCase) + this.posUY),this.grid.getHeight())/2;
     
             setPosUX(this.posUX + posX-posX2);
             setPosUY(this.posUY + posY-posY2);
         }
 
         if(this.sizeCase != sizeCaseBeforeChange){
+            setDimGrid();
             this.paintComponent(getGraphics());
         }
-
 
     }
 
@@ -97,8 +96,8 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
         if(posUX <= 0){
             this.posUX = 0;
         }
-        else if (posUX >= this.grid.getWidth() - (this.dimension.getWidth()/this.sizeCase)){
-            this.posUX = this.grid.getWidth() - (int)(this.dimension.getWidth()/this.sizeCase);
+        else if (posUX >= this.grid.getWidth() - (this.vueDimension.getWidth()/this.sizeCase)){
+            this.posUX = this.grid.getWidth() - (int)(this.vueDimension.getWidth()/this.sizeCase);
         }
         else{
             this.posUX = posUX;
@@ -110,8 +109,8 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
             this.posUY = 0;
         }
 
-        else if (posUY >= this.grid.getHeight() - (int)this.dimension.getHeight()/this.sizeCase ){
-            this.posUY = this.grid.getHeight() - ((int)this.dimension.getHeight()/this.sizeCase) ;
+        else if (posUY >= this.grid.getHeight() - (int)this.vueDimension.getHeight()/this.sizeCase ){
+            this.posUY = this.grid.getHeight() - ((int)this.vueDimension.getHeight()/this.sizeCase) ;
         }
 
         else{
@@ -119,6 +118,17 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
         }
     }
 
+
+    public void setDimGrid() {
+        if(this.sizeCase != null){
+            int dimX = Math.min(this.grid.getWidth(), Math.floorDiv((int)this.vueDimension.getWidth(), this.sizeCase));
+            int dimY = Math.min(this.grid.getHeight(), Math.floorDiv((int)this.vueDimension.getHeight(), this.sizeCase));
+    
+            this.dimGrid = new Dimension(dimX, dimY);
+            System.out.println(this.dimGrid);
+        }
+            
+    }
 
 
 
@@ -128,14 +138,12 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
 
         g.setColor(Color.black);
         if(this.drawLine && this.sizeCase>3){
-            for(int i = 0; i<=Math.min((int)this.dimension.getHeight()/this.sizeCase,this.grid.getHeight()); i++){
-                g.fillRect(0, i*sizeCase-1,Math.min((int)this.dimension.getWidth()/this.sizeCase, this.grid.getWidth())*this.sizeCase, 1);
+            for(int i = 0; i<=this.dimGrid.height; i++){
+                g.fillRect(0, i*sizeCase-1,this.dimGrid.width*this.sizeCase, 1);
             }
-            for(int i = 0; i<=Math.min((int)this.dimension.getWidth()/this.sizeCase,this.grid.getWidth()); i++){
-                g.fillRect(i*sizeCase -1, 0, 1, Math.min((int)this.dimension.getHeight()/this.sizeCase, this.grid.getHeight())*this.sizeCase);
+            for(int i = 0; i<=this.dimGrid.width; i++){
+                g.fillRect(i*sizeCase-1, 0, 1, this.dimGrid.height*this.sizeCase);
             }
-
-            // g.fillRect(0, 0, (int)this.dimension.getWidth(), (int)this.dimension.getHeight()); // Background
         }
 
         this.drawGrid(g);
@@ -143,20 +151,19 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
     }
 
     private void drawGrid(Graphics g){
-        for(int x = 0; x<Math.min((Math.floorDiv((int)this.dimension.getWidth(),(int)this.sizeCase)), this.grid.getWidth()); x++){
-            for(int y = 0; y<Math.min((Math.floorDiv((int)this.dimension.getHeight(),(int)this.sizeCase)), this.grid.getHeight()); y++){
-                
-                
-                    Color c = (this.grid.getCell(x+this.posUX, y+this.posUY).isAlive()) ? Color.red : Color. white; // Red for Alive Cell, White for dead Cell
-                    g.setColor(c);
+        for(int x = 0; x<this.dimGrid.width; x++){
+            for(int y = 0; y<this.dimGrid.height; y++){
+    
+                Color c = (this.grid.getCell(x+this.posUX, y+this.posUY).isAlive()) ? Color.red : Color. white; // Red for Alive Cell, White for dead Cell
+                g.setColor(c);
 
-                    
-                        if(this.drawLine && this.sizeCase>3){
-                            g.fillRect(x*this.sizeCase, y*this.sizeCase, this.sizeCase-1, this.sizeCase-1);
-                        }
-                        else{
-                            g.fillRect(x*this.sizeCase, y*this.sizeCase, this.sizeCase, this.sizeCase);
-                        }
+                
+                if(this.drawLine && this.sizeCase>3){
+                    g.fillRect(x*this.sizeCase, y*this.sizeCase, this.sizeCase-1, this.sizeCase-1);
+                }
+                else{
+                    g.fillRect(x*this.sizeCase, y*this.sizeCase, this.sizeCase, this.sizeCase);
+                }
                 
             }
         }   
@@ -169,8 +176,10 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
 
     @Override
     public void changeCell(int x, int y) {
+        System.out.println(new Point(x,y));
+
         Graphics g = getGraphics();
-        if(x >= this.posUX && x<this.posUX + (int)(this.dimension.getWidth()/this.sizeCase) && y >= this.posUY && y<    this.posUY + (int)(this.dimension.getHeight()/this.sizeCase)){
+        if(x >= this.posUX && x<this.posUX + this.dimGrid.width && y >= this.posUY && y < this.posUY + this.dimGrid.height){
             Color c = (this.grid.getCell(x, y).isAlive()) ? Color.red : Color.white; // Red for Alive Cell, White for dead Cell
             g.setColor(c);
             
@@ -189,7 +198,7 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if(e.getX()<=this.dimension.getWidth() && e.getY()<=this.dimension.getHeight()){ // Click on grid
+        if(e.getX()<=this.vueDimension.getWidth() && e.getY()<=this.vueDimension.getHeight()){ // Click on grid
             int posX = (int)(e.getX()/this.sizeCase);   //Convert position of mouse in position in grid
             int posY = (int)(e.getY()/this.sizeCase);
             if(posX <= this.grid.getWidth() && posY <= this.grid.getHeight()){
@@ -218,7 +227,7 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if(e.getX()<=this.dimension.getWidth() && e.getY()<=this.dimension.getHeight()){
+        if(e.getX()<=this.vueDimension.getWidth() && e.getY()<=this.vueDimension.getHeight()){
             if(SwingUtilities.isMiddleMouseButton(e)){
                 this.lastX = (int)(e.getX()/this.sizeCase);
                 this.lastY = (int)(e.getY()/this.sizeCase);
@@ -229,7 +238,7 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if(e.getX()<=this.dimension.getWidth() && e.getY()<=this.dimension.getHeight()){
+        if(e.getX()<=this.vueDimension.getWidth() && e.getY()<=this.vueDimension.getHeight()){
             if(SwingUtilities.isMiddleMouseButton(e)){
                 this.lastX = null;
                 this.lastY = null;
@@ -251,7 +260,7 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
     @Override
     public void mouseDragged(MouseEvent e) {
         try{
-            if(e.getX()<=this.dimension.getWidth() && e.getY()<=this.dimension.getHeight()){
+            if(e.getX()<=this.vueDimension.getWidth() && e.getY()<=this.vueDimension.getHeight()){
                 int posX = (int)(e.getX()/this.sizeCase);
                 int posY = (int)(e.getY()/this.sizeCase);
 

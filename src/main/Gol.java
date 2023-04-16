@@ -61,6 +61,6 @@ public class Gol {
         Grid fr = new Grid(advance);
         fr.displayGrid();
 
-        // new Window("Game Of Life");
+        new Window("Game Of Life");
     }
 }
