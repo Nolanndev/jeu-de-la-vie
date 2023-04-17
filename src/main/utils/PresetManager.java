@@ -1,6 +1,6 @@
 package main.utils;
 
-public class PresetManager {
+public class PresetManager{
 
     
     

@@ -2,8 +2,8 @@ package tests.core;
 
 import main.core.Cell;
 
-/* 
-Ce fichier servira juste à 
+/*
+Ce fichier servira juste à
 tester le fichier NormalCell.java
 */
 
@@ -47,8 +47,8 @@ public class TestCell{
         System.out.println("Test: getBornMinNeighbors()");
 
         Cell cell1 = new Cell(0, 1, 0, 2, 1, true);
-        Cell cell2 = new Cell(1, 2, 0, 3, 0, true); 
-        Cell cell3 = new Cell(2, 3, 0, 4, 0, true); 
+        Cell cell2 = new Cell(1, 2, 0, 3, 0, true);
+        Cell cell3 = new Cell(2, 3, 0, 4, 0, true);
         
         assert cell1.getBornMinNeighbors() == 0 : "minNeighbors est correct (=0)";
         assert cell2.getBornMinNeighbors() == 1 : "minNeighbors est correct (=1)";
@@ -105,3 +105,4 @@ public class TestCell{
     
     
 }
+

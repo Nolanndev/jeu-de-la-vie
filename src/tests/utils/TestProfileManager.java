@@ -1,58 +1,113 @@
 package tests.utils;
-
 import main.utils.ProfileManager;
+
 import java.io.File;
-import java.io.IOException;
+import java.util.UUID;
+
 import java.util.HashMap;
-import main.exceptions.ProfileNameException;
+import java.util.ArrayList;
 
-public class TestProfileManager {
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
-    private HashMap<String, String> createMap() {
-        HashMap<String, String> base = new HashMap<>();
-        base.put("NAME", "test");
-        base.put("RADIUS", "5");
-        base.put("NEIGHBORS_MIN", "1");
-        base.put("NEIGHBORS_MAX", "3");
-        base.put("DELAY", "3000");
-        base.put("STATES", "15");
-        base.put("DIRECTION", "ALL");
-        base.put("EVOLUTION", "null");
-        return base;
-    }
+public class TestProfileManager{
 
-    public boolean testLoad() throws IOException {
-        System.out.print("Test : TestProfileManager.testLoad()");
-        HashMap<String, String> map = createMap();
+    public boolean testIsUUID(){
+        System.out.print("Test : isUUID()");
 
-        HashMap<String, String> res = ProfileManager.load("testBase");
+        String valid = "123e4567-e89b-12d3-a456-426655440000";
+        String invalid = "123e4567-e89b-12d3-a456-42665544";
 
-        assert map.equals(res) : "Profile loading went wrong";
-        System.out.println(" - OK");
+    
+        assert ProfileManager.isUUID(valid) : "erreur sur le nom valide";
+        assert !ProfileManager.isUUID(invalid) : "erreur sur le nom invalide";
+        assert !ProfileManager.isUUID("") : "erreur le nom ne peut pas être vide";
+        assert !ProfileManager.isUUID(null) : "erreur le nom est de type null";
+    
         return true;
     }
-
-    public boolean testValidProfileName() throws ProfileNameException {
-        System.out.print("Test : TestProfileManager.testValidProfileName()");
+    
+    public boolean testLoad(){
+        HashMap<String, HashMap<String, String>> map = ProfileManager.load();
+        File f = new File("invalidPath");
         
-        assert ProfileManager.validProfileName("DARK_SASUKE!!!") == false : "DARK_SASUKE!!! n'est pas un nom de profil valide";
-        assert ProfileManager.validProfileName("DARK_ITACHI14") == true : "DARK_ITACHI14 est un nom de profil valide";
-        assert ProfileManager.validProfileName("TERREUR964") == true : "TERREUR964 est un nom de profil valide";
-        assert ProfileManager.validProfileName("DARKSLIPEUR93!!") == false : "DARKSLIPEUR93!! n'est pas un nom de profil valide";
-        assert ProfileManager.validProfileName("SAKURA EST FAIBLE") == false : "SAKURA EST FAIBLE n'est pas un nom de profil valide";
-        assert ProfileManager.validProfileName("") == false : "Le profil ne peut pas être vide";
-        assert ProfileManager.validProfileName(" ") == false : "Le profil ne peut pas etre un espace";
-        assert ProfileManager.validProfileName("default") == false : "Default est un nom réservé";
+        assert map != null || !f.exists() : "Erreur : le fichier n'existe pas ou est vide";
+        if (map != null){
+            assert !map.isEmpty() : "Erreur : le map est vide";
+        }
+     
+        assert !f.exists() : "Erreur : le fichier existe";
+        
+        String emptyPath = System.getProperty("user.dir") + "\\src\\main\\assets\\emptyFile.txt";
+        File emptyFile = new File(emptyPath);
+        
+        if(emptyFile.exists()){
+            assert emptyFile.length() == 0 : "Erreur : le fichier n'est pas vide";
+        } 
+        else{
+            System.out.println("Le fichier emptyFile n'existe pas.");
+        }
+
         return true;
     }
 
-    public boolean testSave() throws IOException, ProfileNameException {
-        System.out.print("Test : TestProfileManager.testSave()");
-        HashMap<String, String> map = createMap();
-        ProfileManager.save(map, "testSave");
-        File testFile = new File("src/main/assets/profiles/testSave.gol.profile");
 
-        assert testFile.exists() == true : "le fichier n'existe pas";
+    public boolean testSave(){
+        System.out.println("Test: save()");
+        String path = System.getProperty("user.dir") + "/src/main/assets/profiles.gol.profile";
+        File testFile1 = new File(path);
+        assert testFile1.exists() == true : "Le fichier n'existe pas : " + testFile1.getAbsolutePath();
+    
+        HashMap<String, HashMap<String, String>> emptyMap = new HashMap<>();
+        assert ProfileManager.save(emptyMap) == true: "Erreur avec le ProfileManager - HashMap vide";
+    
+        HashMap<String, HashMap<String, String>> map = new HashMap<>();
+
+        ArrayList<String> uuidList = new ArrayList<>();
+
+        int j = 100;
+        for (int i = 0; i < j; i++){
+            String uuid = UUID.randomUUID().toString();
+            assert ProfileManager.isUUID(uuid) == true : "erreur sur la generation";
+            uuidList.add(uuid);
+            assert uuid.equals(uuidList.get(i)) : "l'uuid est different de celui attendu";
+
+            HashMap<String, String> profile = new HashMap<>();
+
+            profile.put("RADIUS", "0");
+            profile.put("NUMBER-OF-ITERATION", "10");
+            profile.put("BEGIN-EVOLUTION-TO-ITERATION", "0");
+            profile.put("NEIGHBORS-BIRTH-MIN", "2");
+            profile.put("NEIGHBORS-DEATH-MIN", "2");
+            profile.put("DELAY", "500");
+            profile.put("INFINITE-EVOLUTION", "true");
+            profile.put("NAME", "default");
+            profile.put("NEIGHBORS-BIRTH-MAX", "3");
+            profile.put("NEIGHBORS-DEATH-MAX", "3");
+            
+            map.put(uuid, profile);
+            assert ProfileManager.save(map, path) : "Erreur lors de l'enregistrement de la HashMap non vide";
+        }
+   
+        // verifie les UUID dans le fichier
+        try (BufferedReader reader = new BufferedReader(new FileReader(testFile1))) {
+            int i = 0;
+            String line;
+            while ((line = reader.readLine()).isEmpty() == false) {
+                if (i % 12 == 0) { // recupere les uuid aux lignes qui correspondent
+                    String uuidFromFile = line.trim();
+                    assert uuidList.contains(uuidFromFile) == true : "uuid n'a pas ete ecrit dans le fichier";
+    
+                }
+                i++;
+            }
+        } 
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        System.out.println("save() : OK");
         return true;
     }
 }

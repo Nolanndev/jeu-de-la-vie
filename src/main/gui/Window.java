@@ -1,9 +1,7 @@
 package main.gui;
 
-import main.core.Grid;
-import main.core.HashLife;
-import main.core.Quadtree;
-import main.core.Cell;
+import main.core.*;
+
 
 import javax.swing.*;
 
@@ -27,14 +25,19 @@ public class Window implements ActionListener, KeyListener, ComponentListener {
     Icon playIc, pauseIc, nextIc, resetIc, clearIc, photoIc, videoIc, closeIc;
     JLayeredPane iconMenu;
     Grid grid;
+    
+    int radiusValue, numberOfIteration, beginEvolutionToIteration, neighborsBirthMin, neighborsBirthMax, neighborsDeathMin, neighborsDeathMax, delay;
+    boolean infiteEvolution;
+    
 
-    public Window(String title) {
+
+    public Window(String title){
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
         this.window = new JFrame();
 
-        this.window.addComponentListener(this); //resize Event listener
         this.window.addKeyListener(this);
+        this.window.addComponentListener(this); //resize Event listener
 
         this.window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
         this.window.setTitle(title);
@@ -42,16 +45,24 @@ public class Window implements ActionListener, KeyListener, ComponentListener {
         this.window.setLocation((int)(screenSize.getWidth()-this.window.getWidth())/2, (int)(screenSize.getHeight()-this.window.getHeight())/2); // Center on screen
         this.window.setResizable(true);
         
-        this.grid = new Grid(new Dimension(200, 150)); // grille de 20 x 20 = 400 cases
-        this.grid.setCell(0, 0, new Cell(true));
-        this.grid.setCell(4, 2, new Cell(true));
-        this.grid.setCell(5, 1, new Cell(true));
-        this.grid.setCell(4, 4, new Cell(true));
-        this.grid.setCell(5, 4, new Cell(true));
-        this.grid.setCell(6, 3, new Cell(true));
-        this.grid.setCell(6, 5, new Cell(true));
-        this.grid.setCell(1, 149, new Cell(true));
-        this.grid.setCell(199, 149, new Cell(true));
+        Quadtree on = new Quadtree(null, null, null, null, 0, 1, new Cell(true));
+        Quadtree off = new Quadtree(null, null, null, null, 0, 0, new Cell(false));
+
+
+        Quadtree q1 = new Quadtree(on, on, off, on);
+        Quadtree q2 = new Quadtree(off, on, on, off);
+        Quadtree q3 = new Quadtree(off, off, on, on);
+        Quadtree q4 = new Quadtree(on, off, off, on);
+        
+        Quadtree q = new Quadtree(q1, q2, q3, q4);
+
+        HashLife hash = new HashLife(new Cell(true));
+
+        
+        new Grid(q).displayGrid();
+        Quadtree advance = hash.advance(q, 479);
+
+        this.grid = new Grid(advance);
         
         Dimension dimGrid = new Dimension((int) (this.window.getSize().getWidth()*0.75), (int)this.window.getSize().getHeight()-this.window.getInsets().top);
         this.vueGrid = new VueGrid(this.grid, dimGrid,true);
@@ -153,9 +164,9 @@ public class Window implements ActionListener, KeyListener, ComponentListener {
     }
     
     @Override
-    public void componentResized(ComponentEvent e) {
+    public void componentResized(ComponentEvent e){
         if(this.vueGrid != null){
-            this.vueGrid.setDimension(new Dimension((int) (this.window.getSize().getWidth()), (int)this.window.getSize().getHeight()-this.window.getInsets().top));
+            this.vueGrid.setVueDimension(new Dimension((int) (this.window.getSize().getWidth()), (int)this.window.getSize().getHeight()-this.window.getInsets().top));
             this.iconP.setBounds((this.window.getWidth()-300)/2, (this.window.getHeight()-100), 300, 50);
         }
     }
@@ -167,7 +178,7 @@ public class Window implements ActionListener, KeyListener, ComponentListener {
     }
     
     @Override
-    public void componentShown(ComponentEvent e) {
+    public void componentShown(ComponentEvent e){
         
     }
 
@@ -274,6 +285,8 @@ public class Window implements ActionListener, KeyListener, ComponentListener {
         }
         if (e.getSource()==this.load){
             System.out.println("Bouton Load");
+            // faire une fenetre qui affiches tous les profiles disponibles
+            // this.loadProfiles();
         }
         if (e.getSource()==this.save){
             System.out.println("Bouton Save");
@@ -391,15 +404,15 @@ public class Window implements ActionListener, KeyListener, ComponentListener {
         }
     }
     @Override
-    public void keyTyped(KeyEvent e) {
+    public void keyTyped(KeyEvent e){
         this.grid.nextGen();
     }
-
     @Override
-    public void keyPressed(KeyEvent e) {
+    public void keyPressed(KeyEvent e){
+        ;
     }
     @Override
-    public void keyReleased(KeyEvent e) {
+    public void keyReleased(KeyEvent e){
     }
 
     Runnable code = new Runnable() {

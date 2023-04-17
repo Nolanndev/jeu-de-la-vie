@@ -1,3 +1,4 @@
+
 package tests.core;
 
 import java.awt.Dimension;
@@ -106,8 +107,8 @@ public class TestGrid{
         tuple3 = new Dimension(3, 3);
         Grid grid = new Grid(tuple3);
 
-        // ajout de cellule à grid 
-        grid.setCell(0, 0, new Cell(true)); 
+        // ajout de cellule à grid
+        grid.setCell(0, 0, new Cell(true));
         grid.setCell(1, 1, new Cell(true));
         grid.setCell(2, 2, new Cell(true));
 
@@ -178,7 +179,7 @@ public class TestGrid{
 
         for (int j = 0; j < 20; j++){
             if (j != 3){
-                assert grid5.getCell(tuple6).getBornMaxNeighbors() != j: "getBornMaxNeighbors est incorrecte"; 
+                assert grid5.getCell(tuple6).getBornMaxNeighbors() != j: "getBornMaxNeighbors est incorrecte";
                 assert grid5.getCell(tuple6).getBornMinNeighbors() != j: "getBornMinNeighbors est incorrecte";
                 assert grid5.getCell(tuple6).getDieMaxNeighbors() != j: "getDieMaxNeighbors est incorrecte";
 
@@ -196,4 +197,5 @@ public class TestGrid{
 
         return true;
     }
-}    
+}   
+

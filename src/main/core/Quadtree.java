@@ -2,7 +2,7 @@ package main.core;
 
 import java.text.MessageFormat;
 
-public class Quadtree {
+public class Quadtree{
 
     private Quadtree nw;
     private Quadtree ne;
@@ -12,7 +12,7 @@ public class Quadtree {
     private int numberAlive;
     private Cell cell;
     
-    public Quadtree(Quadtree nw, Quadtree ne, Quadtree sw, Quadtree se, int depth, int numberAlive, Cell cell) {
+    public Quadtree(Quadtree nw, Quadtree ne, Quadtree sw, Quadtree se, int depth, int numberAlive, Cell cell){
         this.nw = nw;
         this.ne = ne;
         this.se = se;
@@ -22,35 +22,41 @@ public class Quadtree {
         this.cell = cell;
     }
 
-    public Quadtree(Quadtree nw, Quadtree ne, Quadtree sw, Quadtree se) {
+    public Quadtree(Quadtree nw, Quadtree ne, Quadtree sw, Quadtree se){
         this(nw, ne, sw, se, nw.getDepth()+1, (nw.getNumberAlive() + ne.getNumberAlive() + se.getNumberAlive() + sw.getNumberAlive()), nw.getCell());
     }
 
-    public Quadtree getNe() {
+    // public Quadtree(Grid grid){
+    //     (Math.log(x) / Math.log(2))
+    //    int depth =Math.max((int)grid.getHeight(), (int)grid.getWidth());
+    // }
+
+
+    public Quadtree getNe(){
         return ne;
     }
 
-    public Quadtree getNw() {
+    public Quadtree getNw(){
         return nw;
     }
 
-    public Quadtree getSe() {
+    public Quadtree getSe(){
         return se;
     }
 
-    public Quadtree getSw() {
+    public Quadtree getSw(){
         return sw;
     }
 
-    public int getDepth() {
+    public int getDepth(){
         return depth;
     }
 
-    public int getNumberAlive() {
+    public int getNumberAlive(){
         return numberAlive;
     }
 
-    public Cell getCell() {
+    public Cell getCell(){
         return cell;
     }
 
@@ -67,7 +73,7 @@ public class Quadtree {
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode(){
         if(this.numberAlive == 1){
             return 678;
         }
@@ -78,7 +84,7 @@ public class Quadtree {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object obj){
         if (obj == this){
             return true;
         }
@@ -92,7 +98,7 @@ public class Quadtree {
     }
 
     @Override
-    public String toString() {
+    public String toString(){
         return MessageFormat.format("depth : {0},  nbAlive: {1}",
             this.getDepth(),
             this.getNumberAlive()

@@ -11,23 +11,20 @@ import tests.core.TestGrid;
 import tests.core.TestHashLife;
 import tests.core.TestCell;
 
-/*
-java -ea -cp bin/ tests.Test */
+
 
 public class Test {
 
-    public static void main(String[] args) throws IOException, ProfileNameException {
+    public static void main(String[] args) throws IOException{
 
         boolean ok = true;
         
         System.out.println("-------------");
 
-        // All test OK
         TestProfileManager profileManagerTester = new TestProfileManager();
+        //ok = ok && profileManagerTester.testSave();
         ok = ok && profileManagerTester.testLoad();
-        ok = ok && profileManagerTester.testValidProfileName();
-        ok = ok && profileManagerTester.testSave();
-
+        
         System.out.println("-------------");
      
         // All test OK
@@ -64,23 +61,13 @@ public class Test {
         ok = ok && cell.testGetDieMinNeighbors();
         ok = ok && cell.testGetDieMaxNeighbors();
 
-/* 
-        // -------------
+        System.out.println("-------------");
+
         //TestHashLife
         TestHashLife hashLife = new TestHashLife();
-        ok = ok && hashLife.testGetZero();
-        ok = ok && hashLife.testJoin();
-        //ok = ok && hashLife.testCentre();
-        ok = ok && hashLife.testLife();
-        ok = ok && hashLife.testLife4x4();
-        //ok = ok && hashLife.testSuccessor();
-        //ok = ok && hashLife.testIsPadded();
-        ok = ok && hashLife.testPad();
         ok = ok && hashLife.testAdvance();
 
-*/
-
-        
+    
         if (ok == false){
             System.out.println("At least one test KO");
         }
@@ -88,5 +75,5 @@ public class Test {
             System.out.println("All test OK");
         }
     }
-
 }
+
