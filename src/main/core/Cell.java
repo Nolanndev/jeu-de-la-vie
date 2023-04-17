@@ -92,7 +92,6 @@ public class Cell {
         this(3,3,2,3,1,alive);
     }
 
-
     /**
      * Accessor to the value of <b>bornMinNeighbors</b>.
      * @return value of <b>bornMinNeighbors</b>.
@@ -101,7 +100,6 @@ public class Cell {
         return this.bornMinNeighbors;
     }
 
-    
     /**
      * Defined <b>bornMinNeighbors</b> value of a cell.
      * @param newBornMin new value of <b>bornMinNeighbors</b>.
@@ -116,7 +114,6 @@ public class Cell {
         }
         this.bornMinNeighbors = newBornMin;
     }
-    
     
     /**
      * Accessor to the value of <b>bornMaxNeighbors</b>.
@@ -145,7 +142,6 @@ public class Cell {
     public int getDieMinNeighbors() {
         return this.dieMinNeighbors;
     }
-
     
     /**
      * Defined <b>dieMinNeighbors</b> value of a cell.
@@ -203,7 +199,6 @@ public class Cell {
         this.radius = radius;
     }
     
-    
     /**
      * Accessor to state of cell.
      * @return <b>true</b> if cell is <b>alive</b>, <b>else</b> return <b>false</b>
@@ -216,10 +211,9 @@ public class Cell {
      * Defined state of a cell. 
      * @param newState alive or not.
     */
-    private void setState(boolean newState) {
+    public void setState(boolean newState) {
         this.alive = newState;
     }
-
 
     /**
      * Access to representation of Cell in String.

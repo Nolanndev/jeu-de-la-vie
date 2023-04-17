@@ -29,8 +29,6 @@ public class Gol {
         // grid.setCell(6, 6, new Cell(true));
         // grid.setCell(9, 19, new Cell(true));
 
-
-
         // System.out.println(grid.getCell(new Dimension(4,1)) == grid.getCell(4,1));
         // System.out.println("Nombre de voisins de (4,2) : " + grid.countNeighbors(0, 2));
         
@@ -44,7 +42,6 @@ public class Gol {
 
         Quadtree on = new Quadtree(null, null, null, null, 0, 1, cell);
         Quadtree off = new Quadtree(null, null, null, null, 0, 0, new Cell(false));
-
 
         Quadtree q1 = new Quadtree(on, on, off, on);
         Quadtree q2 = new Quadtree(off, on, on, off);

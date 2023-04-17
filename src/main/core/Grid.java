@@ -36,7 +36,6 @@ public class Grid {
     */
     private ArrayList<GridListener> listeners = new ArrayList<GridListener>();
 
-
     /**
      * Constructor which produce new <b>Grid</b> of given <b>size</b>.
      * Each <b>Cell</b> is initialize to the given <b>Cell</b>.
@@ -52,7 +51,6 @@ public class Grid {
                 setCell(i, j, new Cell(cell.getBornMinNeighbors(), cell.getBornMaxNeighbors(), cell.getDieMinNeighbors(), cell.getDieMaxNeighbors(), cell.getRadius(), cell.isAlive()));
             }  
         }  
-
     }
 
     /**
@@ -74,8 +72,7 @@ public class Grid {
         this.size = new Dimension(board.length, board[0].length);
     }
 
-
-    public Grid (Quadtree tree){
+    public Grid(Quadtree tree){
         this(quadtreeToMatrix(tree));
     }
 
@@ -137,7 +134,6 @@ public class Grid {
         this.gridChange();
     }
 
-
     /**
      * Accessor to the <b>size</b> of this <b>Grid</b>.
      * @return <b>size</b> of this <b>Grid</b>.
@@ -182,7 +178,6 @@ public class Grid {
         }
     }
 
-
     /**
      * Accessor to the given row of matrix
      * @param row index in the matrix
@@ -220,7 +215,6 @@ public class Grid {
         }
         return result;
     }
-
 
     /**
      * Accessor to <b>Cell</b> which are in the given coordinates in the matrix. 
@@ -267,7 +261,6 @@ public class Grid {
         this.setCell((int)getHeight(), (int)getWidth(), cell);
     }
 
-
     /**
      * Display grid in terminal.
      * Alive <b>Cell</b> are represent by ■
@@ -283,8 +276,6 @@ public class Grid {
         }
     }
 
-
-
     /**
      * Count alive neigbors of <b>Cell</b> at the given coordinates.
      * Radius of Neigbors depend on radius of <b>Cell</b>.
@@ -296,7 +287,6 @@ public class Grid {
      */
     public int countNeighbors(int x, int y) {
         int radius = getCell(x,y).getRadius();
-        
         
         int countNeighbors = 0;
 
@@ -373,7 +363,6 @@ public class Grid {
         this.listeners.remove(e);
     }
 
-
     private void gridChange(){
         for (GridListener listener : this.listeners) {
             listener.changeOccured();
@@ -384,6 +373,15 @@ public class Grid {
         for (GridListener listener : this.listeners) {
             listener.changeCell(x, y);
         }
+    }
+
+    public void clearGrid(){
+        for (Cell[] cells : board) {
+            for (Cell cell : cells) {
+                cell.setState(false);
+            }
+        }
+        this.gridChange();
     }
 
 }

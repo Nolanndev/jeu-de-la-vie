@@ -119,9 +119,6 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
         }
     }
 
-
-
-
     @Override
     public void paintComponent(Graphics g){
         super.paintComponent(g);
@@ -182,10 +179,6 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
             }
         }
     }
-
-
-
-    
 
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -308,9 +301,5 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
                 break;
         }
     }
-
-
-
-    
 
 }
