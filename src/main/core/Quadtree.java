@@ -26,6 +26,14 @@ public class Quadtree{
         this(nw, ne, sw, se, nw.getDepth()+1, (nw.getNumberAlive() + ne.getNumberAlive() + se.getNumberAlive() + sw.getNumberAlive()), nw.getCell());
     }
 
+    public Quadtree(Grid grid){
+        int gridMaxSize = Math.max((int)grid.getHeight(), (int)grid.getWidth());  
+        int depth = (int) Math.floor((Math.log(gridMaxSize) / Math.log(2)));
+        
+        System.out.println(depth);
+    }
+
+
     public Quadtree getNe(){
         return ne;
     }
