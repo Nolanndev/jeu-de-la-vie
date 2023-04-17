@@ -2,7 +2,6 @@ package main;
 
 
 import java.awt.Dimension;
-import java.awt.desktop.SystemSleepEvent;
 import java.util.HashMap;
 
 import javax.swing.text.html.HTMLDocument.RunElement;
@@ -36,8 +35,9 @@ public class Gol{
 
         // HashLife hash = new HashLife(cell);
 
+        
         // new Grid(q).displayGrid();
-        // Quadtree advance = hash.advance(q, 30);
+        // Quadtree advance = hash.advance(q, 260);
 
         // Grid fr = new Grid(advance);
         // fr.displayGrid();
@@ -74,7 +74,12 @@ public class Gol{
         // System.out.println("ECRITURE");
         // ProfileManager.save(mapSave);
 
+<<<<<<< HEAD
        //ProfileManager.save(ProfileManager.load());
+=======
+    //    ProfileManager.save(ProfileManager.load());
+>>>>>>> d545ca97a4254e357dc469a82bbe592809cd3402
 
+        new Window("Game Of Life");
     }
 }

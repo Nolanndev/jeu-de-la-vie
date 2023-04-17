@@ -1,16 +1,15 @@
 package main.gui;
 
 import main.core.*;
-import main.utils.*;
+
 
 import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
 
-import java.util.*;
 
-public class Window implements ActionListener,KeyListener, ComponentListener{
+public class Window implements ActionListener, KeyListener, ComponentListener{
 
     JFrame window, setting, cell;
     VueGrid vueGrid;
@@ -38,8 +37,8 @@ public class Window implements ActionListener,KeyListener, ComponentListener{
 
         this.window = new JFrame();
 
-        this.window.addComponentListener(this); //resize Event listener
         this.window.addKeyListener(this);
+        this.window.addComponentListener(this); //resize Event listener
 
         this.window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
         this.window.setTitle(title);
@@ -47,16 +46,24 @@ public class Window implements ActionListener,KeyListener, ComponentListener{
         this.window.setLocation((int)(screenSize.getWidth()-this.window.getWidth())/2, (int)(screenSize.getHeight()-this.window.getHeight())/2); // Center on screen
         this.window.setResizable(true);
         
-        Grid grid = new Grid(new Dimension(200, 150)); // grille de 20 x 20 = 400 cases
-        grid.setCell(0, 0, new Cell(true));
-        grid.setCell(4, 2, new Cell(true));
-        grid.setCell(5, 1, new Cell(true));
-        grid.setCell(4, 4, new Cell(true));
-        grid.setCell(5, 4, new Cell(true));
-        grid.setCell(6, 3, new Cell(true));
-        grid.setCell(6, 5, new Cell(true));
-        grid.setCell(1, 149, new Cell(true));
-        grid.setCell(199, 149, new Cell(true));
+        Quadtree on = new Quadtree(null, null, null, null, 0, 1, new Cell(true));
+        Quadtree off = new Quadtree(null, null, null, null, 0, 0, new Cell(false));
+
+
+        Quadtree q1 = new Quadtree(on, on, off, on);
+        Quadtree q2 = new Quadtree(off, on, on, off);
+        Quadtree q3 = new Quadtree(off, off, on, on);
+        Quadtree q4 = new Quadtree(on, off, off, on);
+        
+        Quadtree q = new Quadtree(q1, q2, q3, q4);
+
+        HashLife hash = new HashLife(new Cell(true));
+
+        
+        new Grid(q).displayGrid();
+        Quadtree advance = hash.advance(q, 479);
+
+        Grid grid = new Grid(advance);
         
         Dimension dimGrid = new Dimension((int) (this.window.getSize().getWidth()*0.75), (int)this.window.getSize().getHeight()-this.window.getInsets().top);
         this.vueGrid = new VueGrid(grid, dimGrid,true);
@@ -100,6 +107,9 @@ public class Window implements ActionListener,KeyListener, ComponentListener{
         
         profileMenu.add(load);
         profileMenu.add(save);
+
+
+        this.grid = new Grid(new Dimension(500,300));
         
         menu.add(commandsMenu);
         menu.add(profileMenu);
@@ -116,28 +126,28 @@ public class Window implements ActionListener,KeyListener, ComponentListener{
         int h = 50;
         icon.setBounds((this.window.getWidth()-w)/2, (this.window.getHeight()-h*2), w, h);
 
-        playIc = new ImageIcon(System.getProperty("user.dir") + "\\src\\main\\assets\\button\\play.png");
-        pauseIc = new ImageIcon(System.getProperty("user.dir") + "\\src\\main\\assets\\button\\stop.png");
+        playIc = new ImageIcon(System.getProperty("user.dir") + "/src/main/assets/button/play.png");
+        pauseIc = new ImageIcon(System.getProperty("user.dir") + "/src/main/assets/button/stop.png");
         icon.add(playPauseBtn = new JToggleButton(playIc));
         playPauseBtn.addActionListener(this);
 
-        nextIc = new ImageIcon(System.getProperty("user.dir") + "\\src\\main\\assets\\button\\next.png");
+        nextIc = new ImageIcon(System.getProperty("user.dir") + "/src/main/assets/button/next.png");
         icon.add(nextBtn = new JButton(nextIc));
         nextBtn.addActionListener(this);
 
-        resetIc = new ImageIcon(System.getProperty("user.dir") + "\\src\\main\\assets\\button\\reset.png");
+        resetIc = new ImageIcon(System.getProperty("user.dir") + "/src/main/assets/button/reset.png");
         icon.add(resetBtn = new JButton(resetIc));
         resetBtn.addActionListener(this);
 
-        clearIc = new ImageIcon(System.getProperty("user.dir") + "\\src\\main\\assets\\button\\clear.png");
+        clearIc = new ImageIcon(System.getProperty("user.dir") + "/src/main/assets/button/clear.png");
         icon.add(clearBtn = new JButton(clearIc));
         clearBtn.addActionListener(this);
 
-        photoIc = new ImageIcon(System.getProperty("user.dir") + "\\src\\main\\assets\\button\\photo.png");
+        photoIc = new ImageIcon(System.getProperty("user.dir") + "/src/main/assets/button/photo.png");
         icon.add(photoBtn = new JButton(photoIc));
         photoBtn.addActionListener(this);
 
-        videoIc = new ImageIcon(System.getProperty("user.dir") + "\\src\\main\\assets\\button\\video.png");
+        videoIc = new ImageIcon(System.getProperty("user.dir") + "/src/main/assets/button/video.png");
         icon.add(videoBtn = new JButton(videoIc));
         videoBtn.addActionListener(this);
 
@@ -152,7 +162,7 @@ public class Window implements ActionListener,KeyListener, ComponentListener{
     @Override
     public void componentResized(ComponentEvent e){
         if(this.vueGrid != null){
-            this.vueGrid.setDimension(new Dimension((int) (this.window.getSize().getWidth()), (int)this.window.getSize().getHeight()-this.window.getInsets().top));
+            this.vueGrid.setVueDimension(new Dimension((int) (this.window.getSize().getWidth()), (int)this.window.getSize().getHeight()-this.window.getInsets().top));
         }
     }
     
@@ -315,9 +325,9 @@ public class Window implements ActionListener,KeyListener, ComponentListener{
     public void keyTyped(KeyEvent e){
         this.grid.nextGen();
     }
-
     @Override
     public void keyPressed(KeyEvent e){
+        ;
     }
     @Override
     public void keyReleased(KeyEvent e){
