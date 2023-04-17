@@ -24,7 +24,7 @@ public class HashLife{
     si la profondeur est inferieure ou egale à 0, on retourne un quadtree null
     sinon on retourne un noeud vide au niveau k
     */
-    public Quadtree getZero(int depth){
+    private Quadtree getZero(int depth){
         return (depth <= 0) ? this.off : new Quadtree(getZero(depth-1), getZero(depth-1), getZero(depth-1), getZero(depth-1));
     }
 
@@ -32,7 +32,7 @@ public class HashLife{
     renvoie un noeud au niveau k+1, qui est centré sur le noeud quadtree donné :
     */
     
-    public Quadtree centre(Quadtree centre){
+    private Quadtree centre(Quadtree centre){
         Quadtree zero = getZero(centre.getNe().getDepth());
         return new Quadtree(new Quadtree(zero, zero, zero, centre.getNw()), new Quadtree(zero, zero, centre.getNe(), zero), new Quadtree(zero, centre.getSw(), zero, zero), new Quadtree(centre.getSe(), zero, zero, zero)); 
     }
@@ -46,7 +46,7 @@ public class HashLife{
     cellules en utilisant la règle de vie standard (ou toute autre 
     règle d’automate cellulaire binaire de quartier Moore que nous choisissons)
     */
-    public Quadtree life(Quadtree centre ,Quadtree... neighboors){
+    private Quadtree life(Quadtree centre ,Quadtree... neighboors){
         int neighboorsAlive = 0;
         for (Quadtree quadtree : neighboors){
             if(quadtree != null){
@@ -58,7 +58,7 @@ public class HashLife{
                 && neighboorsAlive >= cell.getBornMinNeighbors() && neighboorsAlive <= cell.getBornMaxNeighbors())) ? on : off;
     }
 
-    public Quadtree life_4x4(Quadtree m){
+    private Quadtree life_4x4(Quadtree m){
         Quadtree nw = life(m.getNw().getSe(), m.getNw().getNw(), m.getNw().getNe(), m.getNe().getNw(), m.getNw().getSw(), m.getNe().getSw(), m.getSw().getNw(), m.getSw().getNe(), m.getSe().getNw());  
         Quadtree ne = life(m.getNe().getSw(), m.getNw().getNe(), m.getNe().getNw(), m.getNe().getNe(), m.getNw().getSe(), m.getNe().getSe(), m.getSw().getNe(), m.getSe().getNw(), m.getSe().getNe());  
         Quadtree sw = life(m.getSw().getNe(), m.getNw().getSw(), m.getNw().getSe(), m.getNe().getSw(), m.getSw().getNw(), m.getSe().getNw(), m.getSw().getSw(), m.getSw().getSe(), m.getSe().getSw()); 
@@ -70,7 +70,7 @@ public class HashLife{
     retourne le successeur central d’un noeud au moment t+2**k-2.
     */
     
-    public Quadtree successor(Quadtree m, Integer j){
+    private Quadtree successor(Quadtree m, Integer j){
         Quadtree res;
 
         if(cache.containsKey(m)){
@@ -123,7 +123,7 @@ public class HashLife{
         return res;
     }
 
-    public boolean isPadded(Quadtree q){
+    private boolean isPadded(Quadtree q){
         return(
             q.getNw().getNumberAlive() == q.getNw().getSe().getSe().getNumberAlive() &&
             q.getNe().getNumberAlive() == q.getNe().getSw().getSw().getNumberAlive() &&
@@ -132,23 +132,23 @@ public class HashLife{
         );
     }
 
-    public Quadtree pad(Quadtree q){
+    private Quadtree pad(Quadtree q){
         if (q.getDepth() <= 3 || !isPadded(q)){
             return pad(centre(q));
         }
         return q;
     }
 
-    public Quadtree inner(Quadtree q){
+    private Quadtree inner(Quadtree q){
         if (q.getDepth() < 2){
             return null;
         }
         return new Quadtree(q.getNw().getSe(), q.getNe().getSw(), q.getSw().getNe(), q.getSe().getNw());
     }
 
-    public Quadtree crop(Quadtree q){
-        if(q.getDepth() <= 3 || !isPadded(q)){
-            return q; 
+    private Quadtree crop(Quadtree q){
+        if(q.getDepth() <= 2 || !isPadded(q)){
+            return inner(q); 
         }
 
         return crop(inner(q));
@@ -182,6 +182,6 @@ public class HashLife{
                 q = successor(q, j);
             }
         }
-        return q;
+        return crop(q);
     }
 }

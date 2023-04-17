@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.desktop.SystemSleepEvent;
 import java.util.HashMap;
 
+import javax.swing.text.html.HTMLDocument.RunElement;
+
 import main.core.*;
 import main.gui.*;
 import main.utils.ProfileManager;
@@ -16,11 +18,12 @@ public class Gol{
         // System.out.println("DEBUT");
         // System.lineSeparator();
 
-        // Cell cell = new Cell(true);
+        Cell cell = new Cell(true);
         // System.out.println(cell.info());
         // System.out.println("-----------------");
 
-        // Quadtree on = new Quadtree(null, null, null, null, 0, 1, cell);
+        
+        // Quadtree on = new Quadtree(null, null, null, null, 0, 1, new Cell(true));
         // Quadtree off = new Quadtree(null, null, null, null, 0, 0, new Cell(false));
 
 
@@ -71,7 +74,7 @@ public class Gol{
         // System.out.println("ECRITURE");
         // ProfileManager.save(mapSave);
 
-       ProfileManager.save(ProfileManager.load());
+       //ProfileManager.save(ProfileManager.load());
 
     }
 }

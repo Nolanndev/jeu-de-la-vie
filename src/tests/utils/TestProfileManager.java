@@ -1,11 +1,15 @@
 package tests.utils;
-
 import main.utils.ProfileManager;
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
 
-import javax.swing.plaf.TreeUI;
+import java.io.File;
+import java.util.UUID;
+
+import java.util.HashMap;
+import java.util.ArrayList;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class TestProfileManager{
 
@@ -47,18 +51,63 @@ public class TestProfileManager{
 
         return true;
     }
-    /* 
 
-    public boolean testSave() throws IOException, ProfileNameException{
-        System.out.print("Test : TestProfileManager.testSave()");
-        HashMap<String, String> map = createMap();
-        ProfileManager.save(map, "testSave");
-        File testFile = new File("src/main/assets/profiles/testSave.gol.profile");
 
-        assert testFile.exists() == true : "le fichier n'existe pas";
+    public boolean testSave(){
+        System.out.println("Test: save()");
+        String path = System.getProperty("user.dir") + "/src/main/assets/profiles.gol.profile";
+        File testFile1 = new File(path);
+        assert testFile1.exists() == true : "Le fichier n'existe pas : " + testFile1.getAbsolutePath();
+    
+        HashMap<String, HashMap<String, String>> emptyMap = new HashMap<>();
+        assert ProfileManager.save(emptyMap) == true: "Erreur avec le ProfileManager - HashMap vide";
+    
+        HashMap<String, HashMap<String, String>> map = new HashMap<>();
+
+        ArrayList<String> uuidList = new ArrayList<>();
+
+        int j = 100;
+        for (int i = 0; i < j; i++){
+            String uuid = UUID.randomUUID().toString();
+            assert ProfileManager.isUUID(uuid) == true : "erreur sur la generation";
+            uuidList.add(uuid);
+            assert uuid.equals(uuidList.get(i)) : "l'uuid est different de celui attendu";
+
+            HashMap<String, String> profile = new HashMap<>();
+
+            profile.put("RADIUS", "0");
+            profile.put("NUMBER-OF-ITERATION", "10");
+            profile.put("BEGIN-EVOLUTION-TO-ITERATION", "0");
+            profile.put("NEIGHBORS-BIRTH-MIN", "2");
+            profile.put("NEIGHBORS-DEATH-MIN", "2");
+            profile.put("DELAY", "500");
+            profile.put("INFINITE-EVOLUTION", "true");
+            profile.put("NAME", "default");
+            profile.put("NEIGHBORS-BIRTH-MAX", "3");
+            profile.put("NEIGHBORS-DEATH-MAX", "3");
+            
+            map.put(uuid, profile);
+            assert ProfileManager.save(map, path) : "Erreur lors de l'enregistrement de la HashMap non vide";
+        }
+   
+        // verifie les UUID dans le fichier
+        try (BufferedReader reader = new BufferedReader(new FileReader(testFile1))) {
+            int i = 0;
+            String line;
+            while ((line = reader.readLine()).isEmpty() == false) {
+                if (i % 12 == 0) { // recupere les uuid aux lignes qui correspondent
+                    String uuidFromFile = line.trim();
+                    assert uuidList.contains(uuidFromFile) == true : "uuid n'a pas ete ecrit dans le fichier";
+    
+                }
+                i++;
+            }
+        } 
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        System.out.println("save() : OK");
         return true;
     }
-
-*/
-
 }
