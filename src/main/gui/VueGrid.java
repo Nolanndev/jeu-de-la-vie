@@ -54,7 +54,7 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
         setDimGrid();
     }
 
-    public void setSizeCase(int sizeCase) {
+    public void setSizeCase(int sizeCase){
         if(this.sizeCase == null){
             this.sizeCase = sizeCase;
         }
@@ -92,7 +92,7 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
 
     }
 
-    private void setPosUX(int posUX) {
+    private void setPosUX(int posUX){
         if(posUX <= 0){
             this.posUX = 0;
         }
@@ -104,7 +104,7 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
         }
     }
 
-    private void setPosUY(int posUY) {
+    private void setPosUY(int posUY){
         if(posUY <= 0){
             this.posUY = 0;
         }
@@ -170,14 +170,12 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
     }
 
     @Override
-    public void changeOccured() {
+    public void changeOccured(){
         this.drawGrid(getGraphics());
     }
 
     @Override
-    public void changeCell(int x, int y) {
-        System.out.println(new Point(x,y));
-
+    public void changeCell(int x, int y){
         Graphics g = getGraphics();
         if(x >= this.posUX && x<this.posUX + this.dimGrid.width && y >= this.posUY && y < this.posUY + this.dimGrid.height){
             Color c = (this.grid.getCell(x, y).isAlive()) ? Color.red : Color.white; // Red for Alive Cell, White for dead Cell
@@ -248,17 +246,17 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
     }
 
     @Override
-    public void mouseEntered(MouseEvent e) {
+    public void mouseEntered(MouseEvent e){
         ;
     }
 
     @Override
-    public void mouseExited(MouseEvent e) {
+    public void mouseExited(MouseEvent e){
         ;
     }
 
     @Override
-    public void mouseDragged(MouseEvent e) {
+    public void mouseDragged(MouseEvent e){
         try{
             if(e.getX()<=this.vueDimension.getWidth() && e.getY()<=this.vueDimension.getHeight()){
                 int posX = (int)(e.getX()/this.sizeCase);
@@ -298,13 +296,13 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
     }
 
     @Override
-    public void mouseMoved(MouseEvent e) {
+    public void mouseMoved(MouseEvent e){
         ;
     }
 
     @Override
-    public void mouseWheelMoved(MouseWheelEvent e) {
-        switch (e.getWheelRotation()) {
+    public void mouseWheelMoved(MouseWheelEvent e){
+        switch (e.getWheelRotation()){
             case 1:    //Wheel down
                 this.setSizeCase(this.sizeCase-1);
                 break;

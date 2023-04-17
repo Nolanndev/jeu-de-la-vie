@@ -21,7 +21,7 @@ public class SideMenu extends JPanel implements ActionListener{
         super.setPreferredSize(dimension);
     }
 
-    public void setDimension(Dimension dimension) {
+    public void setDimension(Dimension dimension){
         if(dimension.getWidth() <= 0 || dimension.getHeight() <= 0){
             this.dimension = new Dimension(0, 0);
         }
@@ -52,38 +52,38 @@ public class SideMenu extends JPanel implements ActionListener{
 
         m1 = new JPanel();
 
-        play = new ImageIcon(System.getProperty("user.dir") + "\\src\\main\\assets\\button\\play.png");
-        stop = new ImageIcon(System.getProperty("user.dir") + "\\src\\main\\assets\\button\\stop.png");
+        play = new ImageIcon(System.getProperty("user.dir") + "/src/main/assets/button/play.png");
+        stop = new ImageIcon(System.getProperty("user.dir") + "/src/main/assets/button/stop.png");
         playStopBtn = new JToggleButton(play);
         playStopBtn.setPreferredSize(dimBtn);
         playStopBtn.addActionListener(this);
         m1.add(playStopBtn);
 
-        next = new ImageIcon(System.getProperty("user.dir") + "\\src\\main\\assets\\button\\next.png");
+        next = new ImageIcon(System.getProperty("user.dir") + "/src/main/assets/button/next.png");
         nextBtn = new JButton(next);
         nextBtn.setPreferredSize(dimBtn);
         nextBtn.addActionListener(this);
         m1.add(nextBtn);
 
-        reset = new ImageIcon(System.getProperty("user.dir") + "\\src\\main\\assets\\button\\reset.png");
+        reset = new ImageIcon(System.getProperty("user.dir") + "/src/main/assets/button/reset.png");
         resetBtn = new JButton(reset);
         resetBtn.setPreferredSize(dimBtn);
         resetBtn.addActionListener(this);
         m1.add(resetBtn); 
 
-        clear = new ImageIcon(System.getProperty("user.dir") + "\\src\\main\\assets\\button\\clear.png");
+        clear = new ImageIcon(System.getProperty("user.dir") + "/src/main/assets/button/clear.png");
         clearBtn = new JButton(clear);
         clearBtn.setPreferredSize(dimBtn);
         clearBtn.addActionListener(this);
         m1.add(clearBtn);
 
-        photo = new ImageIcon(System.getProperty("user.dir") + "\\src\\main\\assets\\button\\photo.png");
+        photo = new ImageIcon(System.getProperty("user.dir") + "/src/main/assets/button/photo.png");
         photoBtn = new JButton(photo);
         photoBtn.setPreferredSize(dimBtn);
         photoBtn.addActionListener(this);
         m1.add(photoBtn);
 
-        video = new ImageIcon(System.getProperty("user.dir") + "\\src\\main\\assets\\button\\video.png");
+        video = new ImageIcon(System.getProperty("user.dir") + "/src/main/assets/button/video.png");
         videoBtn = new JButton(video);
         videoBtn.setPreferredSize(dimBtn);
         videoBtn.addActionListener(this);
@@ -216,7 +216,7 @@ public class SideMenu extends JPanel implements ActionListener{
         
     // }
     
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e){
         if(e.getSource()==playStopBtn){
             if (playStopBtn.isSelected()){
                 playStopBtn.setIcon(stop);

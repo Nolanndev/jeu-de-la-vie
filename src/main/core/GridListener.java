@@ -1,10 +1,10 @@
 package main.core;
 
 /**
- * Interface which make the connections between the model {@link Grid} and observers of this model, like {@link main.gui.VueGrid}.
+ * Interface which make the connections between the model{@link Grid} and observers of this model, like{@link main.gui.VueGrid}.
  * @author David Matthias
  */
-public interface GridListener {
+public interface GridListener{
     /**
      * Occured when <b>Grid</b> have changed
      * @see Grid#setBoard(Cell[][])
