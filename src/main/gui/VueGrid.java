@@ -190,10 +190,6 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
         }
     }
 
-
-
-    
-
     @Override
     public void mouseClicked(MouseEvent e) {
         if(e.getX()<=this.vueDimension.getWidth() && e.getY()<=this.vueDimension.getHeight()){ // Click on grid
@@ -315,9 +311,5 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
                 break;
         }
     }
-
-
-
-    
 
 }

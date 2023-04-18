@@ -4,6 +4,8 @@ package main;
 import java.awt.Dimension;
 import java.util.HashMap;
 
+import javax.swing.text.html.HTMLDocument.RunElement;
+
 import main.core.*;
 import main.gui.*;
 import main.utils.ProfileManager;
@@ -15,11 +17,26 @@ public class Gol{
         // System.out.println("DEBUT");
         // System.lineSeparator();
 
-        // Cell cell = new Cell(true);
+        Cell cell = new Cell(true);
         // System.out.println(cell.info());
         // System.out.println("-----------------");
 
-        // Quadtree on = new Quadtree(null, null, null, null, 0, 1, cell);
+        // Grid grid = new Grid(new Dimension(10,20));
+        // grid.setCell(0, 0, new Cell(true));
+        // grid.setCell(4, 1, new Cell(true));
+        // grid.setCell(4, 2, new Cell(true));
+        // grid.setCell(5, 1, new Cell(true));
+        // grid.setCell(4, 4, new Cell(true));
+        // grid.setCell(5, 4, new Cell(true));
+        // grid.setCell(6, 3, new Cell(true));
+        // grid.setCell(6, 5, new Cell(true));
+        // grid.setCell(6, 6, new Cell(true));
+        // grid.setCell(9, 19, new Cell(true));
+
+        // System.out.println(grid.getCell(new Dimension(4,1)) == grid.getCell(4,1));
+        // System.out.println("Nombre de voisins de (4,2) : " + grid.countNeighbors(0, 2));
+        
+        // Quadtree on = new Quadtree(null, null, null, null, 0, 1, new Cell(true));
         // Quadtree off = new Quadtree(null, null, null, null, 0, 0, new Cell(false));
 
 
@@ -50,6 +67,15 @@ public class Gol{
         //             }
         //             System.out.println();
         // }
+
+
+        Quadtree on = new Quadtree(null, null, null, null, 0, 1, cell);
+        Quadtree off = new Quadtree(null, null, null, null, 0, 0, new Cell(false));
+
+        Quadtree q1 = new Quadtree(on, on, off, on);
+        Quadtree q2 = new Quadtree(off, on, on, off);
+        Quadtree q3 = new Quadtree(off, off, on, on);
+        Quadtree q4 = new Quadtree(on, off, off, on);
         
         // HashMap<String, HashMap<String, String>> mapSave = new HashMap<>();
         // HashMap<String,String> values = new HashMap<>();
@@ -71,7 +97,7 @@ public class Gol{
         // System.out.println("ECRITURE");
         // ProfileManager.save(mapSave);
 
-    //    ProfileManager.save(ProfileManager.load());
+       //ProfileManager.save(ProfileManager.load());
 
         new Window("Game Of Life");
     }

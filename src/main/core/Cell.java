@@ -92,7 +92,6 @@ public class Cell{
         this(3,3,2,3,1,alive);
     }
 
-
     /**
      * Accessor to the value of <b>bornMinNeighbors</b>.
      * @return value of <b>bornMinNeighbors</b>.
@@ -101,7 +100,6 @@ public class Cell{
         return this.bornMinNeighbors;
     }
 
-    
     /**
      * Defined <b>bornMinNeighbors</b> value of a cell.
      * @param newBornMin new value of <b>bornMinNeighbors</b>.
@@ -116,7 +114,6 @@ public class Cell{
         }
         this.bornMinNeighbors = newBornMin;
     }
-    
     
     /**
      * Accessor to the value of <b>bornMaxNeighbors</b>.
@@ -145,7 +142,6 @@ public class Cell{
     public int getDieMinNeighbors(){
         return this.dieMinNeighbors;
     }
-
     
     /**
      * Defined <b>dieMinNeighbors</b> value of a cell.
@@ -203,7 +199,6 @@ public class Cell{
         this.radius = radius;
     }
     
-    
     /**
      * Accessor to state of cell.
      * @return <b>true</b> if cell is <b>alive</b>, <b>else</b> return <b>false</b>
@@ -220,7 +215,6 @@ public class Cell{
         this.alive = newState;
     }
 
-
     /**
      * Access to representation of Cell in String.
      * @return representation of cell
@@ -228,5 +222,10 @@ public class Cell{
     public String info(){
         return "State: " + this.alive + "\nNeighbors\n\tmin to born: " + this.getBornMinNeighbors() + "\n\tmax to born: " + this.getBornMaxNeighbors() + 
         "\n\tmin before die : " + this.getDieMinNeighbors() + "\n\tmax before die : " + this.getDieMaxNeighbors() +"\nradius : " + this.radius;
+    }
+
+    @Override
+    public String toString() {
+        return(this.isAlive()) ? "■" : ".";
     }
 }

@@ -28,9 +28,29 @@ public class Quadtree{
 
     public Quadtree(Grid grid){
         int gridMaxSize = Math.max((int)grid.getHeight(), (int)grid.getWidth());  
-        int depth = (int) Math.floor((Math.log(gridMaxSize) / Math.log(2)));
-        
-        System.out.println(depth);
+        int depth = (int) Math.ceil((Math.log(gridMaxSize) / Math.log(2)));
+        grid.convertForQuadtree((int)Math.pow(2, depth));
+
+        if(depth == 0){
+            this.nw = null;
+            this.ne = null;
+            this.se = null;
+            this.sw = null;
+            this.depth = 0;
+            this.cell = grid.getCell(0, 0);
+            this.numberAlive = (this.cell.isAlive()) ? 1 : 0;;
+        }
+
+        else{
+            this.nw = new Quadtree(new Grid(grid.getNw()));
+            this.ne = new Quadtree(new Grid(grid.getNe()));
+            this.sw = new Quadtree(new Grid(grid.getSw()));
+            this.se = new Quadtree(new Grid(grid.getSe()));
+            this.depth = depth;
+            this.cell = nw.getCell();
+            this.numberAlive = (nw.getNumberAlive() + ne.getNumberAlive() + se.getNumberAlive() + sw.getNumberAlive());
+        }
+
     }
 
 
@@ -96,6 +116,7 @@ public class Quadtree{
         }
 
         Quadtree q = (Quadtree) obj;
+
         return this.getNw() == q.getNw() && this.getNe() == q.getNe() && this.getSe() == q.getSe() && this.getSw() == q.getSw();
     }
 

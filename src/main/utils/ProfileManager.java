@@ -7,6 +7,12 @@ import java.util.regex.*;
 
 public class ProfileManager{
 
+    /**
+     * Retourne vrai si la chaîne de caractères passée en paramètre est un uuid
+     * @param line une chaine de caractère
+     * @ensures return true si line est générée par java.util.UUID.randomUUID();
+     * @return vrai si le paramètre line est un uuid
+     */
     public static boolean isUUID(String line){
         if (line == null){
             return false;
@@ -17,10 +23,19 @@ public class ProfileManager{
         return matcher.find();
     }
     
+    public static HashMap<String, HashMap<String,String>> load() {
+	    return load("src\\main\\assets\\profiles.gol.profile");
+    }
 
-    public static HashMap<String, HashMap<String, String>> load(){
+    /**
+     * Charge les profiles du jeu de la vie
+     * @requires les profiles doivent être écrits avec la fonction ProfileManager.load()
+     * @ensures return null s'il y a une erreur lors du chargement des données
+     * @return une HashMap<String, HashMap<String, String>> contenant tous les profiles
+     */
+    public static HashMap<String, HashMap<String, String>> load(String filepath){
         try{
-            String path = System.getProperty("user.dir") + "\\src\\main\\assets\\profiles.gol.profile";
+            String path = System.getProperty("user.dir") + filepath;
             File f = new File(path);
             if (f.exists() && !f.isDirectory()){
                 BufferedReader reader = new BufferedReader(new FileReader(path));
@@ -74,9 +89,20 @@ public class ProfileManager{
         }
     }
 
-    public static boolean save(HashMap<String, HashMap<String, String>> map) {
+    /**
+     * 
+     * @param map est une HashMap<String, HashMap<String,String>> contenant les différents profiles
+     * @requires map doit être une valeur retournée par la fonction ProfileManager.load()
+     * @return vrai si les données ont bien été sauvegardées et faux sinon
+     */
+
+    public static boolean save(HashMap<String, HashMap<String,String>> map) {
+        return save(map, "\\src\\main\\assets\\profiles.gol.profile");
+    }
+
+    public static boolean save(HashMap<String, HashMap<String, String>> map, String filepath) {
         try {
-            String path = System.getProperty("user.dir") + "\\src\\main\\assets\\profiles.gol.profile";
+            String path = System.getProperty("user.dir") + filepath;
             FileWriter writer = new FileWriter(path);
             String file = "";
             for (String uuid : map.keySet()){

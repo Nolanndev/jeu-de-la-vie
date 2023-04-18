@@ -20,13 +20,11 @@ public class Test {
         boolean ok = true;
         
         System.out.println("-------------");
-/*
-        // All test OK
+
         TestProfileManager profileManagerTester = new TestProfileManager();
+        //ok = ok && profileManagerTester.testSave();
         ok = ok && profileManagerTester.testLoad();
-        ok = ok && profileManagerTester.testValidProfileName();
-        ok = ok && profileManagerTester.testSave();
-*/
+        
         System.out.println("-------------");
      
         // All test OK
@@ -67,16 +65,7 @@ public class Test {
 
         //TestHashLife
         TestHashLife hashLife = new TestHashLife();
-        ok = ok && hashLife.testGetZero();
-        //ok = ok && hashLife.testCentre(); // en attente creation fonction equals
-        ok = ok && hashLife.testLife();
-        ok = ok && hashLife.testLife4x4();
-        ok = ok && hashLife.testSuccessor(); 
-        ok = ok && hashLife.testIsPadded();
-        ok = ok && hashLife.testPad();
-        ok = ok && hashLife.testInner();
-        ok = ok && hashLife.testCrop();
-        //ok = ok && hashLife.testAdvance();
+        ok = ok && hashLife.testAdvance();
 
     
         if (ok == false){

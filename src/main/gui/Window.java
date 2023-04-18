@@ -8,22 +8,21 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-
-public class Window implements ActionListener, KeyListener, ComponentListener{
+public class Window implements ActionListener, KeyListener, ComponentListener {
 
     JFrame window, setting, cell;
     VueGrid vueGrid;
     JMenuBar menu;
     JMenu commandsMenu, profileMenu;
-    JMenuItem play, pause, next, reset, clear, photo, video, load, save, settingsMenu, cellMenu;
-    JDialog settingDialog, cellDialog, loadDialog, saveDialog;
-    JPanel iterationP, timeItP, numberItP, startItP, cellMaxP, cellMinP, radiusP, icon;
+    JMenuItem play, pause, next, reset, clear, photo, video, icon, load, save, settingsMenu, cellMenu;
+    JDialog settingDialog, cellDialog;
+    JPanel iterationP, timeItP, numberItP, startItP, cellMaxP, cellMinP, radiusP, iconP;
     JLabel iteration, timeIt, numberIt, startIt, cellMax, cellMin, radius;
     JTextArea timeItT, numberItT, startItT, cellMaxT, cellMinT, radiusT;
     JCheckBox infinite, finite;
-    JButton confimSetting, confirmCell, nextBtn, resetBtn, clearBtn, photoBtn, videoBtn;
+    JButton confimSetting, confirmCell, nextBtn, resetBtn, clearBtn, photoBtn, videoBtn, closeBtn;
     JToggleButton playPauseBtn;
-    Icon playIc, pauseIc, nextIc, resetIc, clearIc, photoIc, videoIc;
+    Icon playIc, pauseIc, nextIc, resetIc, clearIc, photoIc, videoIc, closeIc;
     JLayeredPane iconMenu;
     Grid grid;
     
@@ -63,112 +62,118 @@ public class Window implements ActionListener, KeyListener, ComponentListener{
         new Grid(q).displayGrid();
         Quadtree advance = hash.advance(q, 479);
 
-        Grid grid = new Grid(advance);
+        this.grid = new Grid(advance);
         
         Dimension dimGrid = new Dimension((int) (this.window.getSize().getWidth()*0.75), (int)this.window.getSize().getHeight()-this.window.getInsets().top);
-        this.vueGrid = new VueGrid(grid, dimGrid,true);
+        this.vueGrid = new VueGrid(this.grid, dimGrid,true);
         
         //Bar Menu
-        menu = new JMenuBar();
+        this.menu = new JMenuBar();
 
-        menu.setLayout(new GridLayout(1,4));
+        this.menu.setLayout(new GridLayout(1,4));
         
-        commandsMenu = new JMenu("Commands");
-        profileMenu = new JMenu("Profile");
-        settingsMenu = new JMenuItem("Settings");
-        cellMenu = new JMenuItem("Cell");
+        this.commandsMenu = new JMenu("Commands");
+        this.profileMenu = new JMenu("Profile");
+        this.settingsMenu = new JMenuItem("Settings");
+        this.cellMenu = new JMenuItem("Cell");
         
-        play = new JMenuItem("Play");
-        play.addActionListener(this);
-        pause = new JMenuItem("Pause");
-        pause.addActionListener(this);
-        next = new JMenuItem("Next");
-        next.addActionListener(this);
-        reset = new JMenuItem("Reset");
-        reset.addActionListener(this);
-        clear = new JMenuItem("Clear");
-        clear.addActionListener(this);
-        photo = new JMenuItem("Photo");
-        photo.addActionListener(this);
-        video = new JMenuItem("Video");
-        video.addActionListener(this);
+        this.play = new JMenuItem("Play");
+        this.play.addActionListener(this);
+        this.pause = new JMenuItem("Pause");
+        this.pause.addActionListener(this);
+        this.next = new JMenuItem("Next");
+        this.next.addActionListener(this);
+        this.reset = new JMenuItem("Reset");
+        this.reset.addActionListener(this);
+        this.clear = new JMenuItem("Clear");
+        this.clear.addActionListener(this);
+        this.photo = new JMenuItem("Photo");
+        this.photo.addActionListener(this);
+        this.video = new JMenuItem("Video");
+        this.video.addActionListener(this);
+        this.icon = new JMenuItem("Icons");
+        this.icon.addActionListener(this);
         
-        commandsMenu.add(play);
-        commandsMenu.add(pause);
-        commandsMenu.add(reset);
-        commandsMenu.add(clear);
-        commandsMenu.add(photo);
-        commandsMenu.add(video);
+        this.commandsMenu.add(this.play);
+        this.commandsMenu.add(this.pause);
+        this.commandsMenu.add(this.next);
+        this.commandsMenu.add(this.reset);
+        this.commandsMenu.add(this.clear);
+        this.commandsMenu.add(this.photo);
+        this.commandsMenu.add(this.video);
+        this.commandsMenu.add(this.icon);
         
-        load = new JMenuItem("Load");
-        load.addActionListener(this);
-        save = new JMenuItem("Save");
-        save.addActionListener(this);
+        this.load = new JMenuItem("Load file");
+        this.load.addActionListener(this);
+        this.save = new JMenuItem("Save file");
+        this.save.addActionListener(this);
         
-        profileMenu.add(load);
-        profileMenu.add(save);
-
-
-        this.grid = new Grid(new Dimension(500,300));
+        this.profileMenu.add(this.load);
+        this.profileMenu.add(this.save);
         
-        menu.add(commandsMenu);
-        menu.add(profileMenu);
-        menu.add(settingsMenu);
-        settingsMenu.addActionListener(this);
-        menu.add(cellMenu);
-        cellMenu.addActionListener(this);
+        this.menu.add(this.commandsMenu);
+        this.menu.add(this.profileMenu);
+        this.menu.add(this.settingsMenu);
+        this.settingsMenu.addActionListener(this);
+        this.menu.add(this.cellMenu);
+        this.cellMenu.addActionListener(this);
 
         //Icon Menu
 
-        iconMenu = this.window.getLayeredPane();
-        icon = new JPanel();
-        int w = 300;
-        int h = 50;
-        icon.setBounds((this.window.getWidth()-w)/2, (this.window.getHeight()-h*2), w, h);
+        this.iconMenu = this.window.getLayeredPane();
+        this.iconP = new JPanel();
+        
+        this.playIc = new ImageIcon(System.getProperty("user.dir") + "\\src\\main\\assets\\button\\play.png");
+        this.pauseIc = new ImageIcon(System.getProperty("user.dir") + "\\src\\main\\assets\\button\\stop.png");
+        this.iconP.add(this.playPauseBtn = new JToggleButton(this.playIc));
+        this.playPauseBtn.addActionListener(this);
 
-        playIc = new ImageIcon(System.getProperty("user.dir") + "/src/main/assets/button/play.png");
-        pauseIc = new ImageIcon(System.getProperty("user.dir") + "/src/main/assets/button/stop.png");
-        icon.add(playPauseBtn = new JToggleButton(playIc));
-        playPauseBtn.addActionListener(this);
+        this.nextIc = new ImageIcon(System.getProperty("user.dir") + "\\src\\main\\assets\\button\\next.png");
+        this.iconP.add(this.nextBtn = new JButton(this.nextIc));
+        this.nextBtn.addActionListener(this);
 
-        nextIc = new ImageIcon(System.getProperty("user.dir") + "/src/main/assets/button/next.png");
-        icon.add(nextBtn = new JButton(nextIc));
-        nextBtn.addActionListener(this);
+        this.resetIc = new ImageIcon(System.getProperty("user.dir") + "\\src\\main\\assets\\button\\reset.png");
+        this.iconP.add(this.resetBtn = new JButton(this.resetIc));
+        this.resetBtn.addActionListener(this);
 
-        resetIc = new ImageIcon(System.getProperty("user.dir") + "/src/main/assets/button/reset.png");
-        icon.add(resetBtn = new JButton(resetIc));
-        resetBtn.addActionListener(this);
+        this.clearIc = new ImageIcon(System.getProperty("user.dir") + "\\src\\main\\assets\\button\\clear.png");
+        this.iconP.add(this.clearBtn = new JButton(this.clearIc));
+        this.clearBtn.addActionListener(this);
 
-        clearIc = new ImageIcon(System.getProperty("user.dir") + "/src/main/assets/button/clear.png");
-        icon.add(clearBtn = new JButton(clearIc));
-        clearBtn.addActionListener(this);
+        this.photoIc = new ImageIcon(System.getProperty("user.dir") + "\\src\\main\\assets\\button\\photo.png");
+        this.iconP.add(this.photoBtn = new JButton(this.photoIc));
+        this.photoBtn.addActionListener(this);
 
-        photoIc = new ImageIcon(System.getProperty("user.dir") + "/src/main/assets/button/photo.png");
-        icon.add(photoBtn = new JButton(photoIc));
-        photoBtn.addActionListener(this);
+        this.videoIc = new ImageIcon(System.getProperty("user.dir") + "\\src\\main\\assets\\button\\video.png");
+        this.iconP.add(this.videoBtn = new JButton(this.videoIc));
+        this.videoBtn.addActionListener(this);
 
-        videoIc = new ImageIcon(System.getProperty("user.dir") + "/src/main/assets/button/video.png");
-        icon.add(videoBtn = new JButton(videoIc));
-        videoBtn.addActionListener(this);
+        this.closeIc = new ImageIcon(System.getProperty("user.dir") + "\\src\\main\\assets\\button\\close.png");
+        this.iconP.add(this.closeBtn = new JButton(this.closeIc));
+        this.closeBtn.addActionListener(this);
 
-        icon.setLayout(new GridLayout(1, 7));
-        iconMenu.add(icon);
+        this.iconP.setLayout(new GridLayout(1, 7));
+        this.iconMenu.add(this.iconP);
+        this.iconP.setVisible(false);
+        
 
         this.window.add(this.vueGrid, BorderLayout.CENTER);
-        this.window.setJMenuBar(menu);
+        this.window.setJMenuBar(this.menu);
         this.window.setVisible(true);
+        System.out.println(Thread.currentThread().getName());
     }
     
     @Override
     public void componentResized(ComponentEvent e){
         if(this.vueGrid != null){
             this.vueGrid.setVueDimension(new Dimension((int) (this.window.getSize().getWidth()), (int)this.window.getSize().getHeight()-this.window.getInsets().top));
+            this.iconP.setBounds((this.window.getWidth()-300)/2, (this.window.getHeight()-100), 300, 50);
         }
     }
     
     @Override
-    public void componentMoved(ComponentEvent e){
-        System.out.println("moved");
+    public void componentMoved(ComponentEvent e) {
+        // System.out.println("moved");
         
     }
     
@@ -178,147 +183,224 @@ public class Window implements ActionListener, KeyListener, ComponentListener{
     }
 
     @Override
-    public void componentHidden(ComponentEvent e){
-        ;
+    public void componentHidden(ComponentEvent e) {
+        
     }
 
     @Override
-    public void actionPerformed(ActionEvent e){
-        if(e.getSource()==playPauseBtn){
-            if (playPauseBtn.isSelected()){
-                playPauseBtn.setIcon(pauseIc);
+    public void actionPerformed(ActionEvent e) {
+        if(e.getSource()==this.playPauseBtn){
+            if (this.playPauseBtn.isSelected()){
+                if (this.infinite != null){
+                    Thread t = new Thread(code);
+                    if(this.infinite.isSelected()){
+                        while(e.getSource()!=pause){
+                            try {
+                                t.start();
+                                Thread.sleep(Integer.valueOf(this.timeItT.getText())*1000);
+                            } catch (InterruptedException e1) {
+                                e1.printStackTrace();
+                            }
+                        }
+                    }
+                    else {
+                        for(int i=0; i< Integer.valueOf(this.numberItT.getText());i++){
+                            try {
+                                t.start();
+                                Thread.sleep(Integer.valueOf(this.timeItT.getText())*1000);
+                            } catch (InterruptedException e1) {
+                                e1.printStackTrace();
+                            }
+                        }
+                    }
+                    this.playPauseBtn.setIcon(this.pauseIc);
+                } else {
+                    JOptionPane.showMessageDialog(this.window, "Comfirm setting information");
+                }
                 System.out.println("Bouton Play");
             }
             else{
-                playPauseBtn.setIcon(playIc);
-                System.out.println("Bouton Stop");
+                this.playPauseBtn.setIcon(playIc);
+                System.out.println("Bouton Pause");
             }
         }
         if (e.getSource()==play){
+            this.playPauseBtn.setIcon(this.pauseIc);
+            // if (this.infinite != null){
+            //     if(this.infinite.isSelected()){
+            //         while(e.getSource()!=pause){
+            //             try {
+            //                 this.grid.nextGen();
+            //                 Thread.sleep(Integer.valueOf(this.timeItT.getText())*1000);
+            //             } catch (InterruptedException e1) {
+            //                 e1.printStackTrace();
+            //             }
+            //         }
+            //     }
+            //     else {
+            //         for(int i=0; i< Integer.valueOf(this.numberItT.getText());i++){
+            //             try {
+            //                 this.grid.nextGen();
+            //                 Thread.sleep(Integer.valueOf(this.timeItT.getText())*1000);
+            //             } catch (InterruptedException e1) {
+            //                 e1.printStackTrace();
+            //             }
+            //         }
+            //     }
+            // } else {
+            //     JOptionPane.showMessageDialog(this.window, "Comfirm information in setting");
+            // }
             System.out.println("Bouton Play");
         }
-        if (e.getSource()==pause){
+        if (e.getSource()==this.pause){
+            this.playPauseBtn.setIcon(playIc);
             System.out.println("Bouton Pause");
         }
-        if (e.getSource()==next || e.getSource()==nextBtn){
+        if (e.getSource()==this.next || e.getSource()==this.nextBtn){
+            this.grid.nextGen();
             System.out.println("Bouton Next");
         }
-        if (e.getSource()==reset || e.getSource()==resetBtn){
+        if (e.getSource()==this.reset || e.getSource()==this.resetBtn){
+            // this.grid.removeListener(this.vueGrid);
             System.out.println("Bouton Reset");
         }
-        if (e.getSource()==clear || e.getSource()==clearBtn){
+        if (e.getSource()==this.clear || e.getSource()==this.clearBtn){
+            this.grid.clearGrid();
             System.out.println("Bouton Clear");
         }
-        if (e.getSource()==photo || e.getSource()==photoBtn){
+        if (e.getSource()==this.photo || e.getSource()==this.photoBtn){
             System.out.println("Bouton Photo");
         }
-        if (e.getSource()==video || e.getSource()==videoBtn){
+        if (e.getSource()==this.video || e.getSource()==this.videoBtn){
             System.out.println("Bouton Video");
         }
-        if (e.getSource()==load){
+        if (e.getSource()==this.icon || e.getSource()==this.closeBtn){
+            if(this.iconP.isVisible() == false){
+                System.out.println("Bouton Icon on");
+                iconP.setVisible(true);
+            } else {
+                System.out.println("Bouton Icon off");
+                iconP.setVisible(false);
+            }
+        }
+        if (e.getSource()==this.load){
             System.out.println("Bouton Load");
             // faire une fenetre qui affiches tous les profiles disponibles
-            this.loadProfiles();
+            // this.loadProfiles();
         }
-        if (e.getSource()==save){
+        if (e.getSource()==this.save){
             System.out.println("Bouton Save");
         }
-        if (e.getSource()==settingsMenu){
+        if (e.getSource()==this.settingsMenu){
             System.out.println("Bouton Setting");
-            setting = new JFrame();
-            settingDialog = new JDialog(setting, "Setting");
-            settingDialog.setLayout(new GridLayout(5, 1));
+            this.setting = new JFrame();
+            this.settingDialog = new JDialog(this.setting, "Setting");
+            this.settingDialog.setLayout(new GridLayout(4, 1));
             
-            iterationP = new JPanel();
-            iteration = new JLabel("Type of iteration :");
-            infinite = new JCheckBox("Infinite");
-            infinite.addActionListener(this);
-            finite = new JCheckBox("Finite");
-            finite.addActionListener(this);
-            iterationP.add(iteration);
-            iterationP.add(infinite);
-            iterationP.add(finite);
+            this.iterationP = new JPanel();
+            this.iteration = new JLabel("Type of iteration :");
+            this.infinite = new JCheckBox("Infinite");
+            this.infinite.addActionListener(this);
+            this.finite = new JCheckBox("Finite");
+            this.finite.addActionListener(this);
+            this.infinite.setSelected(true);
+            this.iterationP.add(this.iteration);
+            this.iterationP.add(this.infinite);
+            this.iterationP.add(this.finite);
             
-            timeItP = new JPanel();
-            timeIt = new JLabel("Time between iteration :");
-            timeItT = new JTextArea(1,4);
-            timeItP.add(timeIt);
-            timeItP.add(timeItT);
+            this.timeItP = new JPanel();
+            this.timeIt = new JLabel("Time between iteration :");
+            this.timeItT = new JTextArea("1",1,4);
+            this.timeItP.add(this.timeIt);
+            this.timeItP.add(this.timeItT);
 
-            numberItP = new JPanel();
-            numberIt = new JLabel("Number of iteration :");
-            numberItT = new JTextArea(1,4);
-            numberItP.add(numberIt);
-            numberItP.add(numberItT);
+            this.numberItP = new JPanel();
+            this.numberIt = new JLabel("Number of iteration :");
+            this.numberItT = new JTextArea("10",1,4);
+            this.numberItP.add(this.numberIt);
+            this.numberItP.add(this.numberItT);
             
-            startItP = new JPanel();
-            startIt = new JLabel("Start to iteration :");
-            startItT = new JTextArea(1,4);
-            startItP.add(startIt);
-            startItP.add(startItT);
+            this.startItP = new JPanel();
+            this.startIt = new JLabel("Start to iteration :");
+            this.startItT = new JTextArea("1",1,4);
+            this.startItP.add(this.startIt);
+            this.startItP.add(this.startItT);
 
-            confimSetting = new JButton("Confirm");
-            confimSetting.addActionListener(this);
+            this.confimSetting = new JButton("Confirm");
+            this.confimSetting.addActionListener(this);
             
-            settingDialog.add(iterationP);
-            settingDialog.add(timeItP);
-            settingDialog.add(numberItP);
-            settingDialog.add(startItP);
-            settingDialog.add(confimSetting);
+            this.settingDialog.add(this.confimSetting);
+            this.settingDialog.add(this.iterationP);
+            this.settingDialog.add(this.timeItP);
+            this.settingDialog.add(this.startItP);
             
-            settingDialog.setSize(300,200);
-            settingDialog.setVisible(true);
+            this.settingDialog.setSize(300,200);
+            this.settingDialog.setVisible(true);
         }
-        if (e.getSource()==cellMenu){
-            System.out.println("Bouton Cell");
-            cell = new JFrame();
-            cellDialog = new JDialog(cell, "Cell");
-            cellDialog.setLayout(new GridLayout(4, 1));
-            
-            cellMaxP = new JPanel();
-            cellMax = new JLabel("Neighboring cell max :");
-            cellMaxT = new JTextArea(1,4);
-            cellMaxP.add(cellMax);
-            cellMaxP.add(cellMaxT);
-            
-            cellMinP = new JPanel();
-            cellMin = new JLabel("Neighboring cell min :");
-            cellMinT = new JTextArea(1,4);            
-            cellMinP.add(cellMin);
-            cellMinP.add(cellMinT);
-            
-            radiusP = new JPanel();
-            radius = new JLabel("Radius :");
-            radiusT = new JTextArea(1,4);            
-            radiusP.add(radius);
-            radiusP.add(radiusT);
-
-            confirmCell = new JButton("Confirm");
-            confirmCell.addActionListener(this);
-            
-            cellDialog.add(cellMaxP);
-            cellDialog.add(cellMinP);
-            cellDialog.add(radiusP);
-            cellDialog.add(confirmCell);
-
-            cellDialog.setSize(250,150);
-            cellDialog.setVisible(true);
-        }
-        if (e.getSource() == finite){
+        if (e.getSource() == this.finite){
             System.out.println("Bouton Finite");
-            infinite.setSelected(false);
+            this.settingDialog.add(this.numberItP);
+            this.settingDialog.setLayout(new GridLayout(5, 1));
+            this.settingDialog.pack();
+            this.infinite.setSelected(false);
         }
-        if (e.getSource() == infinite){
+        if (e.getSource() == this.infinite){
             System.out.println("Bouton Infinite");
-            finite.setSelected(false);
+            this.settingDialog.remove(this.numberItP);
+            this.settingDialog.setLayout(new GridLayout(4, 1));
+            this.settingDialog.pack();
+            this.finite.setSelected(false);
         }
-        if (e.getSource()==confimSetting){
+        if (e.getSource()==this.confimSetting){
             System.out.println("Bouton Confirm Set");
-            setting.dispatchEvent(new WindowEvent(setting, WindowEvent.WINDOW_CLOSING));        
+            if (this.timeItT.getText() == null || this.numberItT.getText() == null || this.startItT.getText() == null){
+                JOptionPane.showMessageDialog(this.setting, "Missing information");
+            } else {
+                this.setting.dispatchEvent(new WindowEvent(this.setting, WindowEvent.WINDOW_CLOSING));        
+            }
         }
-        if (e.getSource()==confirmCell){
+        if (e.getSource()==this.cellMenu){
+            System.out.println("Bouton Cell");
+            this.cell = new JFrame();
+            this.cellDialog = new JDialog(cell, "Cell");
+            this.cellDialog.setLayout(new GridLayout(4, 1));
+            
+            this.cellMaxP = new JPanel();
+            this.cellMax = new JLabel("Neighboring cell max :");
+            this.cellMaxT = new JTextArea("1",1,4);
+            this.cellMaxP.add(this.cellMax);
+            this.cellMaxP.add(this.cellMaxT);
+            
+            this.cellMinP = new JPanel();
+            this.cellMin = new JLabel("Neighboring cell min :");
+            this.cellMinT = new JTextArea("1",1,4);            
+            this.cellMinP.add(this.cellMin);
+            this.cellMinP.add(this.cellMinT);
+            
+            this.radiusP = new JPanel();
+            this.radius = new JLabel("Radius :");
+            this.radiusT = new JTextArea("1",1,4);            
+            this.radiusP.add(this.radius);
+            this.radiusP.add(this.radiusT);
+
+            this.confirmCell = new JButton("Confirm");
+            this.confirmCell.addActionListener(this);
+            
+            this.cellDialog.add(this.confirmCell);
+            this.cellDialog.add(this.cellMaxP);
+            this.cellDialog.add(this.cellMinP);
+            this.cellDialog.add(this.radiusP);
+
+            this.cellDialog.setSize(250,150);
+            this.cellDialog.setVisible(true);
+        }
+        if (e.getSource()==this.confirmCell){
             System.out.println("Bouton Confirm Cell");
-            cell.dispatchEvent(new WindowEvent(cell, WindowEvent.WINDOW_CLOSING));        
+            if (this.cellMaxT.getText() == null || this.cellMinT.getText() == null || this.radiusT.getText() == null){
+                JOptionPane.showMessageDialog(this.cell, "Missing information");
+            } else {
+                this.cell.dispatchEvent(new WindowEvent(this.cell, WindowEvent.WINDOW_CLOSING));        
+            }       
         }
     }
     @Override
@@ -333,10 +415,14 @@ public class Window implements ActionListener, KeyListener, ComponentListener{
     public void keyReleased(KeyEvent e){
     }
 
-    void loadProfiles(){
-        loadDialog = new JDialog(new JFrame(), "Load Profile");
-    
-    }
+    Runnable code = new Runnable() {
+        
 
+        @Override
+        public void run() {
+            System.out.println(Thread.currentThread().getName());
+        }
+    };
+   
 
 }

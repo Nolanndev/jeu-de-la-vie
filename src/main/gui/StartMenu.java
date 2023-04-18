@@ -5,7 +5,7 @@ public class StartMenu extends Window{
 
         
 
-    public StartMenu(){
+    public StartMenu() {
         super("Game Of Life");
     }
 }
