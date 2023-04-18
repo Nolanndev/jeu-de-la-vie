@@ -3,106 +3,133 @@ package main.core;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Class to compute the next gen of Quadtree in Game of life by using the hashLife algorithm
+ * @see Quadtree
+ */
 public class HashLife{
 
-
+    /**
+     * Cell to use for the default Quadtree (on and off)
+     */
     private Cell cell;
+
+    /**
+     * Cache to avoid calculating the same thing several times
+     */
     private HashMap<Quadtree, Quadtree> cache = new HashMap<Quadtree, Quadtree>(); 
+
+    /**
+     * Quadtree which represents an alive Cell
+     */
     public Quadtree on;
+
+    /**
+     * Quadtree which represents a dead Cell
+     */
     public Quadtree off;
 
-
+    /**
+     * Constructor which produce a new Hashlife and defined {@link HashLife#on} and {@link HashLife#off} with the given Cell 
+     * @param cell Cell which defined {@link HashLife#on} and {@link HashLife#off}
+     */
     public HashLife(Cell cell){
         this.cell = cell;
-        this.on = new Quadtree(null, null, null, null, 0, 1, cell);
-        this.off = new Quadtree(null, null, null, null, 0, 0, cell);
+        this.on = new Quadtree(null, null, null, null, 0, 1, this.cell);
+        this.off = new Quadtree(null, null, null, null, 0, 0, this.cell);
 
     }
 
-    /* 
-    fonction recursive
-    si la profondeur est inferieure ou egale à 0, on retourne un quadtree null
-    sinon on retourne un noeud vide au niveau k
-    */
+
+    /**
+     * Produce a new Quadtree with the given depth full of {@link HashLife#off} 
+     * @param depth depth of the new Quadtree
+     * @return new Quadtree full of {@link HashLife#off} 
+     */
     public Quadtree getZero(int depth){
         return (depth <= 0) ? this.off : new Quadtree(getZero(depth-1), getZero(depth-1), getZero(depth-1), getZero(depth-1));
     }
 
-    /*
-    renvoie un noeud au niveau k+1, qui est centré sur le noeud quadtree donné :
-    */
-    
-    public Quadtree centre(Quadtree centre){
-        Quadtree zero = getZero(centre.getNe().getDepth());
-        return new Quadtree(new Quadtree(zero, zero, zero, centre.getNw()), new Quadtree(zero, zero, centre.getNe(), zero), new Quadtree(zero, centre.getSw(), zero, zero), new Quadtree(centre.getSe(), zero, zero, zero)); 
+    /**
+     * Produce a new Quadtree center on the given Quadtree
+     * @param tree The tree that will centered
+     * @return tree centered
+     */
+    public Quadtree center(Quadtree tree){
+        Quadtree zero = getZero(tree.getNe().getDepth());
+        return new Quadtree(new Quadtree(zero, zero, zero, tree.getNw()), new Quadtree(zero, zero, tree.getNe(), zero), new Quadtree(zero, tree.getSw(), zero, zero), new Quadtree(tree.getSe(), zero, zero, zero)); 
     }
 
-    /* 
-    ... : tableau de Quadtree  
-    retourne la prochaine génération d’une cellule k=2. 
-    Pour mettre fin à la récursion, au niveau de la base, 
-    si nous avons un bloc k=2 4x4, nous pouvons calculer les 2x2 
-    successeurs centraux en itérant sur les 3x3 sous-quartiers de 1x1 
-    cellules en utilisant la règle de vie standard (ou toute autre 
-    règle d’automate cellulaire binaire de quartier Moore que nous choisissons)
-    */
-    public Quadtree life(Quadtree centre ,Quadtree... neighboors){
+    /**
+     * Compute the next gen for a 3x3 collection of Cell, where center is the Center
+     * @param center the Center of the 3x3 collection
+     * @param neighboors Other Quadtree of the 3x3 collection
+     * @return new Quadtree at next gen
+     */
+    private Quadtree life(Quadtree center ,Quadtree... neighboors){
         int neighboorsAlive = 0;
         for (Quadtree quadtree : neighboors){
             if(quadtree != null){
                 neighboorsAlive += quadtree.getNumberAlive();
             }
         }
-        return ((centre.getNumberAlive() == 1 && neighboorsAlive >= cell.getDieMinNeighbors() && neighboorsAlive <= cell.getDieMaxNeighbors()) 
-                || (centre.getNumberAlive() == 0 
-                && neighboorsAlive >= cell.getBornMinNeighbors() && neighboorsAlive <= cell.getBornMaxNeighbors())) ? on : off;
+        return ((center.getNumberAlive() == 1 && neighboorsAlive >= center.getCell().getDieMinNeighbors() && neighboorsAlive <= center.getCell().getDieMaxNeighbors()) 
+                || (center.getNumberAlive() == 0 
+                && neighboorsAlive >= center.getCell().getBornMinNeighbors() && neighboorsAlive <= center.getCell().getBornMaxNeighbors())) ? on : off;
     }
 
-    public Quadtree life_4x4(Quadtree m){
-        Quadtree nw = life(m.getNw().getSe(), m.getNw().getNw(), m.getNw().getNe(), m.getNe().getNw(), m.getNw().getSw(), m.getNe().getSw(), m.getSw().getNw(), m.getSw().getNe(), m.getSe().getNw());  
-        Quadtree ne = life(m.getNe().getSw(), m.getNw().getNe(), m.getNe().getNw(), m.getNe().getNe(), m.getNw().getSe(), m.getNe().getSe(), m.getSw().getNe(), m.getSe().getNw(), m.getSe().getNe());  
-        Quadtree sw = life(m.getSw().getNe(), m.getNw().getSw(), m.getNw().getSe(), m.getNe().getSw(), m.getSw().getNw(), m.getSe().getNw(), m.getSw().getSw(), m.getSw().getSe(), m.getSe().getSw()); 
-        Quadtree se = life(m.getSe().getNw(), m.getNw().getSe(), m.getNe().getSw(), m.getNe().getSe(), m.getSw().getNe(), m.getSe().getNe(), m.getSw().getSe(), m.getSe().getSw(), m.getSe().getSe());  
+    /**
+     * Compute the next gen for a Quadtree of depth 1 
+     * @param tree The quadtree which will be compute
+     * @return New Quadtree a gen +1
+     */
+    private Quadtree life_2x2(Quadtree tree){
+        Quadtree nw = life(tree.getNw().getSe(), tree.getNw().getNw(), tree.getNw().getNe(), tree.getNe().getNw(), tree.getNw().getSw(), tree.getNe().getSw(), tree.getSw().getNw(), tree.getSw().getNe(), tree.getSe().getNw());  
+        Quadtree ne = life(tree.getNe().getSw(), tree.getNw().getNe(), tree.getNe().getNw(), tree.getNe().getNe(), tree.getNw().getSe(), tree.getNe().getSe(), tree.getSw().getNe(), tree.getSe().getNw(), tree.getSe().getNe());  
+        Quadtree sw = life(tree.getSw().getNe(), tree.getNw().getSw(), tree.getNw().getSe(), tree.getNe().getSw(), tree.getSw().getNw(), tree.getSe().getNw(), tree.getSw().getSw(), tree.getSw().getSe(), tree.getSe().getSw()); 
+        Quadtree se = life(tree.getSe().getNw(), tree.getNw().getSe(), tree.getNe().getSw(), tree.getNe().getSe(), tree.getSw().getNe(), tree.getSe().getNe(), tree.getSw().getSe(), tree.getSe().getSw(), tree.getSe().getSe());  
         return new Quadtree(nw, ne, sw, se);
     }
 
-    /*
-    retourne le successeur central d’un noeud au moment t+2**k-2.
-    */
-    
-    public Quadtree successor(Quadtree m, Integer j){
+    /**
+     * Return the central successor of a Quadtree at time 2**j
+     * @param tree 
+     * @param j
+     * @return central successor of a tree at time 2**j
+     */
+    private Quadtree successor(Quadtree tree, Integer j){
         Quadtree res;
 
-        if(cache.containsKey(m)){
-            return cache.get(m);
+        if(cache.containsKey(tree)){
+            return cache.get(tree);
         }
 
-        if(m.getNumberAlive() == 0){
-            return m.getNe();
+        if(tree.getNumberAlive() == 0){
+            return tree.getNe();
         }
 
-        if(m.getDepth() == 1){
-            return life_4x4(centre(m));
+        if(tree.getDepth() == 1){
+            return life_2x2(center(tree));
         }
 
-        if (m.getDepth() == 2){
-            return life_4x4(m);
+        if (tree.getDepth() == 2){
+            return life_2x2(tree);
         }
 
         else{
-            j = (j == null) ? (m.getDepth() - 2) : Math.min(j, m.getDepth()-2);
+            j = (j == null) ? (tree.getDepth() - 2) : Math.min(j, tree.getDepth()-2);
 
-            Quadtree c1 = successor(new Quadtree(m.getNw().getNw(), m.getNw().getNe(), m.getNw().getSw(), m.getNw().getSe()), j);
-            Quadtree c2 = successor(new Quadtree(m.getNw().getNe(), m.getNe().getNw(), m.getNw().getSe(), m.getNe().getSw()), j);
-            Quadtree c3 = successor(new Quadtree(m.getNe().getNw(), m.getNe().getNe(), m.getNe().getSw(), m.getNe().getSe()), j);
-            Quadtree c4 = successor(new Quadtree(m.getNw().getSw(), m.getNw().getSe(), m.getSw().getNw(), m.getSw().getNe()), j);
-            Quadtree c5 = successor(new Quadtree(m.getNw().getSe(), m.getNe().getSw(), m.getSw().getNe(), m.getSe().getNw()), j);
-            Quadtree c6 = successor(new Quadtree(m.getNe().getSw(), m.getNe().getSe(), m.getSe().getNw(), m.getSe().getNe()), j);
-            Quadtree c7 = successor(new Quadtree(m.getSw().getNw(), m.getSw().getNe(), m.getSw().getSw(), m.getSw().getSe()), j);
-            Quadtree c8 = successor(new Quadtree(m.getSw().getNe(), m.getSe().getNw(), m.getSw().getSe(), m.getSe().getSw()), j);
-            Quadtree c9 = successor(new Quadtree(m.getSe().getNw(), m.getSe().getNe(), m.getSe().getSw(), m.getSe().getSe()), j);
+            Quadtree c1 = successor(new Quadtree(tree.getNw().getNw(), tree.getNw().getNe(), tree.getNw().getSw(), tree.getNw().getSe()), j);
+            Quadtree c2 = successor(new Quadtree(tree.getNw().getNe(), tree.getNe().getNw(), tree.getNw().getSe(), tree.getNe().getSw()), j);
+            Quadtree c3 = successor(new Quadtree(tree.getNe().getNw(), tree.getNe().getNe(), tree.getNe().getSw(), tree.getNe().getSe()), j);
+            Quadtree c4 = successor(new Quadtree(tree.getNw().getSw(), tree.getNw().getSe(), tree.getSw().getNw(), tree.getSw().getNe()), j);
+            Quadtree c5 = successor(new Quadtree(tree.getNw().getSe(), tree.getNe().getSw(), tree.getSw().getNe(), tree.getSe().getNw()), j);
+            Quadtree c6 = successor(new Quadtree(tree.getNe().getSw(), tree.getNe().getSe(), tree.getSe().getNw(), tree.getSe().getNe()), j);
+            Quadtree c7 = successor(new Quadtree(tree.getSw().getNw(), tree.getSw().getNe(), tree.getSw().getSw(), tree.getSw().getSe()), j);
+            Quadtree c8 = successor(new Quadtree(tree.getSw().getNe(), tree.getSe().getNw(), tree.getSw().getSe(), tree.getSe().getSw()), j);
+            Quadtree c9 = successor(new Quadtree(tree.getSe().getNw(), tree.getSe().getNe(), tree.getSe().getSw(), tree.getSe().getSe()), j);
             
-            if(j < (m.getDepth()-2)){
+            if(j < (tree.getDepth()-2)){
                 res = new Quadtree(
                         (new Quadtree(c1.getSe(), c2.getSw(), c4.getNe(), c5.getNw())),
                         (new Quadtree(c2.getSe(), c3.getSw(), c5.getNe(), c6.getNw())),
@@ -119,56 +146,77 @@ public class HashLife{
                     );
             }
         }
-        cache.put(m, res);
+        cache.put(tree, res);
         return res;
     }
 
-    public boolean isPadded(Quadtree q){
-        if(q.getDepth()<3){
+    /**
+     * Lets know if the given Quadtree is padded or not
+     * A Quadtree is padded when it is surronded by Quadtree full of off
+     * @param tree Tree to test
+     * @return True if it is padded else False
+     */
+    public boolean isPadded(Quadtree tree){
+        if(tree.getDepth()<3){
             return true;
         }
         return(
-            q.getNw().getNumberAlive() == q.getNw().getSe().getSe().getNumberAlive() &&
-            q.getNe().getNumberAlive() == q.getNe().getSw().getSw().getNumberAlive() &&
-            q.getSw().getNumberAlive() == q.getSw().getNe().getNe().getNumberAlive() &&
-            q.getSe().getNumberAlive() == q.getSe().getNw().getNw().getNumberAlive()
+            tree.getNw().getNumberAlive() == tree.getNw().getSe().getSe().getNumberAlive() &&
+            tree.getNe().getNumberAlive() == tree.getNe().getSw().getSw().getNumberAlive() &&
+            tree.getSw().getNumberAlive() == tree.getSw().getNe().getNe().getNumberAlive() &&
+            tree.getSe().getNumberAlive() == tree.getSe().getNw().getNw().getNumberAlive()
         );
     }
 
-    public Quadtree pad(Quadtree q){
-        if (q.getDepth() <= 3 || !isPadded(q)){
-            return pad(centre(q));
+    /**
+     * Return the given tree padded
+     * @param tree Quadtree will be padded
+     * @return Given Quadtree padded
+     */
+    public Quadtree pad(Quadtree tree){
+        if (tree.getDepth() <= 3 || !isPadded(tree)){
+            return pad(center(tree));
         }
-        return q;
+        return tree;
     }
 
-    public Quadtree inner(Quadtree q){
-        if (q.getDepth() < 2){
+    /**
+     * Return the center of the given Quadtree
+     * @param tree 
+     * @return Center of tree
+     */
+    public Quadtree inner(Quadtree tree){
+        if (tree.getDepth() < 2){
             return null;
         }
-        return new Quadtree(q.getNw().getSe(), q.getNe().getSw(), q.getSw().getNe(), q.getSe().getNw());
+        return new Quadtree(tree.getNw().getSe(), tree.getNe().getSw(), tree.getSw().getNe(), tree.getSe().getNw());
     }
 
-    public Quadtree crop(Quadtree q){
-        if(q.getDepth() < 2){
-            return q; 
+    /**
+     * Repeatedly take the inner node, until all pading is removed
+     * @param tree 
+     * @return tree where all pading is removed
+     */
+    public Quadtree crop(Quadtree tree){
+        if(tree.getDepth() < 2){
+            return tree; 
         }
-        if(!isPadded(q)){
-            return inner(q);
+        if(!isPadded(tree)){
+            return inner(tree);
         }
 
-        return crop(inner(q));
+        return crop(inner(tree));
     }
 
-    /*
-    trouve le nième successeur d’un noeud donné. 
-    Depuis que nous calculons n’importe quelle étape avancée de 2**j, jusqu’à 2**k-2, de 
-    un noeud de niveau k, on peut avancer par n trouver son successeur
-    en utilisant les conversions binaires.
+   /**
+    * Advance tree by exactly n generations
+    * @param tree Tree to advance
+    * @param n Number of generations
+    * @return tree at the n generation
     */
-    public Quadtree advance(Quadtree q, int n){
+    public Quadtree advance(Quadtree tree, int n){
         if(n == 0){
-            return q;
+            return tree;
         }
 
         ArrayList<Integer> bits = new ArrayList<Integer>();
@@ -176,18 +224,18 @@ public class HashLife{
         while(n>0){
             bits.add(n & 1);
             n = n >> 1;
-            q = centre(q);
+            tree = center(tree);
         }
 
-        q = centre(q);
+        tree = center(tree);
 
         for (int i = 0; i < bits.size(); i++){
             int bit = bits.get(bits.size() - i - 1);
             int j = bits.size() - i - 1;
             if(bit >=1){
-                q = centre(successor(q, j));
+                tree = center(successor(tree, j));
             }
         }
-        return crop(q);
+        return crop(tree);
     }
 }

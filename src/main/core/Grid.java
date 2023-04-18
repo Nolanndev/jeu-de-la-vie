@@ -106,39 +106,48 @@ public class Grid{
         
     }
 
-    public void convertForQuadtree(int size){
+
+    /**
+     * Method used to resize the array such that the new size is 2^depth (needed to convert Grid to Quadtree).
+     * Resize by settings the actual Matrix into the middle of the new one
+     * @param depth depth of the quadTree
+     */
+    public void convertForQuadtree(int depth){
+        int size = (int)Math.pow(2, depth);
         if(size == this.getHeight() && size == this.getWidth()){
-            ;
+            ; //si on est déja a la bonne taille on fait rien
         }
         else{
         
-        Cell[][] res = new Cell[size][size];
-        for (int i = 0; i < Math.ceil(size - this.getHeight())/2; i++) {
-            for (int j = 0; j < size; j++) {
-                res[i][j] = new Cell(false);
+            Cell[][] res = new Cell[size][size];
+            Cell originalCell = this.getCell(0, 0);
+            for (int i = 0; i < Math.ceil(size - this.getHeight())/2; i++) {
+                for (int j = 0; j < size; j++) {
+                    res[i][j] = new Cell(originalCell.getBornMinNeighbors(), originalCell.getBornMaxNeighbors(), originalCell.getDieMinNeighbors(), originalCell.getDieMaxNeighbors(), originalCell.getRadius(), false);
+                }
             }
-        }
 
-        for (int i = (int)Math.ceil(size - this.getHeight())/2; i < this.getHeight() + Math.ceil(size - this.getHeight())/2; i++) {
-            for (int j = 0; j < Math.ceil(size - this.getWidth())/2; j++) {
-                res[i][j] = new Cell(false);
+            for (int i = (int)Math.ceil(size - this.getHeight())/2; i < this.getHeight() + Math.ceil(size - this.getHeight())/2; i++) {
+                for (int j = 0; j < Math.ceil(size - this.getWidth())/2; j++) {
+                    res[i][j] = new Cell(originalCell.getBornMinNeighbors(), originalCell.getBornMaxNeighbors(), originalCell.getDieMinNeighbors(), originalCell.getDieMaxNeighbors(), originalCell.getRadius(), false);
+                }
+                for (int j = (int)Math.ceil(size - this.getWidth())/2; j < this.getWidth()+Math.ceil(size - this.getWidth())/2; j++) {
+                    Cell cell = this.getCell(j - (int)Math.ceil(size - this.getWidth())/2, i-(int)Math.ceil(size - this.getHeight())/2);
+                    res[i][j] = cell;
+                }
+                for (int j = this.getWidth()+(int)Math.ceil(size - this.getWidth())/2; j < size; j++) {
+                    res[i][j] = new Cell(originalCell.getBornMinNeighbors(), originalCell.getBornMaxNeighbors(), originalCell.getDieMinNeighbors(), originalCell.getDieMaxNeighbors(), originalCell.getRadius(), false);
+                }
             }
-            for (int j = (int)Math.ceil(size - this.getWidth())/2; j < this.getWidth()+Math.ceil(size - this.getWidth())/2; j++) {
-                Cell cell = this.getCell(j - (int)Math.ceil(size - this.getWidth())/2, i-(int)Math.ceil(size - this.getHeight())/2);
-                res[i][j] = cell;
-            }
-            for (int j = this.getWidth()+(int)Math.ceil(size - this.getWidth())/2; j < size; j++) {
-                res[i][j] = new Cell(false);
-            }
-        }
 
-        for (int i = this.getHeight()+(int)Math.ceil(size - this.getHeight())/2; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                res[i][j] = new Cell(false);
+            for (int i = this.getHeight()+(int)Math.ceil(size - this.getHeight())/2; i < size; i++) {
+                for (int j = 0; j < size; j++) {
+                    res[i][j] = new Cell(originalCell.getBornMinNeighbors(), originalCell.getBornMaxNeighbors(), originalCell.getDieMinNeighbors(), originalCell.getDieMaxNeighbors(), originalCell.getRadius(), false);
+                }
             }
-        }
 
-        this.setBoard(res);}
+            this.setBoard(res);
+        }
     }
 
     public Cell[][] getNw(){

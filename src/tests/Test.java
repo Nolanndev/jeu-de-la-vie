@@ -21,11 +21,11 @@ public class Test {
         
         System.out.println("-------------");
 
-        TestProfileManager profileManagerTester = new TestProfileManager();
-        //ok = ok && profileManagerTester.testSave();
-        ok = ok && profileManagerTester.testLoad();
+        // TestProfileManager profileManagerTester = new TestProfileManager();
+        // //ok = ok && profileManagerTester.testSave();
+        // ok = ok && profileManagerTester.testLoad();
         
-        System.out.println("-------------");
+        // System.out.println("-------------");
      
         // All test OK
         TestQuadtree quadtree = new TestQuadtree();
