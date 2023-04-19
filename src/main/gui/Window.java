@@ -2,13 +2,13 @@ package main.gui;
 
 import main.core.*;
 
-
 import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.lang.Thread;
 
-public class Window implements ActionListener, KeyListener, ComponentListener {
+public class Window implements ActionListener, ComponentListener {
 
     JFrame window, setting, cell;
     VueGrid vueGrid;
@@ -16,9 +16,9 @@ public class Window implements ActionListener, KeyListener, ComponentListener {
     JMenu commandsMenu, profileMenu;
     JMenuItem play, pause, next, reset, clear, photo, video, icon, load, save, settingsMenu, cellMenu;
     JDialog settingDialog, cellDialog;
-    JPanel iterationP, timeItP, numberItP, startItP, cellMaxP, cellMinP, radiusP, iconP;
-    JLabel iteration, timeIt, numberIt, startIt, cellMax, cellMin, radius;
-    JTextArea timeItT, numberItT, startItT, cellMaxT, cellMinT, radiusT;
+    JPanel iterationP, timeItP, numberItP, startItP, cellBornP, cellMaxBP, cellMinBP, cellDieP, cellMaxDP, cellMinDP, radiusP, iconP;
+    JLabel iteration, timeIt, numberIt, startIt, cellBorn, cellMaxB, cellMinB, cellDie, cellMaxD, cellMinD, radius;
+    JTextArea timeItT, numberItT, startItT, cellMaxBT, cellMinBT, cellMaxDT, cellMinDT, radiusT;
     JCheckBox infinite, finite;
     JButton confimSetting, confirmCell, nextBtn, resetBtn, clearBtn, photoBtn, videoBtn, closeBtn;
     JToggleButton playPauseBtn;
@@ -28,15 +28,12 @@ public class Window implements ActionListener, KeyListener, ComponentListener {
     
     int radiusValue, numberOfIteration, beginEvolutionToIteration, neighborsBirthMin, neighborsBirthMax, neighborsDeathMin, neighborsDeathMax, delay;
     boolean infiteEvolution;
-    
-
 
     public Window(String title){
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
         this.window = new JFrame();
 
-        this.window.addKeyListener(this);
         this.window.addComponentListener(this); //resize Event listener
 
         this.window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
@@ -187,31 +184,24 @@ public class Window implements ActionListener, KeyListener, ComponentListener {
         
     }
 
+    public int stringToInt(JTextArea txt){
+        return Integer.valueOf(txt.getText());
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==this.playPauseBtn){
             if (this.playPauseBtn.isSelected()){
                 if (this.infinite != null){
-                    Thread t = new Thread(code);
                     if(this.infinite.isSelected()){
-                        while(e.getSource()!=pause){
-                            try {
-                                t.start();
-                                Thread.sleep(Integer.valueOf(this.timeItT.getText())*1000);
-                            } catch (InterruptedException e1) {
-                                e1.printStackTrace();
-                            }
-                        }
+                        Action code = new Action(this.grid, stringToInt(this.timeItT), 0);
+                        Thread t = new Thread(code);
+                        t.start();
                     }
                     else {
-                        for(int i=0; i< Integer.valueOf(this.numberItT.getText());i++){
-                            try {
-                                t.start();
-                                Thread.sleep(Integer.valueOf(this.timeItT.getText())*1000);
-                            } catch (InterruptedException e1) {
-                                e1.printStackTrace();
-                            }
-                        }
+                        Action code = new Action(this.grid, stringToInt(this.timeItT), stringToInt(this.numberItT));
+                        Thread t = new Thread(code);
+                        t.start();
                     }
                     this.playPauseBtn.setIcon(this.pauseIc);
                 } else {
@@ -226,30 +216,21 @@ public class Window implements ActionListener, KeyListener, ComponentListener {
         }
         if (e.getSource()==play){
             this.playPauseBtn.setIcon(this.pauseIc);
-            // if (this.infinite != null){
-            //     if(this.infinite.isSelected()){
-            //         while(e.getSource()!=pause){
-            //             try {
-            //                 this.grid.nextGen();
-            //                 Thread.sleep(Integer.valueOf(this.timeItT.getText())*1000);
-            //             } catch (InterruptedException e1) {
-            //                 e1.printStackTrace();
-            //             }
-            //         }
-            //     }
-            //     else {
-            //         for(int i=0; i< Integer.valueOf(this.numberItT.getText());i++){
-            //             try {
-            //                 this.grid.nextGen();
-            //                 Thread.sleep(Integer.valueOf(this.timeItT.getText())*1000);
-            //             } catch (InterruptedException e1) {
-            //                 e1.printStackTrace();
-            //             }
-            //         }
-            //     }
-            // } else {
-            //     JOptionPane.showMessageDialog(this.window, "Comfirm information in setting");
-            // }
+            if (this.infinite != null){
+                if(this.infinite.isSelected()){
+                    Action code = new Action(this.grid, stringToInt(this.timeItT), 0);
+                    Thread t = new Thread(code);
+                    t.start();
+                }
+                else {
+                    Action code = new Action(this.grid, stringToInt(this.timeItT), stringToInt(this.numberItT));
+                    Thread t = new Thread(code);
+                    t.start();
+                }
+                this.playPauseBtn.setIcon(this.pauseIc);
+            } else {
+                JOptionPane.showMessageDialog(this.window, "Comfirm setting information");
+            }
             System.out.println("Bouton Play");
         }
         if (e.getSource()==this.pause){
@@ -334,7 +315,7 @@ public class Window implements ActionListener, KeyListener, ComponentListener {
             this.settingDialog.add(this.timeItP);
             this.settingDialog.add(this.startItP);
             
-            this.settingDialog.setSize(300,200);
+            this.settingDialog.pack();
             this.settingDialog.setVisible(true);
         }
         if (e.getSource() == this.finite){
@@ -353,7 +334,7 @@ public class Window implements ActionListener, KeyListener, ComponentListener {
         }
         if (e.getSource()==this.confimSetting){
             System.out.println("Bouton Confirm Set");
-            if (this.timeItT.getText() == null || this.numberItT.getText() == null || this.startItT.getText() == null){
+            if (this.timeItT == null || this.numberItT == null || this.startItT == null){
                 JOptionPane.showMessageDialog(this.setting, "Missing information");
             } else {
                 this.setting.dispatchEvent(new WindowEvent(this.setting, WindowEvent.WINDOW_CLOSING));        
@@ -363,23 +344,63 @@ public class Window implements ActionListener, KeyListener, ComponentListener {
             System.out.println("Bouton Cell");
             this.cell = new JFrame();
             this.cellDialog = new JDialog(cell, "Cell");
-            this.cellDialog.setLayout(new GridLayout(4, 1));
+            this.cellDialog.setLayout(new GridLayout(6, 1));
             
-            this.cellMaxP = new JPanel();
-            this.cellMax = new JLabel("Neighboring cell max :");
-            this.cellMaxT = new JTextArea("1",1,4);
-            this.cellMaxP.add(this.cellMax);
-            this.cellMaxP.add(this.cellMaxT);
+            String maxBornVal = new String();
+            String minBornVal = new String();
+            String maxDieVal = new String();
+            String minDieVal = new String();
+            String radiusVal = new String();
             
-            this.cellMinP = new JPanel();
-            this.cellMin = new JLabel("Neighboring cell min :");
-            this.cellMinT = new JTextArea("1",1,4);            
-            this.cellMinP.add(this.cellMin);
-            this.cellMinP.add(this.cellMinT);
+            for (Cell[] row : this.grid.getBoard()) {
+                for (Cell cell : row) {
+                    maxBornVal = Integer.toString(cell.getBornMaxNeighbors());
+                    minBornVal = Integer.toString(cell.getBornMinNeighbors());
+                    maxDieVal = Integer.toString(cell.getDieMaxNeighbors());
+                    minDieVal = Integer.toString(cell.getDieMinNeighbors());
+                    radiusVal = Integer.toString(cell.getRadius());
+                }
+            }
+            
+            this.cellBorn = new JLabel("Neighboring cell born :");
+            this.cellBornP = new JPanel();
+            
+            this.cellMaxBP = new JPanel();
+            this.cellMaxB = new JLabel("Max :");
+            this.cellMaxBT = new JTextArea(maxBornVal,1,4);
+            this.cellMaxBP.add(this.cellMaxB);
+            this.cellMaxBP.add(this.cellMaxBT);
+            
+            this.cellMinBP = new JPanel();
+            this.cellMinB = new JLabel("Min :");
+            this.cellMinBT = new JTextArea(minBornVal,1,4);            
+            this.cellMinBP.add(this.cellMinB);
+            this.cellMinBP.add(this.cellMinBT);
+
+            this.cellBornP.add(cellMaxBP);
+            this.cellBornP.add(cellMinBP);
+
+            this.cellDie = new JLabel("Neighboring cell dead :");
+            this.cellDieP = new JPanel();
+
+            this.cellMaxDP = new JPanel();
+            this.cellMaxD = new JLabel("Max :");
+            this.cellMaxDT = new JTextArea(maxDieVal,1,4);
+            this.cellMaxDP.add(this.cellMaxD);
+            this.cellMaxDP.add(this.cellMaxDT);
+            
+            this.cellMinDP = new JPanel();
+            this.cellMinD = new JLabel("Min :");
+            this.cellMinDT = new JTextArea(minDieVal,1,4);            
+            this.cellMinDP.add(this.cellMinD);
+            this.cellMinDP.add(this.cellMinDT);
+
+            this.cellDieP.add(cellMaxDP);
+            this.cellDieP.add(cellMinDP);
             
             this.radiusP = new JPanel();
             this.radius = new JLabel("Radius :");
-            this.radiusT = new JTextArea("1",1,4);            
+            this.radiusT = new JTextArea(radiusVal,1,4);            
             this.radiusP.add(this.radius);
             this.radiusP.add(this.radiusT);
 
@@ -387,42 +408,31 @@ public class Window implements ActionListener, KeyListener, ComponentListener {
             this.confirmCell.addActionListener(this);
             
             this.cellDialog.add(this.confirmCell);
-            this.cellDialog.add(this.cellMaxP);
-            this.cellDialog.add(this.cellMinP);
+            this.cellDialog.add(this.cellBorn);
+            this.cellDialog.add(this.cellBornP);
+            this.cellDialog.add(this.cellDie);
+            this.cellDialog.add(this.cellDieP);
             this.cellDialog.add(this.radiusP);
 
-            this.cellDialog.setSize(250,150);
+            this.cellDialog.pack();
             this.cellDialog.setVisible(true);
         }
         if (e.getSource()==this.confirmCell){
             System.out.println("Bouton Confirm Cell");
-            if (this.cellMaxT.getText() == null || this.cellMinT.getText() == null || this.radiusT.getText() == null){
+            if (this.cellMaxBT.getText() == "" || this.cellMinBT.getText() == "" || this.cellMaxDT.getText() == "" || this.cellMinDT.getText() == "" || this.radiusT.getText() == ""){
                 JOptionPane.showMessageDialog(this.cell, "Missing information");
             } else {
+                for (Cell[] row : this.grid.getBoard()) {
+                    for (Cell cell : row) {
+                        cell.setBornMaxNeighbors(stringToInt(this.cellMaxBT));
+                        cell.setBornMinNeighbors(stringToInt(this.cellMinBT));
+                        cell.setDieMaxNeighbors(stringToInt(this.cellMaxDT));
+                        cell.setDieMinNeighbors(stringToInt(this.cellMinDT));
+                        cell.setRadius(stringToInt(this.radiusT));
+                    }
+                }
                 this.cell.dispatchEvent(new WindowEvent(this.cell, WindowEvent.WINDOW_CLOSING));        
             }       
         }
     }
-    @Override
-    public void keyTyped(KeyEvent e){
-        this.grid.nextGen();
-    }
-    @Override
-    public void keyPressed(KeyEvent e){
-        ;
-    }
-    @Override
-    public void keyReleased(KeyEvent e){
-    }
-
-    Runnable code = new Runnable() {
-        
-
-        @Override
-        public void run() {
-            System.out.println(Thread.currentThread().getName());
-        }
-    };
-   
-
 }

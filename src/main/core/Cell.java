@@ -105,7 +105,7 @@ public class Cell{
      * @param newBornMin new value of <b>bornMinNeighbors</b>.
      * @throws ExceptionInInitializerError Occured if <b>newBornMin</b> is less than <b>0</b> or <b>newBornMin</b> are greater than <b>bornMaxNeigbors</b>.
      */
-    private void setBornMinNeighbors(int newBornMin) throws ExceptionInInitializerError{
+    public void setBornMinNeighbors(int newBornMin) throws ExceptionInInitializerError{
         if(newBornMin < 0){
             throw new ExceptionInInitializerError("bornMinNeighbors must be positive number.");
         }
@@ -128,7 +128,7 @@ public class Cell{
      * @param newBornMax new value of <b>bornMaxNeighbors</b>.
      * @throws ExceptionInInitializerError Occured if bornMaxNeighbors are less than bornMinNeigbors.
     */
-    private void setBornMaxNeighbors(int newBornMax) throws ExceptionInInitializerError{
+    public void setBornMaxNeighbors(int newBornMax) throws ExceptionInInitializerError{
         if(this.bornMinNeighbors != null &&  newBornMax < this.bornMinNeighbors){
             throw new ExceptionInInitializerError("bornMaxNeighbors must be superior to bornMinNeighbors");
         }
@@ -148,7 +148,7 @@ public class Cell{
      * @param newDieMin new value of <b>dieMinNeighbors</b>.
      * @throws ExceptionInInitializerError Occured if <b>newDieMin</b> is less than <b>0</b> or <b>newDieMin</b> are greater than <b>dieMaxNeigbors</b>.
      */
-    private void setDieMinNeighbors(int newDieMin) throws ExceptionInInitializerError{
+    public void setDieMinNeighbors(int newDieMin) throws ExceptionInInitializerError{
         if(newDieMin < 0){
             throw new ExceptionInInitializerError("dieMinNeighbors must be positive number.");
         }
@@ -172,7 +172,7 @@ public class Cell{
      * @param newDieMax new value of <b>dieMaxNeighbors</b>.
      * @throws ExceptionInInitializerError Occured if dieMaxNeighbors are less than dieMinNeigbors.
     */
-    private void setDieMaxNeighbors(int newDieMax) throws ExceptionInInitializerError{
+    public void setDieMaxNeighbors(int newDieMax) throws ExceptionInInitializerError{
         if(this.dieMinNeighbors != null &&  newDieMax < this.dieMinNeighbors){
             throw new ExceptionInInitializerError("dieMaxNeighbors must be superior to dieMinNeighbors");
         }
@@ -192,7 +192,7 @@ public class Cell{
      * @param radius new value of <b>radius</b>.
      * @throws ExceptionInInitializerError Occured if <b>radius</b> are less than <b>0</b>.
      */
-    private void setRadius(int radius) throws ExceptionInInitializerError{
+    public void setRadius(int radius) throws ExceptionInInitializerError{
         if(radius < 0){
             throw new ExceptionInInitializerError("radius must be a positive number.");
         }
