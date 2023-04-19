@@ -3,6 +3,8 @@ package tests.utils;
 import main.core.Quadtree;
 import main.core.Cell;
 
+import java.util.Objects; 
+
 /* 
 Ce fichier sert à tester la classe Quadtree.
 */
@@ -65,32 +67,35 @@ public class TestQuadtree{
 
     public boolean testHashCode(){
         System.out.println("Test: hashCode()");
-        leaf = new Quadtree(null, null, null, null, 0, 1, cell);
-
-
-        quad1 = new Quadtree(leaf, leaf, leaf, leaf, 2, 1, cell);
-        quad2 = new Quadtree(quad1, quad1, quad1, quad1, 3, 0, cell);
-        quad3 = new Quadtree(quad1, quad1, quad2, quad2, 3, 0, cell);
-
-        Quadtree quad1_1 = new Quadtree(leaf, leaf, leaf, leaf, 2, 1, cell);
-        Quadtree quad2_1 = new Quadtree(quad1_1, quad1_1, quad1_1, quad1_1, 3, 0, cell);
-        Quadtree quad3_1 = new Quadtree(quad1_1, quad1_1, quad2_1, quad2_1, 3, 0, cell);
+        
+        Quadtree leaf = new Quadtree(null, null, null, null, 0, 1, cell);
+        assert leaf.hashCode() == 709 : "Premier if en erreur sur hashCode()";
     
-        assert quad1.hashCode() == quad1_1.hashCode() : "1 Probleme avec hashCode";
-        assert quad2.hashCode() == quad2_1.hashCode() : "2 Probleme avec hashCode";
-        assert quad3.hashCode() == quad3_1.hashCode() : "3 Probleme avec hashCode";
-    
-        Quadtree quad5 = new Quadtree(quad1_1, quad1_1, quad2_1, quad3_1, 0, 1, cell);
-        Quadtree quad6 = new Quadtree(quad1_1, quad1_1, quad2_1, quad3_1, 0, 1, cell);
+        Quadtree leaf1 = new Quadtree(null, null, null, null, 0, 0, cell);
+        assert leaf1.hashCode() == 129 : "Deuxieme if echec sur hashCode()";
 
-        assert quad5.hashCode() == quad6.hashCode() : "5 Probleme avec hashCode";
-    
-        Quadtree quad7 = new Quadtree(quad1_1, quad1_1, quad2_1, quad3_1, 0, 1, cell);
-        Quadtree quad8 = new Quadtree(quad1_1, quad1_1, quad2_1, quad3_1, 0, 1, cell);
-        assert quad7.hashCode() == quad8.hashCode() : "6 Probleme avec hashCode";
-    
+        Quadtree quadtree = new Quadtree(leaf, leaf, leaf, leaf, 1, 4, cell);
+        Quadtree quadtree1 = quadtree;
+
+        assert quadtree.hashCode() == 40 : "(1) le hashcode genere n est pas le bon";
+        assert quadtree1.hashCode() == quadtree.hashCode() : "(2) le hashcode genere n est pas le bon";
+
+        Quadtree quadtree2 = new Quadtree(leaf1, leaf1, leaf1, leaf1, 1, 2, cell);
+        Quadtree quadtree3 = quadtree2;
+        
+        assert quadtree2.hashCode() == 20 : "(3) le hashcode genere n est pas le bon";
+        assert quadtree3.hashCode() == quadtree2.hashCode() : "(4) le hashcode genere est mauvais";
+
+        Quadtree quadtreeX = quadtree; 
+        
+        Quadtree quadtree4 = new Quadtree(quadtree1, quadtreeX, quadtreeX, quadtree);
+        Quadtree quadtree5 = new Quadtree(quadtree1, quadtree1, quadtree1, quadtree1);
+        
+        assert quadtree4.hashCode() == 160 : "(5) le hashcode genere n est pas le bon";
+        assert quadtree5.hashCode() == 160 : "(6) le hashcode genere est mauvais";
         return true;
     }
+    
     
 
     public boolean testEquals(){
@@ -141,6 +146,4 @@ public class TestQuadtree{
     
         return true;
     }
-    
- 
 }

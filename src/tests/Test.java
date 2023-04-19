@@ -52,7 +52,6 @@ public class Test {
 
         System.out.println("-------------");
 
-        //All test OK
         TestCell cell = new TestCell();
         ok = ok && cell.testIsAlive();
         ok = ok && cell.testGetRadius();
@@ -63,7 +62,6 @@ public class Test {
 
         System.out.println("-------------");
 
-        //TestHashLife
         TestHashLife hashLife = new TestHashLife();
         ok = ok && hashLife.testAdvance();
 

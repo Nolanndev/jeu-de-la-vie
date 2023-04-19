@@ -75,10 +75,10 @@ public class Quadtree{
     @Override
     public int hashCode(){
         if(this.numberAlive == 1){
-            return 678;
+            return 709;
         }
         if(this.numberAlive == 0){
-            return 98;
+            return 129;
         }
         return (this.ne.hashCode() * this.nw.hashCode())/this.sw.hashCode() - this.se.hashCode() + this.getNumberAlive()*10; 
     }
