@@ -158,6 +158,7 @@ public class TestHashLife{
         
         result = hashlife.advance(disappear3, 1);
         
+        //System.out.println("result : " + hash_result + " expected : " + hash_quadtreeOff);
         assert hashlife.advance(disappear3, 0) == disappear3 : "Il doit ressembler a expected_disappear3 a cette etape";  
         assert result.hashCode() == quadtreeOff.hashCode() : "Il devrait disparaitre au bout de 2 etapes";  
         

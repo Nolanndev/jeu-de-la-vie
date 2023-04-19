@@ -72,30 +72,139 @@ public class Grid{
         this.size = new Dimension(board.length, board[0].length);
     }
 
+     /**
+     * Constructor which produce new <b>Grid</b> with given Quadtree.
+     * @param tree Quadtree will be convert.
+     * @see Quadtree
+     */
     public Grid(Quadtree tree){
         this(quadtreeToMatrix(tree));
     }
 
+    /**
+     * Convert a given tree into Matrix of Cell
+     * @param tree tree will be convert
+     * @return new Matrix of Cell 
+     */
     private static Cell[][] quadtreeToMatrix(Quadtree tree){
         if(tree == null){
             return null;
         }
 
-        Cell[][] board = new Cell[(int)Math.pow(2, tree.getDepth())][(int)Math.pow(2, tree.getDepth())];
+        Cell[][] board = new Cell[(int)Math.pow(2, tree.getDepth())][(int)Math.pow(2, tree.getDepth())]; //taille est tree.depth^2
 
-        if(tree.isLeaf()){
+        if(tree.isLeaf()){ //si c'est une feuille on retourne une matrice de taille 1
             Cell cell = tree.getCell();
             Boolean alive = (tree.getNumberAlive() == 1) ? true : false; 
             board[0][0] = new Cell(cell.getBornMinNeighbors(), cell.getBornMaxNeighbors(), cell.getDieMinNeighbors(), cell.getDieMaxNeighbors(), cell.getRadius(), alive);
             return board; 
         }
-        else{
+        else{ //sinon on produit une nouvelle matrice en fusionnant les quatres enfants ensemble
             board = fusion(quadtreeToMatrix(tree.getNw()), quadtreeToMatrix(tree.getNe()), quadtreeToMatrix(tree.getSw()), quadtreeToMatrix(tree.getSe())); 
             return board; 
         }
         
     }
 
+
+    /**
+     * Method used to resize the array such that the new size is 2^depth (needed to convert Grid to Quadtree).
+     * Resize by settings the actual Matrix into the middle of the new one
+     * @param depth depth of the quadTree
+     */
+    public void convertForQuadtree(int depth){
+        int size = (int)Math.pow(2, depth);
+        if(size == this.getHeight() && size == this.getWidth()){
+            ; //si on est déja a la bonne taille on fait rien
+        }
+        else{
+        
+            Cell[][] res = new Cell[size][size];
+            Cell originalCell = this.getCell(0, 0);
+            for (int i = 0; i < Math.ceil(size - this.getHeight())/2; i++) {
+                for (int j = 0; j < size; j++) {
+                    res[i][j] = new Cell(originalCell.getBornMinNeighbors(), originalCell.getBornMaxNeighbors(), originalCell.getDieMinNeighbors(), originalCell.getDieMaxNeighbors(), originalCell.getRadius(), false);
+                }
+            }
+
+            for (int i = (int)Math.ceil(size - this.getHeight())/2; i < this.getHeight() + Math.ceil(size - this.getHeight())/2; i++) {
+                for (int j = 0; j < Math.ceil(size - this.getWidth())/2; j++) {
+                    res[i][j] = new Cell(originalCell.getBornMinNeighbors(), originalCell.getBornMaxNeighbors(), originalCell.getDieMinNeighbors(), originalCell.getDieMaxNeighbors(), originalCell.getRadius(), false);
+                }
+                for (int j = (int)Math.ceil(size - this.getWidth())/2; j < this.getWidth()+Math.ceil(size - this.getWidth())/2; j++) {
+                    Cell cell = this.getCell(j - (int)Math.ceil(size - this.getWidth())/2, i-(int)Math.ceil(size - this.getHeight())/2);
+                    res[i][j] = cell;
+                }
+                for (int j = this.getWidth()+(int)Math.ceil(size - this.getWidth())/2; j < size; j++) {
+                    res[i][j] = new Cell(originalCell.getBornMinNeighbors(), originalCell.getBornMaxNeighbors(), originalCell.getDieMinNeighbors(), originalCell.getDieMaxNeighbors(), originalCell.getRadius(), false);
+                }
+            }
+
+            for (int i = this.getHeight()+(int)Math.ceil(size - this.getHeight())/2; i < size; i++) {
+                for (int j = 0; j < size; j++) {
+                    res[i][j] = new Cell(originalCell.getBornMinNeighbors(), originalCell.getBornMaxNeighbors(), originalCell.getDieMinNeighbors(), originalCell.getDieMaxNeighbors(), originalCell.getRadius(), false);
+                }
+            }
+
+            this.setBoard(res);
+        }
+    }
+
+    public Cell[][] getNw(){
+        Cell[][] res = new Cell[Math.floorDiv(getHeight(), 2)][Math.floorDiv(getWidth(), 2)];
+        
+            for (int i = 0; i < Math.floorDiv(getHeight(), 2); i++) {
+                for (int j = 0; j < Math.floorDiv(getWidth(), 2); j++) {
+                    res[i][j] = this.getCell(j, i);
+                }
+            }
+        
+        return res;
+    }
+
+    public Cell[][] getNe(){
+        Cell[][] res = new Cell[Math.floorDiv(getHeight(), 2)][Math.ceilDiv(getWidth(), 2)];
+
+        
+            for (int i = 0; i < Math.floorDiv(getHeight(), 2); i++) {
+                for (int j = 0; j < Math.ceilDiv(getWidth(), 2); j++) {
+                    res[i][j] = this.getCell(Math.floorDiv(getWidth(), 2)+j, i);
+                }
+            }
+        
+        return res;
+    }
+
+    public Cell[][] getSw(){
+        Cell[][] res = new Cell[Math.ceilDiv(getHeight(), 2)][Math.floorDiv(getWidth(), 2)];
+        for (int i = 0; i < Math.ceilDiv(getHeight(), 2); i++) {
+            for (int j = 0; j < Math.floorDiv(getWidth(), 2); j++) {
+                res[i][j] = this.getCell(j, Math.floorDiv(getHeight(), 2)+i);
+            }
+        }
+        return res;
+    }
+
+    public Cell[][] getSe(){
+        Cell[][] res = new Cell[Math.ceilDiv(getHeight(), 2)][Math.ceilDiv(getWidth(), 2)];
+        for (int i = 0; i < Math.ceilDiv(getHeight(), 2); i++) {
+            for (int j = 0; j < Math.ceilDiv(getWidth(), 2); j++) {
+                res[i][j] = this.getCell(Math.floorDiv(getWidth(), 2)+j, Math.floorDiv(getHeight(), 2)+i);
+            }
+        }
+        return res;
+    }
+
+    /**
+     * Merge 4 Matrix (with the same size) into a new one 
+     * @param nw North west part of the new Matrix
+     * @param ne North east part of the new Matrix
+     * @param sw South west part of the new Matrix
+     * @param se South east part of the new Matrix
+     * @return new Matrix correspond to |nw|ne|
+     *                                  -------
+     *                                  |sw|se|
+     */
     private static Cell[][] fusion(Cell[][] nw, Cell[][] ne, Cell[][] sw, Cell[][] se){
         if(nw == null || ne == null || sw == null || se == null){
             return null;
@@ -131,6 +240,7 @@ public class Grid{
      */
     public void setBoard(Cell[][] board){
         this.board = board;
+        this.setSize(new Dimension(board[0].length, board.length));
         this.gridChange();
     }
 
@@ -269,8 +379,7 @@ public class Grid{
     public void displayGrid(){
         for (Cell[] row : this.board){
             for (Cell cell : row){
-                String res = (cell.isAlive()) ? "■" : " ";
-                System.out.print(res + " ");
+                System.out.print(cell + " ");
             }
             System.out.print("\n");
         }
@@ -375,13 +484,15 @@ public class Grid{
         }
     }
 
+    /**
+     * Reinitialize the grid with only empty cells.
+     */
     public void clearGrid(){
-        for (Cell[] cells : board) {
-            for (Cell cell : cells) {
-                cell.setState(false);
+        for (int i = 0; i < this.getWidth(); i++) {
+            for (int j = 0; j < this.getHeight(); j++) {
+                this.setCell(i, j, new Cell(false));
             }
         }
-        this.gridChange();
     }
 
 }

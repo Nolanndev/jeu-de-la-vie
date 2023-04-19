@@ -211,7 +211,7 @@ public class Cell{
      * Defined state of a cell. 
      * @param newState alive or not.
     */
-    public void setState(boolean newState){
+    private void setState(boolean newState){
         this.alive = newState;
     }
 
@@ -222,5 +222,10 @@ public class Cell{
     public String info(){
         return "State: " + this.alive + "\nNeighbors\n\tmin to born: " + this.getBornMinNeighbors() + "\n\tmax to born: " + this.getBornMaxNeighbors() + 
         "\n\tmin before die : " + this.getDieMinNeighbors() + "\n\tmax before die : " + this.getDieMaxNeighbors() +"\nradius : " + this.radius;
+    }
+
+    @Override
+    public String toString() {
+        return(this.isAlive()) ? "■" : ".";
     }
 }
