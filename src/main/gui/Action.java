@@ -17,20 +17,20 @@ public class Action implements Runnable {
     public void run() {
         try {
             if(typeIt!=0){
-                for(int i = 0; i<=typeIt; i++){
-                    this.grid.nextGen();
-                    Thread.sleep(time*500);
-                    System.out.println(Thread.currentThread().getName());
-                }
+            for(int i = 0; i<=typeIt; i++){
+                this.grid.nextGen();
+                Thread.sleep(time*500);
+                System.out.println(Thread.currentThread().getName());
+            }
             } else {
                 while(true){
                     this.grid.nextGen();
-                    Thread.sleep(time*500);
+                    Thread.sleep(time);
                     System.out.println(Thread.currentThread().getName());
                 }
             }
-        } catch (InterruptedException e1) {
-            e1.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
     

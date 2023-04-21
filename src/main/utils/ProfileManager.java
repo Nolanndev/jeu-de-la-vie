@@ -24,7 +24,7 @@ public class ProfileManager{
     }
     
     public static HashMap<String, HashMap<String,String>> load() {
-	    return load("src\\main\\assets\\profiles.gol.profile");
+	    return load("\\src\\main\\assets\\profiles.gol.profile");
     }
 
     /**
@@ -111,7 +111,6 @@ public class ProfileManager{
                 HashMap<String, String> key_val = map.get(uuid);
                 for (String key : key_val.keySet()){
                     file += "_" + key + ": " + key_val.get(key) + "\n";
-                    System.out.println(uuid + "." + key + ":" + key_val.get(key));
                 }
                 file += "\n";
             }
@@ -122,5 +121,25 @@ public class ProfileManager{
         } catch (IOException e){
             return false;
         }
+    }
+
+    public static ArrayList<String> getNames() {
+        HashMap<String, HashMap<String,String>> map = load();
+        ArrayList<String> names = new ArrayList<>();
+        for (String id : map.keySet()) {
+            names.add(map.get(id).get("NAME"));
+        }
+        return names;
+    }
+
+    public static HashMap<String,String> getProfile(String profileName) {
+        HashMap<String, HashMap<String,String>> profiles = load();
+        for (String id : profiles.keySet()) {
+            System.out.println("profilename : " + profileName + ", actual : " + profiles.get(id).get("NAME") + ", " + (profileName.equals(profiles.get(id).get("NAME"))));
+            if (profiles.get(id).get("NAME") == profileName) {
+                return profiles.get(id);
+            }
+        }
+        return null;
     }
 }

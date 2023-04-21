@@ -32,7 +32,7 @@ public class Grid{
 
     /**
      * Array of objects which listens this grid 
-     * @see GridListener     
+     * @see GridListener
     */
     private ArrayList<GridListener> listeners = new ArrayList<GridListener>();
 
