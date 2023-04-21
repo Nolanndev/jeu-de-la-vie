@@ -135,8 +135,7 @@ public class ProfileManager{
     public static HashMap<String,String> getProfile(String profileName) {
         HashMap<String, HashMap<String,String>> profiles = load();
         for (String id : profiles.keySet()) {
-            System.out.println("profilename : " + profileName + ", actual : " + profiles.get(id).get("NAME") + ", " + (profileName.equals(profiles.get(id).get("NAME"))));
-            if (profiles.get(id).get("NAME") == profileName) {
+            if (profileName.equals(profiles.get(id).get("NAME"))) {
                 return profiles.get(id);
             }
         }
