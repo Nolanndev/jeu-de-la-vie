@@ -7,6 +7,7 @@ public class Action implements Runnable {
     public Grid grid;
     public int time;
     public int typeIt;
+    public int pause;
     
     public Action(Grid grid, int time, int typeIt){
         this.grid = grid;
@@ -17,15 +18,15 @@ public class Action implements Runnable {
     public void run() {
         try {
             if(typeIt!=0){
-                for(int i = 0; i<=typeIt; i++){
+                for(int i = 0; i<typeIt; i++){
                     this.grid.nextGen();
-                    Thread.sleep(time*500);
+                    Thread.sleep(time);
                     System.out.println(Thread.currentThread().getName());
                 }
             } else {
                 while(true){
                     this.grid.nextGen();
-                    Thread.sleep(time*500);
+                    Thread.sleep(time);
                     System.out.println(Thread.currentThread().getName());
                 }
             }
@@ -33,6 +34,4 @@ public class Action implements Runnable {
             e1.printStackTrace();
         }
     }
-    
-
 }
