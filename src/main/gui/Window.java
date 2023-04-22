@@ -164,11 +164,10 @@ public class Window implements ActionListener, ComponentListener, Runnable {
         
         this.window.add(this.vueGrid, BorderLayout.CENTER);
         this.window.setJMenuBar(this.menu);
-        this.window.pack();
-        this.window.setVisible(true);
-
         this.iconMenu.add(this.iconP);
         this.iconP.setVisible(true);
+        this.window.setVisible(true);
+
     }
 
     @Override

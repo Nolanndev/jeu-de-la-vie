@@ -211,7 +211,7 @@ public class Cell{
      * Defined state of a cell. 
      * @param newState alive or not.
     */
-    private void setState(boolean newState){
+    public void setState(boolean newState){
         this.alive = newState;
     }
 
@@ -222,6 +222,15 @@ public class Cell{
     public String info(){
         return "State: " + this.alive + "\nNeighbors\n\tmin to born: " + this.getBornMinNeighbors() + "\n\tmax to born: " + this.getBornMaxNeighbors() + 
         "\n\tmin before die : " + this.getDieMinNeighbors() + "\n\tmax before die : " + this.getDieMaxNeighbors() +"\nradius : " + this.radius;
+    }
+
+    /**
+     * Method which return a deep copy of the given Cell (same information but not the same reference)
+     * @param cell Cell that will be copied
+     * @return Copied Cell
+     */
+    public Cell copyCell(){
+        return new Cell(this.getBornMinNeighbors(), this.getBornMaxNeighbors(), this.getDieMinNeighbors(), this.getDieMaxNeighbors(), this.getRadius(), this.isAlive());
     }
 
     @Override

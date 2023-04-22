@@ -24,7 +24,7 @@ public class ProfileManager{
     }
     
     public static HashMap<String, HashMap<String,String>> load() {
-	    return load("\\src\\main\\assets\\profiles.gol.profile");
+	    return load("/src/main/assets/profiles.gol.profile");
     }
 
     /**
@@ -97,7 +97,7 @@ public class ProfileManager{
      */
 
     public static boolean save(HashMap<String, HashMap<String,String>> map) {
-        return save(map, "\\src\\main\\assets\\profiles.gol.profile");
+        return save(map, "/src/main/assets/profiles.gol.profile");
     }
 
     public static boolean save(HashMap<String, HashMap<String, String>> map, String filepath) {

@@ -201,15 +201,11 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
 
 
                 if(SwingUtilities.isLeftMouseButton(e)){ //Left click
-                    if(!this.grid.getCell(posCellX ,posCellY).isAlive()){
-                        this.grid.setCell(posCellX, posCellY, new Cell(true));
-                    }
+                    this.grid.getCell(posCellX, posCellY).setState(true);
                 }
                 
                 if(SwingUtilities.isRightMouseButton(e)){ //Left click
-                    if(this.grid.getCell(posCellX,posCellY).isAlive()){
-                        this.grid.setCell(posCellX, posCellY, new Cell(false));
-                    }
+                    this.grid.setCell(posCellX, posCellY, new Cell(false));
                 }
 
             }
@@ -262,13 +258,17 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
 
                 if(SwingUtilities.isLeftMouseButton(e)){ //posX/Y is use to not change the same Cell during the drag
                     if(!this.grid.getCell(posCellX,posCellY).isAlive()){
-                        this.grid.setCell(posCellX, posCellY, new Cell(true));
+                        Cell newCell = this.grid.getCell(posCellX,posCellY).copyCell();
+                        newCell.setState(true);
+                        this.grid.setCell(posCellX, posCellY, newCell);
                     }
                 }
 
                 if(SwingUtilities.isRightMouseButton(e)){ //Left click
                     if(this.grid.getCell(posCellX,posCellY).isAlive()){
-                        this.grid.setCell(posCellX, posCellY, new Cell(false));
+                        Cell newCell = this.grid.getCell(posCellX,posCellY).copyCell();
+                        newCell.setState(false);
+                        this.grid.setCell(posCellX, posCellY, newCell);
                     }
                 }
 
