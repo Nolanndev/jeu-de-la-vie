@@ -24,7 +24,7 @@ public class ProfileManager{
     }
     
     public static HashMap<String, HashMap<String,String>> load() {
-	    return load("/src/main/assets/profiles.gol.profile");
+	    return load("\\src\\main\\assets\\profiles.gol.profile");
     }
 
     /**
@@ -111,7 +111,6 @@ public class ProfileManager{
                 HashMap<String, String> key_val = map.get(uuid);
                 for (String key : key_val.keySet()){
                     file += "_" + key + ": " + key_val.get(key) + "\n";
-                    System.out.println(uuid + "." + key + ":" + key_val.get(key));
                 }
                 file += "\n";
             }
@@ -138,6 +137,25 @@ public class ProfileManager{
         for (String id : profiles.keySet()) {
             if (profileName.equals(profiles.get(id).get("NAME"))) {
                 return profiles.get(id);
+            }
+        }
+        return null;
+    }
+
+    public static boolean isValidName(String profileName) {
+        if (profileName == null || profileName.isBlank()){
+            return false;
+        }
+        Pattern regex = Pattern.compile("^[0-9a-zA-Z ]+$");
+        Matcher matcher = regex.matcher(profileName);
+        return matcher.find();
+    }
+
+    public static String getId(String profileName) {
+        HashMap<String, HashMap<String,String>> map = ProfileManager.load();
+        for (String id : map.keySet()) {
+            if (map.get(id).get("NAME").equals(profileName)) {
+                return id;
             }
         }
         return null;

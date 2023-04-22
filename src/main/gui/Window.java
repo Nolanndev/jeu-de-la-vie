@@ -4,20 +4,28 @@ import main.core.*;
 import main.utils.ProfileManager;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.lang.Thread;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
+
+import javax.imageio.ImageIO;
+
 
 public class Window implements ActionListener, ComponentListener, Runnable {
 
     JFrame window, setting, cell, loadFrame, dataProfilesFrame, saveFrame;
     VueGrid vueGrid;
     JMenuBar menu;
-    JMenu commandsMenu, profileMenu;
-    JMenuItem play, pause, next, reset, clear, photo, icon, load, save, settingsMenu, cellMenu;
+    JMenu commandsMenu, profileMenu, presetMenu;
+    JMenuItem play, pause, next, reset, clear, photo, icon, loadProfile, saveProfile, loadPreset, savePreset, settingsMenu, cellMenu;
     JDialog settingDialog, cellDialog, loadDialog, dataProfilesDialog, saveDialog;
     JPanel dataProfilesP, saveP, iterationP, timeItP, startItP, numberItP, cellBornP, cellMaxBP, cellMinBP, cellDieP, cellMaxDP, cellMinDP, radiusP, iconP;
     JLabel iteration, timeIt, startIt, numberIt, cellBorn, cellMaxB, cellMinB, cellDie, cellMaxD, cellMinD, radius;
@@ -73,7 +81,8 @@ public class Window implements ActionListener, ComponentListener, Runnable {
         this.menu.setLayout(new GridLayout(1,4));
         
         this.commandsMenu = new JMenu("Commands");
-        this.profileMenu = new JMenu("Profile");
+        this.profileMenu = new JMenu("Profiles");
+        this.presetMenu = new JMenu("Presets");
         this.settingsMenu = new JMenuItem("Settings");
         this.cellMenu = new JMenuItem("Cell");
         
@@ -100,16 +109,25 @@ public class Window implements ActionListener, ComponentListener, Runnable {
         this.commandsMenu.add(this.photo);
         this.commandsMenu.add(this.icon);
         
-        this.load = new JMenuItem("Load file");
-        this.load.addActionListener(this);
-        this.save = new JMenuItem("Save file");
-        this.save.addActionListener(this);
+        this.loadProfile = new JMenuItem("Load profile");
+        this.loadProfile.addActionListener(this);
+        this.saveProfile = new JMenuItem("Save current profile");
+        this.saveProfile.addActionListener(this);
+
+        this.loadPreset = new JMenuItem("Load Preset");
+        this.loadPreset.addActionListener(this);
+        this.savePreset = new JMenuItem("Save current Preset");
+        this.savePreset.addActionListener(this);
         
-        this.profileMenu.add(this.load);
-        this.profileMenu.add(this.save);
+        this.profileMenu.add(this.loadProfile);
+        this.profileMenu.add(this.saveProfile);
+
+        this.presetMenu.add(this.loadPreset);
+        this.presetMenu.add(this.savePreset);
         
         this.menu.add(this.commandsMenu);
         this.menu.add(this.profileMenu);
+        this.menu.add(this.presetMenu);
         this.menu.add(this.settingsMenu);
         this.settingsMenu.addActionListener(this);
         this.menu.add(this.cellMenu);
@@ -145,7 +163,8 @@ public class Window implements ActionListener, ComponentListener, Runnable {
         this.iconP.add(this.closeBtn = new JButton(this.closeIc));
         this.closeBtn.addActionListener(this);
 
-        this.iconP.setLayout(new GridLayout(1, 7));
+        this.iconP.setLayout(new GridLayout(1, 6));
+        
         
         this.window.add(this.vueGrid, BorderLayout.CENTER);
         this.window.setJMenuBar(this.menu);
@@ -154,7 +173,6 @@ public class Window implements ActionListener, ComponentListener, Runnable {
 
         this.iconMenu.add(this.iconP);
         this.iconP.setVisible(true);
-        System.out.println(Thread.currentThread().getName());
     }
     
     @Override
@@ -231,6 +249,8 @@ public class Window implements ActionListener, ComponentListener, Runnable {
         this.minDieVal = Integer.parseInt(dataProfile.get("NEIGHBORS-DEATH-MIN"));
         this.radiusVal = Integer.parseInt(dataProfile.get("RADIUS"));
         this.loadFrame.dispatchEvent(new WindowEvent(this.loadFrame, WindowEvent.WINDOW_CLOSING));
+        this.radiusVal = Integer.parseInt(dataProfile.get("RADIUS"));
+        this.loadFrame.dispatchEvent(new WindowEvent(this.loadFrame, WindowEvent.WINDOW_CLOSING));
     }
 
     public void actionSave(){
@@ -241,14 +261,33 @@ public class Window implements ActionListener, ComponentListener, Runnable {
         this.saveT = new JTextArea( 1, 10);
         this.confirmSave = new JButton("Confirm");
         this.confirmSave.addActionListener(this);
-
+        this.saveP.add(new JLabel("Profile name "));
         this.saveP.add(this.saveT);
         this.saveP.add(this.confirmSave);
-
+    
         this.saveDialog.add(this.saveP);
         
         this.saveDialog.pack();
         this.saveDialog.setVisible(true);
+    }
+
+    public void saveNewProfile() {
+        if(ProfileManager.isValidName(this.saveT.getText())) {
+            HashMap<String,HashMap<String,String>> map = ProfileManager.load();
+            HashMap<String,String> profileSettings = new HashMap<>();
+            profileSettings.put("RADIUS", Integer.toString(this.radiusVal));
+            profileSettings.put("NUMBER-OF-ITERATION", Integer.toString(this.numberItVal));
+            profileSettings.put("NEIGHBORS-BIRTH-MIN", Integer.toString(this.minBornVal));
+            profileSettings.put("NEIGHBORS-DEATH-MIN", Integer.toString(this.minDieVal));
+            profileSettings.put("DELAY", Integer.toString(this.timeItVal));
+            profileSettings.put("NAME",this.saveT.getText());
+            profileSettings.put("NEIGHBORS-BIRTH-MAX", Integer.toString(this.maxBornVal));
+            profileSettings.put("NEIGHBORS-DEATH-MAX", Integer.toString(this.maxDieVal));
+            map.put(UUID.randomUUID().toString(), profileSettings);
+            ProfileManager.save(map);
+            this.saveFrame.dispatchEvent(new WindowEvent(this.saveFrame, WindowEvent.WINDOW_CLOSING));
+        }
+
     }
 
     public void actionSetting(){
@@ -472,18 +511,23 @@ public class Window implements ActionListener, ComponentListener, Runnable {
         }
         if (e.getSource()==this.clear || e.getSource()==this.clearBtn){
             this.grid.clearGrid();
-            System.out.println("Bouton Clear");
         }
         if (e.getSource()==this.photo || e.getSource()==this.photoBtn){
-            System.out.println("Bouton Photo");
+            try {
+                actionScreen();
+            } catch (Exception e1) {
+                System.out.print(e1);
+                e1.printStackTrace();
+            }
         }
+        
         if (e.getSource()==this.icon || e.getSource()==this.closeBtn){
             actionIcon();
         }
-        if (e.getSource()==this.load){
+        if (e.getSource()==this.loadProfile){
             actionLoad();       
         }
-        if (e.getSource()==this.save){
+        if (e.getSource()==this.saveProfile){
             actionSave();
         }
         if (e.getSource()==this.settingsMenu){
@@ -544,6 +588,36 @@ public class Window implements ActionListener, ComponentListener, Runnable {
                     e.printStackTrace();
                 }
             }
+        }
+    }
+
+    public void actionScreen() throws Exception{
+        String path="";
+        JFileChooser choose = new JFileChooser(
+            FileSystemView
+            .getFileSystemView()
+            .getHomeDirectory()
+        );
+        
+        choose.setDialogTitle("Enregistrer sous: ");
+        choose.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        choose.setAcceptAllFileFilterUsed(false);
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("JPG", "jpg");
+        choose.addChoosableFileFilter(filter);
+        choose.setSelectedFile(new File("screenshot.jpg"));
+        int res = choose.showSaveDialog(null);
+        if(res == JFileChooser.APPROVE_OPTION) 
+        {
+            path = choose.getSelectedFile().toString();
+        }
+        if(path!=""){
+            Rectangle rect = this.vueGrid.getBounds();
+            BufferedImage captureImage =
+                new BufferedImage(rect.width, rect.height,
+                                    BufferedImage.TYPE_INT_ARGB);
+            this.vueGrid.paint(captureImage.getGraphics());
+    
+            ImageIO.write(captureImage, "png", new File(path));
         }
     }
 }

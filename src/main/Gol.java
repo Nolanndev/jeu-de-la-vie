@@ -13,5 +13,6 @@ public class Gol{
     
     public static void main(String[] args){
         new Window("Game Of Life");
+        // System.out.println(ProfileManager.load());
     }
 }
