@@ -371,7 +371,7 @@ public class Grid{
      */
     public void setCell(int x, int y, Cell cell){
         this.board[y][x] = cell;
-        this.changeCell(x, y);  
+        this.changeCell(x, y);
     }
 
     /**

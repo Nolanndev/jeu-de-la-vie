@@ -5,64 +5,68 @@ import java.io.*;
 import java.io.IOException;
 import java.util.regex.*;
 
-import main.core.Cell;
-import main.core.Grid;
+import java.awt.Dimension;
 
-import java.awt.Point;
+public class PresetManager {
 
-public class PresetManager{
-
-    public static boolean isUUID(String line){
-        if (line == null){
+    public static boolean isName(String line) {
+        if (line == null || line.isBlank()) {
             return false;
         }
-        Pattern regex = Pattern
-                .compile("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
+        Pattern regex = Pattern.compile("^[0-9a-zA-Z ]+$");
         Matcher matcher = regex.matcher(line);
         return matcher.find();
     }
-    
-    public static HashMap<String, HashMap<String,String>> load() {
-	    return load("src/main/assets/profiles.gol.profile");
+
+    // public static boolean isDimension(String line) {
+    //     if (line == null || line.isBlank()) {
+    //         return false;
+    //     }
+    //     Pattern regex = Pattern.compile("^_([0-9]+,[0-9]+)$");
+    //     Matcher matcher = regex.matcher(line);
+    //     return matcher.find();
+    // }
+
+    public static HashMap<String, ArrayList<Dimension>> load() {
+        return load("/src/main/assets/presets.gol.preset");
     }
 
-    public static HashMap<String, HashMap<String, String>> load(String filepath){
-        try{
+    public static HashMap<String, ArrayList<Dimension>> load(String filepath) {
+        try {
             String path = System.getProperty("user.dir") + filepath;
             File f = new File(path);
-            if (f.exists() && !f.isDirectory()){
+            if (f.exists() && !f.isDirectory()) {
                 BufferedReader reader = new BufferedReader(new FileReader(path));
-                HashMap<String, HashMap<String, String>> map = new HashMap<>();
-
-                if (reader != null){
-
-                    String uuid = "", keyContent, keyValue;
+                HashMap<String, ArrayList<Dimension>> map = new HashMap<>();
+                if (reader != null) {
+                    String name = "", keyContent, keyValue;
                     boolean key = true;
 
-                    while (reader.ready()){
+                    while (reader.ready()) {
                         String line = reader.readLine();
                         key = true;
                         keyContent = "";
                         keyValue = "";
-                        if (isUUID(line)){
-                            uuid = line;
-                            map.put(uuid, new HashMap<>());
-                        } else{
-                            for (int i = 0; i < line.length(); i++){
-                                if (line.charAt(i) == ':'){
+                        if (isName(line)) {
+                            name = line;
+                            map.put(name, new ArrayList<>());
+                        } else {
+                            for (int i = 0; i < line.length(); i++) {
+                                if (line.charAt(i) == ':') {
                                     key = false;
-                                } else if (line.charAt(i) == ' ' || line.charAt(i) == '_' ||line.charAt(i) == '\n'){
+                                } else if (line.charAt(i) == ' ' || line.charAt(i) == '_' || line.charAt(i) == '\n') {
                                     ;
-                                } else{
-                                    if (key){
+                                } else {
+                                    if (key) {
                                         keyContent += line.charAt(i);
-                                    } else{
+                                    } else {
                                         keyValue += line.charAt(i);
                                     }
                                 }
                             }
-                            if (map.containsKey(uuid) && !keyContent.isBlank() && !keyValue.isBlank()){
-                                map.get(uuid).put(keyContent, keyValue);
+                            if (map.containsKey(name) && !keyContent.isBlank() && !keyValue.isBlank()) {
+                                // map.get(name).add(new Dimension(Integer.parseInt(keyContent), Integer.parseInt(keyValue)));
+                                map.get(name).add(new Dimension((int)Integer.parseInt(keyContent), (int)Integer.parseInt(keyValue)));
                                 keyContent = "";
                                 keyValue = "";
                             }
@@ -73,55 +77,72 @@ public class PresetManager{
                 reader.close();
 
                 return map;
-            } else{
+            } else {
                 throw new IOException("Le fichier n'existe pas");
             }
         } catch (IOException e) {
+            System.err.println("Erreur : PresetManager.load()");
             return null;
         }
     }
 
-    public static boolean save(HashMap<String, Grid> map) {
-        return save(map, "/src/main/assets/preset.gol.profile");
+    public static boolean save(HashMap<String, ArrayList<Dimension>> map) {
+        return save(map, "/src/main/assets/presets.gol.preset");
     }
 
-    public static boolean save(HashMap<String, Grid> map, String filepath) {
+    public static boolean save(HashMap<String, ArrayList<Dimension>> map, String filepath) {
         try {
             String path = System.getProperty("user.dir") + filepath;
             FileWriter writer = new FileWriter(path);
             String file = "";
-            for (String uuid : map.keySet()){
-                file += uuid + "\n";
-                System.out.println(uuid);
-                
-                Grid grid = map.get(uuid);
-                Cell[][] board = map.get(uuid).getBoard();
-                for (int i = 0; i<grid.getWidth(); i++) {
-                    for (int j = 0; j<grid.getHeight(); j++) {
-                        if (board[i][j].isAlive()) {
-                            file += "_" + i + ":" + j + "\n";
-                        }
-                    }
+            for (String name : map.keySet()) {
+                file += name + "\n";
+                for (Dimension dim : map.get(name)) {
+                    file += "_" + (int)dim.getWidth() + ":" + (int)dim.getHeight() + "\n";
                 }
                 file += "\n";
             }
             writer.write(file);
             writer.close();
             return true;
-        } catch (IOException e){
+        } catch (IOException e) {
             return false;
         }
     }
-    
 
-    public static ArrayList<String> getPresets() {
+    public static ArrayList<String> getNames() {
         ArrayList<String> presets = new ArrayList<>();
-        for (String id : PresetManager.load().keySet()) {
-            presets.add(id);
+        HashMap<String, ArrayList<Dimension>> names = PresetManager.load();
+        if (names != null) {
+            for (String name : PresetManager.load().keySet()) {
+                presets.add(name);
+            }
+            return presets;
         }
-        return presets;
+        return null;
     }
 
-    // sauvegarder l'image d'un preset avec son identifiant comme nom
+    public static ArrayList<Dimension> getPreset(String name) {
+        HashMap<String, ArrayList<Dimension>> map = PresetManager.load();
+        for (String presetName : map.keySet()) {
+            if (presetName.equals(name)) {
+                return map.get(presetName);
+            }
+        }
+        return null;
+    }
 
+    public static boolean isValidName(String name) {
+        if (name == null || name.isBlank()){
+            return false;
+        }
+        for (String presetName : PresetManager.getNames()) {
+            if (name.equals(presetName)) {
+                return false;
+            }
+        }
+        Pattern regex = Pattern.compile("^[0-9a-zA-Z ]+$");
+        Matcher matcher = regex.matcher(name);
+        return matcher.find();
+    }
 }
