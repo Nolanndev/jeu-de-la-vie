@@ -17,8 +17,8 @@ public class Window implements ActionListener, ComponentListener {
     JFrame window, setting, cell, loadFrame, saveFrame;
     VueGrid vueGrid;
     JMenuBar menu;
-    JMenu commandsMenu, profileMenu;
-    JMenuItem play, pause, next, reset, clear, photo, video, icon, load, save, settingsMenu, cellMenu;
+    JMenu commandsMenu, profileMenu, presetMenu;
+    JMenuItem play, pause, next, reset, clear, photo, video, icon, loadProfile, saveProfile, loadPreset, savePreset, settingsMenu, cellMenu;
     JDialog settingDialog, cellDialog, loadDialog, saveDialog;
     JPanel saveP, iterationP, timeItP, numberItP, cellBornP, cellMaxBP, cellMinBP, cellDieP, cellMaxDP, cellMinDP, radiusP, iconP;
     JLabel iteration, timeIt, numberIt, cellBorn, cellMaxB, cellMinB, cellDie, cellMaxD, cellMinD, radius;
@@ -73,7 +73,8 @@ public class Window implements ActionListener, ComponentListener {
         this.menu.setLayout(new GridLayout(1,4));
         
         this.commandsMenu = new JMenu("Commands");
-        this.profileMenu = new JMenu("Profile");
+        this.profileMenu = new JMenu("Profiles");
+        this.presetMenu = new JMenu("Presets");
         this.settingsMenu = new JMenuItem("Settings");
         this.cellMenu = new JMenuItem("Cell");
         
@@ -103,16 +104,25 @@ public class Window implements ActionListener, ComponentListener {
         this.commandsMenu.add(this.video);
         this.commandsMenu.add(this.icon);
         
-        this.load = new JMenuItem("Load file");
-        this.load.addActionListener(this);
-        this.save = new JMenuItem("Save file");
-        this.save.addActionListener(this);
+        this.loadProfile = new JMenuItem("Load profile");
+        this.loadProfile.addActionListener(this);
+        this.saveProfile = new JMenuItem("Save current profile");
+        this.saveProfile.addActionListener(this);
+
+        this.loadPreset = new JMenuItem("Load Preset");
+        this.loadPreset.addActionListener(this);
+        this.savePreset = new JMenuItem("Save current Preset");
+        this.savePreset.addActionListener(this);
         
-        this.profileMenu.add(this.load);
-        this.profileMenu.add(this.save);
+        this.profileMenu.add(this.loadProfile);
+        this.profileMenu.add(this.saveProfile);
+
+        this.presetMenu.add(this.loadPreset);
+        this.presetMenu.add(this.savePreset);
         
         this.menu.add(this.commandsMenu);
         this.menu.add(this.profileMenu);
+        this.menu.add(this.presetMenu);
         this.menu.add(this.settingsMenu);
         this.settingsMenu.addActionListener(this);
         this.menu.add(this.cellMenu);
@@ -268,6 +278,7 @@ public class Window implements ActionListener, ComponentListener {
         this.saveT = new JTextArea( 1, 10);
         this.confirmSave = new JButton("Confirm");
         this.confirmSave.addActionListener(this);
+        this.saveP.add(new JLabel("Profile name "));
         this.saveP.add(this.saveT);
         this.saveP.add(this.confirmSave);
     
@@ -481,10 +492,10 @@ public class Window implements ActionListener, ComponentListener {
         if (e.getSource()==this.icon || e.getSource()==this.closeBtn){
             actionIcon();
         }
-        if (e.getSource()==this.load){
+        if (e.getSource()==this.loadProfile){
             actionLoad();       
         }
-        if (e.getSource()==this.save){
+        if (e.getSource()==this.saveProfile){
             actionSave();
         }
         if (e.getSource()==this.settingsMenu){

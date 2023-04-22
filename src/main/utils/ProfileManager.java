@@ -150,4 +150,14 @@ public class ProfileManager{
         Matcher matcher = regex.matcher(profileName);
         return matcher.find();
     }
+
+    public static String getId(String profileName) {
+        HashMap<String, HashMap<String,String>> map = ProfileManager.load();
+        for (String id : map.keySet()) {
+            if (map.get(id).get("NAME").equals(profileName)) {
+                return id;
+            }
+        }
+        return null;
+    }
 }
