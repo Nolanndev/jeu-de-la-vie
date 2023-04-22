@@ -1,10 +1,7 @@
 package tests;
 
 import java.io.IOException;
-import main.exceptions.*;
 
-
-import tests.utils.TestProfileManager;
 import tests.utils.TestQuadtree;
 
 import tests.core.TestGrid;

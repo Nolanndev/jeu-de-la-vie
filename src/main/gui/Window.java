@@ -167,9 +167,10 @@ public class Window implements ActionListener, ComponentListener {
         
         this.window.add(this.vueGrid, BorderLayout.CENTER);
         this.window.setJMenuBar(this.menu);
-        this.window.setVisible(true);
         this.iconMenu.add(this.iconP);
         this.iconP.setVisible(true);
+        this.window.setVisible(true);
+
     }
     
     @Override
@@ -270,7 +271,6 @@ public class Window implements ActionListener, ComponentListener {
     }
 
     public void actionSave(){
-        System.out.println("Save file");
         this.saveFrame = new JFrame();
         this.saveDialog = new JDialog(this.saveFrame, "Load file");
         this.saveP = new JPanel();
