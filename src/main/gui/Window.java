@@ -16,7 +16,6 @@ import java.lang.Thread;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
-
 import javax.imageio.ImageIO;
 
 
@@ -183,10 +182,8 @@ public class Window implements ActionListener, ComponentListener, Runnable {
 
     @Override
     public void componentMoved(ComponentEvent e) {}
-
     @Override
     public void componentShown(ComponentEvent e) {}
-
     @Override
     public void componentHidden(ComponentEvent e) {}
 
