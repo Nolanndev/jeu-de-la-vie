@@ -4,12 +4,19 @@ import main.core.*;
 import main.utils.ProfileManager;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.lang.Thread;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import javax.imageio.ImageIO;
+
 
 public class Window implements ActionListener, ComponentListener {
 
@@ -17,7 +24,7 @@ public class Window implements ActionListener, ComponentListener {
     VueGrid vueGrid;
     JMenuBar menu;
     JMenu commandsMenu, profileMenu;
-    JMenuItem play, pause, next, reset, clear, photo, video, icon, load, save, settingsMenu, cellMenu;
+    JMenuItem play, pause, next, reset, clear, photo, icon, load, save, settingsMenu, cellMenu;
     JDialog settingDialog, cellDialog, loadDialog, saveDialog;
     JPanel iterationP, timeItP, numberItP, cellBornP, cellMaxBP, cellMinBP, cellDieP, cellMaxDP, cellMinDP, radiusP, iconP;
     JLabel iteration, timeIt, numberIt, cellBorn, cellMaxB, cellMinB, cellDie, cellMaxD, cellMinD, radius;
@@ -90,8 +97,6 @@ public class Window implements ActionListener, ComponentListener {
         this.clear.addActionListener(this);
         this.photo = new JMenuItem("Photo");
         this.photo.addActionListener(this);
-        this.video = new JMenuItem("Video");
-        this.video.addActionListener(this);
         this.icon = new JMenuItem("Icons");
         this.icon.addActionListener(this);
         
@@ -101,7 +106,6 @@ public class Window implements ActionListener, ComponentListener {
         this.commandsMenu.add(this.reset);
         this.commandsMenu.add(this.clear);
         this.commandsMenu.add(this.photo);
-        this.commandsMenu.add(this.video);
         this.commandsMenu.add(this.icon);
         
         this.load = new JMenuItem("Load file");
@@ -145,15 +149,11 @@ public class Window implements ActionListener, ComponentListener {
         this.iconP.add(this.photoBtn = new JButton(this.photoIc));
         this.photoBtn.addActionListener(this);
 
-        this.videoIc = new ImageIcon(System.getProperty("user.dir") + "/src/main/assets/button/video.png");
-        this.iconP.add(this.videoBtn = new JButton(this.videoIc));
-        this.videoBtn.addActionListener(this);
-
         this.closeIc = new ImageIcon(System.getProperty("user.dir") + "/src/main/assets/button/close.png");
         this.iconP.add(this.closeBtn = new JButton(this.closeIc));
         this.closeBtn.addActionListener(this);
 
-        this.iconP.setLayout(new GridLayout(1, 7));
+        this.iconP.setLayout(new GridLayout(1, 6));
         
         
         this.window.add(this.vueGrid, BorderLayout.CENTER);
@@ -161,7 +161,6 @@ public class Window implements ActionListener, ComponentListener {
         this.window.setVisible(true);
         this.iconMenu.add(this.iconP);
         this.iconP.setVisible(true);
-        System.out.println(Thread.currentThread().getName());
     }
     
     @Override
@@ -440,14 +439,16 @@ public class Window implements ActionListener, ComponentListener {
         }
         if (e.getSource()==this.clear || e.getSource()==this.clearBtn){
             this.grid.clearGrid();
-            System.out.println("Bouton Clear");
         }
         if (e.getSource()==this.photo || e.getSource()==this.photoBtn){
-            System.out.println("Bouton Photo");
+            try {
+                actionScreen();
+            } catch (Exception e1) {
+                System.out.print(e1);
+                e1.printStackTrace();
+            }
         }
-        if (e.getSource()==this.video || e.getSource()==this.videoBtn){
-            System.out.println("Bouton Video");
-        }
+        
         if (e.getSource()==this.icon || e.getSource()==this.closeBtn){
             actionIcon();
         }
@@ -482,6 +483,36 @@ public class Window implements ActionListener, ComponentListener {
         }
         if (e.getSource()==this.confirmCell){
             actionComfirmCell();
+        }
+    }
+
+    public void actionScreen() throws Exception{
+        String path="";
+        JFileChooser choose = new JFileChooser(
+            FileSystemView
+            .getFileSystemView()
+            .getHomeDirectory()
+        );
+        
+        choose.setDialogTitle("Enregistrer sous: ");
+        choose.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        choose.setAcceptAllFileFilterUsed(false);
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("JPG", "jpg");
+        choose.addChoosableFileFilter(filter);
+        choose.setSelectedFile(new File("screenshot.jpg"));
+        int res = choose.showSaveDialog(null);
+        if(res == JFileChooser.APPROVE_OPTION) 
+        {
+            path = choose.getSelectedFile().toString();
+        }
+        if(path!=""){
+            Rectangle rect = this.vueGrid.getBounds();
+            BufferedImage captureImage =
+                new BufferedImage(rect.width, rect.height,
+                                    BufferedImage.TYPE_INT_ARGB);
+            this.vueGrid.paint(captureImage.getGraphics());
+    
+            ImageIO.write(captureImage, "png", new File(path));
         }
     }
 }
