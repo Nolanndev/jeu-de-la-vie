@@ -5,11 +5,7 @@ import java.io.*;
 import java.io.IOException;
 import java.util.regex.*;
 
-import main.core.Cell;
-import main.core.Grid;
-
 import java.awt.Dimension;
-import java.awt.Point;
 
 public class PresetManager {
 
