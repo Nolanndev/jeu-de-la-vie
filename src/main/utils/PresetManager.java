@@ -23,7 +23,7 @@ public class PresetManager{
     }
     
     public static HashMap<String, HashMap<String,String>> load() {
-	    return load("src\\main\\assets\\profiles.gol.profile");
+	    return load("src/main/assets/profiles.gol.profile");
     }
 
     public static HashMap<String, HashMap<String, String>> load(String filepath){
@@ -82,7 +82,7 @@ public class PresetManager{
     }
 
     public static boolean save(HashMap<String, Grid> map) {
-        return save(map, "\\src\\main\\assets\\preset.gol.profile");
+        return save(map, "/src/main/assets/preset.gol.profile");
     }
 
     public static boolean save(HashMap<String, Grid> map, String filepath) {
