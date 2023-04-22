@@ -113,4 +113,7 @@ public class PresetManager{
             return false;
         }
     }
+
+    // sauvegarder l'image d'un preset avec son identifiant comme nom
+
 }

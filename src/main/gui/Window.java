@@ -10,6 +10,7 @@ import java.awt.event.*;
 import java.lang.Thread;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
 public class Window implements ActionListener, ComponentListener {
 
@@ -19,20 +20,18 @@ public class Window implements ActionListener, ComponentListener {
     JMenu commandsMenu, profileMenu;
     JMenuItem play, pause, next, reset, clear, photo, video, icon, load, save, settingsMenu, cellMenu;
     JDialog settingDialog, cellDialog, loadDialog, saveDialog;
-    JPanel iterationP, timeItP, numberItP, cellBornP, cellMaxBP, cellMinBP, cellDieP, cellMaxDP, cellMinDP, radiusP, iconP;
+    JPanel saveP, iterationP, timeItP, numberItP, cellBornP, cellMaxBP, cellMinBP, cellDieP, cellMaxDP, cellMinDP, radiusP, iconP;
     JLabel iteration, timeIt, numberIt, cellBorn, cellMaxB, cellMinB, cellDie, cellMaxD, cellMinD, radius;
-    JTextArea timeItT, numberItT, cellMaxBT, cellMinBT, cellMaxDT, cellMinDT, radiusT;
+    JTextArea saveT, timeItT, numberItT, cellMaxBT, cellMinBT, cellMaxDT, cellMinDT, radiusT;
     JCheckBox infinite, finite;
-    JButton confimSetting, confirmCell, nextBtn, resetBtn, clearBtn, photoBtn, videoBtn, closeBtn;
+    JButton confirmSave, confimSetting, confirmCell, nextBtn, resetBtn, clearBtn, photoBtn, videoBtn, closeBtn;
     JToggleButton playPauseBtn;
     Icon playIc, pauseIc, nextIc, resetIc, clearIc, photoIc, videoIc, closeIc;
     JLayeredPane iconMenu;
     Grid grid;
-
     Action code;
-    
     int timeItVal = 1000, numberItVal = 10, maxBornVal = 3, minBornVal = 2, maxDieVal = 3, minDieVal = 2, radiusVal = 1;
-    
+
     public Window(String title){
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
@@ -257,13 +256,44 @@ public class Window implements ActionListener, ComponentListener {
         this.minBornVal = Integer.parseInt(dataProfile.get("NEIGHBORS-BIRTH-MIN"));
         this.maxDieVal = Integer.parseInt(dataProfile.get("NEIGHBORS-DEATH-MAX"));
         this.minDieVal = Integer.parseInt(dataProfile.get("NEIGHBORS-DEATH-MIN"));
-        this.radiusVal = Integer.parseInt(dataProfile.get("RADIUS")); 
+        this.radiusVal = Integer.parseInt(dataProfile.get("RADIUS"));
+        this.loadFrame.dispatchEvent(new WindowEvent(this.loadFrame, WindowEvent.WINDOW_CLOSING));
     }
 
     public void actionSave(){
         System.out.println("Save file");
         this.saveFrame = new JFrame();
         this.saveDialog = new JDialog(this.saveFrame, "Load file");
+        this.saveP = new JPanel();
+        this.saveT = new JTextArea( 1, 10);
+        this.confirmSave = new JButton("Confirm");
+        this.confirmSave.addActionListener(this);
+        this.saveP.add(this.saveT);
+        this.saveP.add(this.confirmSave);
+    
+        this.saveDialog.add(this.saveP);
+        
+        this.saveDialog.pack();
+        this.saveDialog.setVisible(true);
+    }
+
+    public void saveNewProfile() {
+        if(ProfileManager.isValidName(this.saveT.getText())) {
+            HashMap<String,HashMap<String,String>> map = ProfileManager.load();
+            HashMap<String,String> profileSettings = new HashMap<>();
+            profileSettings.put("RADIUS", Integer.toString(this.radiusVal));
+            profileSettings.put("NUMBER-OF-ITERATION", Integer.toString(this.numberItVal));
+            profileSettings.put("NEIGHBORS-BIRTH-MIN", Integer.toString(this.minBornVal));
+            profileSettings.put("NEIGHBORS-DEATH-MIN", Integer.toString(this.minDieVal));
+            profileSettings.put("DELAY", Integer.toString(this.timeItVal));
+            profileSettings.put("NAME",this.saveT.getText());
+            profileSettings.put("NEIGHBORS-BIRTH-MAX", Integer.toString(this.maxBornVal));
+            profileSettings.put("NEIGHBORS-DEATH-MAX", Integer.toString(this.maxDieVal));
+            map.put(UUID.randomUUID().toString(), profileSettings);
+            ProfileManager.save(map);
+            this.saveFrame.dispatchEvent(new WindowEvent(this.saveFrame, WindowEvent.WINDOW_CLOSING));
+        }
+
     }
 
     public void actionSetting(){
@@ -482,6 +512,9 @@ public class Window implements ActionListener, ComponentListener {
         }
         if (e.getSource()==this.confirmCell){
             actionComfirmCell();
+        }
+        if(e.getSource()==this.confirmSave){
+            saveNewProfile();
         }
     }
 }

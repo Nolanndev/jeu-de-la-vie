@@ -141,4 +141,13 @@ public class ProfileManager{
         }
         return null;
     }
+
+    public static boolean isValidName(String profileName) {
+        if (profileName == null || profileName.isBlank()){
+            return false;
+        }
+        Pattern regex = Pattern.compile("^[0-9a-zA-Z ]+$");
+        Matcher matcher = regex.matcher(profileName);
+        return matcher.find();
+    }
 }
