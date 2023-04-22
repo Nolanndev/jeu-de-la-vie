@@ -48,7 +48,7 @@ public class Grid{
         setBoard(new Cell[this.getHeight()][this.getWidth()]);
         for (int i = 0; i < getWidth(); i++) {  
             for (int j=0; j < getHeight(); j++){
-                setCell(i, j, new Cell(cell.getBornMinNeighbors(), cell.getBornMaxNeighbors(), cell.getDieMinNeighbors(), cell.getDieMaxNeighbors(), cell.getRadius(), cell.isAlive()));
+                setCell(i, j, cell.copyCell());
             }  
         }  
     }
@@ -96,7 +96,9 @@ public class Grid{
         if(tree.isLeaf()){ //si c'est une feuille on retourne une matrice de taille 1
             Cell cell = tree.getCell();
             Boolean alive = (tree.getNumberAlive() == 1) ? true : false; 
-            board[0][0] = new Cell(cell.getBornMinNeighbors(), cell.getBornMaxNeighbors(), cell.getDieMinNeighbors(), cell.getDieMaxNeighbors(), cell.getRadius(), alive);
+            Cell newCell = cell.copyCell();
+            newCell.setState(alive);
+            board[0][0] = newCell;
             return board; 
         }
         else{ //sinon on produit une nouvelle matrice en fusionnant les quatres enfants ensemble
@@ -123,26 +125,36 @@ public class Grid{
             Cell originalCell = this.getCell(0, 0);
             for (int i = 0; i < Math.ceil(size - this.getHeight())/2; i++) {
                 for (int j = 0; j < size; j++) {
-                    res[i][j] = new Cell(originalCell.getBornMinNeighbors(), originalCell.getBornMaxNeighbors(), originalCell.getDieMinNeighbors(), originalCell.getDieMaxNeighbors(), originalCell.getRadius(), false);
+                    Cell newCell = originalCell.copyCell();
+                    newCell.setState(false);
+                    res[i][j] = newCell;
                 }
             }
 
             for (int i = (int)Math.ceil(size - this.getHeight())/2; i < this.getHeight() + Math.ceil(size - this.getHeight())/2; i++) {
                 for (int j = 0; j < Math.ceil(size - this.getWidth())/2; j++) {
-                    res[i][j] = new Cell(originalCell.getBornMinNeighbors(), originalCell.getBornMaxNeighbors(), originalCell.getDieMinNeighbors(), originalCell.getDieMaxNeighbors(), originalCell.getRadius(), false);
+                    Cell newCell = originalCell.copyCell();
+                    newCell.setState(false);
+                    res[i][j] = newCell;
                 }
+
                 for (int j = (int)Math.ceil(size - this.getWidth())/2; j < this.getWidth()+Math.ceil(size - this.getWidth())/2; j++) {
                     Cell cell = this.getCell(j - (int)Math.ceil(size - this.getWidth())/2, i-(int)Math.ceil(size - this.getHeight())/2);
                     res[i][j] = cell;
                 }
+
                 for (int j = this.getWidth()+(int)Math.ceil(size - this.getWidth())/2; j < size; j++) {
-                    res[i][j] = new Cell(originalCell.getBornMinNeighbors(), originalCell.getBornMaxNeighbors(), originalCell.getDieMinNeighbors(), originalCell.getDieMaxNeighbors(), originalCell.getRadius(), false);
+                    Cell newCell = originalCell.copyCell();
+                    newCell.setState(false);
+                    res[i][j] = newCell;
                 }
             }
 
             for (int i = this.getHeight()+(int)Math.ceil(size - this.getHeight())/2; i < size; i++) {
                 for (int j = 0; j < size; j++) {
-                    res[i][j] = new Cell(originalCell.getBornMinNeighbors(), originalCell.getBornMaxNeighbors(), originalCell.getDieMinNeighbors(), originalCell.getDieMaxNeighbors(), originalCell.getRadius(), false);
+                    Cell newCell = originalCell.copyCell();
+                    newCell.setState(false);
+                    res[i][j] = newCell;
                 }
             }
 
@@ -434,7 +446,9 @@ public class Grid{
                 (!cell.isAlive() && neighbors>=cell.getBornMinNeighbors() && neighbors<=cell.getBornMaxNeighbors())); //ou respecte les conditions de naissance déinie dans la Cellule cell
                 
                 if(nextState != this.getCell(i, j).isAlive()){ //si l'etat de la cellule a la prochaine génération est différent de l'état actuelle, on change la cellule. 
-                    this.setCell(i, j, new Cell(cell.getBornMinNeighbors(), cell.getBornMaxNeighbors(), cell.getDieMinNeighbors(), cell.getDieMaxNeighbors(),cell.getRadius(), nextState));
+                    Cell newCell = cell.copyCell();
+                    newCell.setState(nextState);
+                    this.setCell(i, j, newCell);
                     this.changeCell(i, j);
                 }
             }
@@ -450,7 +464,7 @@ public class Grid{
         for (int i = 0; i < getHeight() ; i++){
             for (int j = 0; j < getWidth(); j++){
                 Cell cell = this.getCell(j, i);
-                copyBoard[i][j] = new Cell(cell.getBornMinNeighbors(), cell.getBornMaxNeighbors(), cell.getDieMinNeighbors(), cell.getDieMaxNeighbors(),cell.getRadius(), cell.isAlive());
+                copyBoard[i][j] = cell.copyCell();
             }
         }
         return copyBoard;
@@ -490,7 +504,9 @@ public class Grid{
     public void clearGrid(){
         for (int i = 0; i < this.getWidth(); i++) {
             for (int j = 0; j < this.getHeight(); j++) {
-                this.setCell(i, j, new Cell(false));
+                Cell newCell = this.getCell(0, 0).copyCell();
+                newCell.setState(false);
+                this.setCell(i, j, newCell);
             }
         }
     }
