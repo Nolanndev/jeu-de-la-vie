@@ -11,27 +11,25 @@ import java.lang.Thread;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Window implements ActionListener, ComponentListener {
+public class Window implements ActionListener, ComponentListener, Runnable {
 
-    JFrame window, setting, cell, loadFrame, saveFrame;
+    JFrame window, setting, cell, loadFrame, dataProfilesFrame, saveFrame;
     VueGrid vueGrid;
     JMenuBar menu;
     JMenu commandsMenu, profileMenu;
-    JMenuItem play, pause, next, reset, clear, photo, video, icon, load, save, settingsMenu, cellMenu;
-    JDialog settingDialog, cellDialog, loadDialog, saveDialog;
-    JPanel iterationP, timeItP, numberItP, cellBornP, cellMaxBP, cellMinBP, cellDieP, cellMaxDP, cellMinDP, radiusP, iconP;
-    JLabel iteration, timeIt, numberIt, cellBorn, cellMaxB, cellMinB, cellDie, cellMaxD, cellMinD, radius;
-    JTextArea timeItT, numberItT, cellMaxBT, cellMinBT, cellMaxDT, cellMinDT, radiusT;
+    JMenuItem play, pause, next, reset, clear, photo, icon, load, save, settingsMenu, cellMenu;
+    JDialog settingDialog, cellDialog, loadDialog, dataProfilesDialog, saveDialog;
+    JPanel dataProfilesP, saveP, iterationP, timeItP, startItP, numberItP, cellBornP, cellMaxBP, cellMinBP, cellDieP, cellMaxDP, cellMinDP, radiusP, iconP;
+    JLabel iteration, timeIt, startIt, numberIt, cellBorn, cellMaxB, cellMinB, cellDie, cellMaxD, cellMinD, radius;
+    JTextArea saveT, timeItT, startItT, numberItT, cellMaxBT, cellMinBT, cellMaxDT, cellMinDT, radiusT;
     JCheckBox infinite, finite;
-    JButton confimSetting, confirmCell, nextBtn, resetBtn, clearBtn, photoBtn, videoBtn, closeBtn;
+    JButton profileApli, profileDel, confirmSave, confimSetting, confirmCell, nextBtn, resetBtn, clearBtn, photoBtn, closeBtn;
     JToggleButton playPauseBtn;
-    Icon playIc, pauseIc, nextIc, resetIc, clearIc, photoIc, videoIc, closeIc;
+    Icon playIc, pauseIc, nextIc, resetIc, clearIc, photoIc, closeIc;
     JLayeredPane iconMenu;
     Grid grid;
 
-    Action code;
-    
-    int timeItVal = 1000, numberItVal = 10, maxBornVal = 3, minBornVal = 2, maxDieVal = 3, minDieVal = 2, radiusVal = 1;
+    int timeItVal = 1000,  startItVal = 1, numberItVal = 10, maxBornVal = 3, minBornVal = 2, maxDieVal = 3, minDieVal = 2, radiusVal = 1;
     
     public Window(String title){
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -69,6 +67,7 @@ public class Window implements ActionListener, ComponentListener {
         this.vueGrid = new VueGrid(this.grid, dimGrid,true);
         
         //Bar Menu
+
         this.menu = new JMenuBar();
 
         this.menu.setLayout(new GridLayout(1,4));
@@ -90,8 +89,6 @@ public class Window implements ActionListener, ComponentListener {
         this.clear.addActionListener(this);
         this.photo = new JMenuItem("Photo");
         this.photo.addActionListener(this);
-        this.video = new JMenuItem("Video");
-        this.video.addActionListener(this);
         this.icon = new JMenuItem("Icons");
         this.icon.addActionListener(this);
         
@@ -101,7 +98,6 @@ public class Window implements ActionListener, ComponentListener {
         this.commandsMenu.add(this.reset);
         this.commandsMenu.add(this.clear);
         this.commandsMenu.add(this.photo);
-        this.commandsMenu.add(this.video);
         this.commandsMenu.add(this.icon);
         
         this.load = new JMenuItem("Load file");
@@ -145,20 +141,17 @@ public class Window implements ActionListener, ComponentListener {
         this.iconP.add(this.photoBtn = new JButton(this.photoIc));
         this.photoBtn.addActionListener(this);
 
-        this.videoIc = new ImageIcon(System.getProperty("user.dir") + "/src/main/assets/button/video.png");
-        this.iconP.add(this.videoBtn = new JButton(this.videoIc));
-        this.videoBtn.addActionListener(this);
-
         this.closeIc = new ImageIcon(System.getProperty("user.dir") + "/src/main/assets/button/close.png");
         this.iconP.add(this.closeBtn = new JButton(this.closeIc));
         this.closeBtn.addActionListener(this);
 
         this.iconP.setLayout(new GridLayout(1, 7));
         
-        
         this.window.add(this.vueGrid, BorderLayout.CENTER);
         this.window.setJMenuBar(this.menu);
+        this.window.pack();
         this.window.setVisible(true);
+
         this.iconMenu.add(this.iconP);
         this.iconP.setVisible(true);
         System.out.println(Thread.currentThread().getName());
@@ -175,7 +168,6 @@ public class Window implements ActionListener, ComponentListener {
     @Override
     public void componentMoved(ComponentEvent e) {
         // System.out.println("moved");
-        
     }
     
     @Override
@@ -190,24 +182,6 @@ public class Window implements ActionListener, ComponentListener {
 
     public int stringToInt(JTextArea txt){
         return Integer.valueOf(txt.getText());
-    }
-
-    public void actionPlay(){
-        this.playPauseBtn.setIcon(this.pauseIc);
-        if (this.infinite != null){
-            if(this.infinite.isSelected()){
-                this.code = new Action(this.grid, stringToInt(this.timeItT), 0);
-            }
-            else {
-                this.code= new Action(this.grid, stringToInt(this.timeItT), stringToInt(this.numberItT));
-            }
-            Thread t = new Thread(this.code);
-            t.start();
-            this.playPauseBtn.setIcon(this.pauseIc);
-        } else {
-            JOptionPane.showMessageDialog(this.window, "Comfirm setting information");
-        }
-        System.out.println("Bouton Play");
     }
 
     public void actionIcon(){
@@ -236,15 +210,13 @@ public class Window implements ActionListener, ComponentListener {
                 public void actionPerformed(ActionEvent e) {
                     if(e.getSource()==profil){
                         System.out.println(name);
-
                         dataProfiles(name);
                     }
                 }
-                
             });
             this.loadDialog.add(profil);
         }
-        this.loadDialog.setSize(200, 200);
+        this.loadDialog.pack();
         this.loadDialog.setVisible(true);
     }
 
@@ -257,20 +229,33 @@ public class Window implements ActionListener, ComponentListener {
         this.minBornVal = Integer.parseInt(dataProfile.get("NEIGHBORS-BIRTH-MIN"));
         this.maxDieVal = Integer.parseInt(dataProfile.get("NEIGHBORS-DEATH-MAX"));
         this.minDieVal = Integer.parseInt(dataProfile.get("NEIGHBORS-DEATH-MIN"));
-        this.radiusVal = Integer.parseInt(dataProfile.get("RADIUS")); 
+        this.radiusVal = Integer.parseInt(dataProfile.get("RADIUS"));
+        this.loadFrame.dispatchEvent(new WindowEvent(this.loadFrame, WindowEvent.WINDOW_CLOSING));
     }
 
     public void actionSave(){
         System.out.println("Save file");
         this.saveFrame = new JFrame();
         this.saveDialog = new JDialog(this.saveFrame, "Load file");
+        this.saveP = new JPanel();
+        this.saveT = new JTextArea( 1, 10);
+        this.confirmSave = new JButton("Confirm");
+        this.confirmSave.addActionListener(this);
+
+        this.saveP.add(this.saveT);
+        this.saveP.add(this.confirmSave);
+
+        this.saveDialog.add(this.saveP);
+        
+        this.saveDialog.pack();
+        this.saveDialog.setVisible(true);
     }
 
     public void actionSetting(){
         System.out.println("Bouton Setting");
         this.setting = new JFrame();
         this.settingDialog = new JDialog(this.setting, "Setting");
-        this.settingDialog.setLayout(new GridLayout(3, 1));
+        this.settingDialog.setLayout(new GridLayout(5, 1));
         
         this.iterationP = new JPanel();
         this.iteration = new JLabel("Type of iteration :");
@@ -278,7 +263,7 @@ public class Window implements ActionListener, ComponentListener {
         this.infinite.addActionListener(this);
         this.finite = new JCheckBox("Finite");
         this.finite.addActionListener(this);
-        this.infinite.setSelected(true);
+        this.finite.setSelected(true);
         this.iterationP.add(this.iteration);
         this.iterationP.add(this.infinite);
         this.iterationP.add(this.finite);
@@ -289,6 +274,12 @@ public class Window implements ActionListener, ComponentListener {
         this.timeItP.add(this.timeIt);
         this.timeItP.add(this.timeItT);
 
+        this.startItP = new JPanel();
+        this.startIt = new JLabel("Start to iteration :");
+        this.startItT = new JTextArea(Integer.toString(startItVal),1,4);
+        this.startItP.add(this.startIt);
+        this.startItP.add(this.startItT);
+
         this.numberItP = new JPanel();
         this.numberIt = new JLabel("Number of iteration :");
         this.numberItT = new JTextArea(Integer.toString(numberItVal),1,4);
@@ -298,9 +289,11 @@ public class Window implements ActionListener, ComponentListener {
         this.confimSetting = new JButton("Confirm");
         this.confimSetting.addActionListener(this);
         
-        this.settingDialog.add(this.confimSetting);
         this.settingDialog.add(this.iterationP);
         this.settingDialog.add(this.timeItP);
+        this.settingDialog.add(this.startItP);
+        this.settingDialog.add(this.numberItP);
+        this.settingDialog.add(this.confimSetting);
         
         this.settingDialog.pack();
         this.settingDialog.setVisible(true);
@@ -412,26 +405,65 @@ public class Window implements ActionListener, ComponentListener {
         } 
     }
 
+    public void action(){
+        this.grid.nextGen();
+        System.out.println(Thread.currentThread().getName());
+    }
+
+    public void btnEnabled(Boolean a){
+        if(a){
+            this.next.setEnabled(true);
+            this.reset.setEnabled(true);
+            this.clear.setEnabled(true);
+            this.photo.setEnabled(true);
+            this.nextBtn.setEnabled(true);
+            this.resetBtn.setEnabled(true);
+            this.clearBtn.setEnabled(true);
+            this.photoBtn.setEnabled(true);
+        } else {
+            this.next.setEnabled(false);
+            this.reset.setEnabled(false);
+            this.clear.setEnabled(false);
+            this.photo.setEnabled(false);
+            this.nextBtn.setEnabled(false);
+            this.resetBtn.setEnabled(false);
+            this.clearBtn.setEnabled(false);
+            this.photoBtn.setEnabled(false);    
+        }
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==this.playPauseBtn){
             if (this.playPauseBtn.isSelected()){
-                actionPlay();
+                if (!go) {
+                    new Thread(this).start();
+                }
+                this.playPauseBtn.setIcon(this.pauseIc);
+                btnEnabled(false);
             }
             else{
-                this.playPauseBtn.setIcon(playIc);
+                this.playPauseBtn.setIcon(this.playIc);
+                go = false;
+                btnEnabled(true);
                 System.out.println("Bouton Pause");
             }
         }
         if (e.getSource()==play){
-            actionPlay();
+            if ( !go ) {
+                new Thread(this).start();
+            }
+            this.playPauseBtn.setIcon(this.pauseIc);
+            btnEnabled(false);
         }
         if (e.getSource()==this.pause){
+            go = false;
             this.playPauseBtn.setIcon(playIc);
+            btnEnabled(true);
             System.out.println("Bouton Pause");
         }
         if (e.getSource()==this.next || e.getSource()==this.nextBtn){
-            this.grid.nextGen();
+            action();
             System.out.println("Bouton Next");
         }
         if (e.getSource()==this.reset || e.getSource()==this.resetBtn){
@@ -444,9 +476,6 @@ public class Window implements ActionListener, ComponentListener {
         }
         if (e.getSource()==this.photo || e.getSource()==this.photoBtn){
             System.out.println("Bouton Photo");
-        }
-        if (e.getSource()==this.video || e.getSource()==this.videoBtn){
-            System.out.println("Bouton Video");
         }
         if (e.getSource()==this.icon || e.getSource()==this.closeBtn){
             actionIcon();
@@ -463,16 +492,18 @@ public class Window implements ActionListener, ComponentListener {
         if (e.getSource() == this.finite){
             System.out.println("Bouton Finite");
             this.settingDialog.add(this.numberItP);
-            this.settingDialog.setLayout(new GridLayout(4, 1));
-            this.settingDialog.pack();
+            this.settingDialog.setLayout(new GridLayout(5, 1));
             this.infinite.setSelected(false);
+            this.settingDialog.add(this.confimSetting);
+            this.settingDialog.pack();
         }
         if (e.getSource() == this.infinite){
             System.out.println("Bouton Infinite");
             this.settingDialog.remove(this.numberItP);
-            this.settingDialog.setLayout(new GridLayout(3, 1));
-            this.settingDialog.pack();
+            this.settingDialog.setLayout(new GridLayout(4, 1));
             this.finite.setSelected(false);
+            this.settingDialog.add(this.confimSetting);
+            this.settingDialog.pack();
         }
         if (e.getSource()==this.confimSetting){
             actionComfirmSetting();
@@ -482,6 +513,37 @@ public class Window implements ActionListener, ComponentListener {
         }
         if (e.getSource()==this.confirmCell){
             actionComfirmCell();
+        }
+    }
+
+    private boolean go=false;
+    public void run() {
+        go=true;
+        while(go){
+            if(this.finite.isSelected()){
+                try {
+                    for(int i=0; i<this.numberItVal; i++){
+                        if(go){
+                            this.grid.nextGen();
+                            Thread.sleep(this.timeItVal);
+                        }
+                    }
+                    go=false;
+                    this.playPauseBtn.setIcon(this.pauseIc);
+                    this.playPauseBtn.setEnabled(true);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                try {
+                    while(go){
+                        this.grid.nextGen();
+                        Thread.sleep(this.timeItVal);
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }
