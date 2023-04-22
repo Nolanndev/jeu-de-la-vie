@@ -69,7 +69,6 @@ public class PresetManager{
                         }
 
                     }
-
                 }
                 reader.close();
 
@@ -113,4 +112,16 @@ public class PresetManager{
             return false;
         }
     }
+    
+
+    public static ArrayList<String> getPresets() {
+        ArrayList<String> presets = new ArrayList<>();
+        for (String id : PresetManager.load().keySet()) {
+            presets.add(id);
+        }
+        return presets;
+    }
+
+    // sauvegarder l'image d'un preset avec son identifiant comme nom
+
 }
