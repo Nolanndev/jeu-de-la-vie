@@ -107,7 +107,6 @@ public class ProfileManager{
             String file = "";
             for (String uuid : map.keySet()){
                 file += uuid + "\n";
-                System.out.println(uuid);
                 HashMap<String, String> key_val = map.get(uuid);
                 for (String key : key_val.keySet()){
                     file += "_" + key + ": " + key_val.get(key) + "\n";
@@ -145,6 +144,11 @@ public class ProfileManager{
     public static boolean isValidName(String profileName) {
         if (profileName == null || profileName.isBlank()){
             return false;
+        }
+        for (String name : ProfileManager.getNames()) {
+            if (profileName.equals(name)) {
+                return false;
+            }
         }
         Pattern regex = Pattern.compile("^[0-9a-zA-Z ]+$");
         Matcher matcher = regex.matcher(profileName);

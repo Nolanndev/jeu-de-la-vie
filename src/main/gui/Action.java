@@ -21,13 +21,11 @@ public class Action implements Runnable {
                 for(int i = 0; i<typeIt; i++){
                     this.grid.nextGen();
                     Thread.sleep(time);
-                    System.out.println(Thread.currentThread().getName());
                 }
             } else {
                 while(true){
                     this.grid.nextGen();
                     Thread.sleep(time);
-                    System.out.println(Thread.currentThread().getName());
                 }
             }
         } catch (InterruptedException e) {

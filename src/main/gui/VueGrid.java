@@ -125,7 +125,6 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
             int dimY = Math.min(this.grid.getHeight(), Math.floorDiv((int)this.vueDimension.getHeight(), this.sizeCase));
     
             this.dimGrid = new Dimension(dimX, dimY);
-            System.out.println(this.dimGrid);
         }
             
     }
