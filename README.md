@@ -22,3 +22,4 @@
 - preset : taille de la grille `out of bound`
 - z-order icon menu
 - file separator chemins fichiers
+- 

@@ -5,6 +5,7 @@ import java.io.*;
 import java.io.IOException;
 import java.util.regex.*;
 import java.awt.Dimension;
+
 public class PresetManager {
 
     public static boolean isName(String line) {
