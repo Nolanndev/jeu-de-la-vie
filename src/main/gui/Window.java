@@ -223,7 +223,7 @@ public class Window implements ActionListener, ComponentListener, Runnable {
     public void actionProfileLoad() {
         this.loadProfileFrame = new JFrame();
         this.loadProfileDialog = new JDialog(this.loadProfileFrame, "Profile - Load");
-        this.loadProfileDialog.setLayout(new GridLayout(2, 1));
+        this.loadProfileDialog.setLayout(new GridLayout(0, 1));
         ArrayList<String> profilesNames = ProfileManager.getNames();
 
         for (String name : profilesNames) {
@@ -276,7 +276,7 @@ public class Window implements ActionListener, ComponentListener, Runnable {
     public void deleteProfile() {
         this.loadProfileFrame = new JFrame();
         this.loadProfileDialog = new JDialog(this.loadProfileFrame, "Profile - Delete");
-        this.loadProfileDialog.setLayout(new GridLayout(2, 1));
+        this.loadProfileDialog.setLayout(new GridLayout(0, 1));
         ArrayList<String> profilesNames = ProfileManager.getNames();
 
         for (String name : profilesNames) {
@@ -293,7 +293,7 @@ public class Window implements ActionListener, ComponentListener, Runnable {
             });
             this.loadProfileDialog.add(profil);
         }
-        this.loadProfileDialog.setSize(200, 200);
+        this.loadProfileDialog.pack();
         this.loadProfileDialog.setVisible(true);
     }
 
