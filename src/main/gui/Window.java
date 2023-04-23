@@ -21,7 +21,7 @@ import javax.imageio.ImageIO;
 
 public class Window implements ActionListener, ComponentListener, Runnable {
 
-    JFrame window, setting, cell, loadProfileFrame, saveProfileFrame, loadPresetFrame, savePresetFrame;
+    JFrame window, setting, cellFrame, loadProfileFrame, saveProfileFrame, loadPresetFrame, savePresetFrame;
     VueGrid vueGrid;
     JMenuBar menu;
     JMenu commandsMenu, profileMenu, presetMenu;
@@ -38,8 +38,8 @@ public class Window implements ActionListener, ComponentListener, Runnable {
     Icon playIc, pauseIc, nextIc, resetIc, clearIc, photoIc, closeIc;
     JLayeredPane iconMenu;
     Grid grid;
-
-    int timeItVal = 1000,  startItVal = 1, numberItVal = 10, maxBornVal = 3, minBornVal = 2, maxDieVal = 3, minDieVal = 2, radiusVal = 1;
+    Cell cell;
+    int timeItVal = 1000,  startItVal = 1, numberItVal = 10;
     
     public Window(String title){
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -54,7 +54,10 @@ public class Window implements ActionListener, ComponentListener, Runnable {
         this.window.setLocation((int) (screenSize.getWidth() - this.window.getWidth()) / 2,
                 (int) (screenSize.getHeight() - this.window.getHeight()) / 2); // Center on screen
         this.window.setResizable(true);
-        this.grid = new Grid(new Dimension(300,300));
+        
+        this.cell = new Cell(3,3,2,3,1,false);
+        this.grid = new Grid(new Dimension(500,500));
+
 
         Dimension dimGrid = new Dimension((int) (this.window.getSize().getWidth() * 0.75),(int) this.window.getSize().getHeight() - this.window.getInsets().top);
         this.vueGrid = new VueGrid(this.grid, dimGrid, true);
@@ -226,11 +229,11 @@ public class Window implements ActionListener, ComponentListener, Runnable {
         HashMap<String, String> dataProfile = ProfileManager.getProfile(name);
         this.timeItVal = Integer.parseInt(dataProfile.get("DELAY"));
         this.numberItVal = Integer.parseInt(dataProfile.get("NUMBER-OF-ITERATION"));
-        this.maxBornVal = Integer.parseInt(dataProfile.get("NEIGHBORS-BIRTH-MAX"));
-        this.minBornVal = Integer.parseInt(dataProfile.get("NEIGHBORS-BIRTH-MIN"));
-        this.maxDieVal = Integer.parseInt(dataProfile.get("NEIGHBORS-DEATH-MAX"));
-        this.minDieVal = Integer.parseInt(dataProfile.get("NEIGHBORS-DEATH-MIN"));
-        this.radiusVal = Integer.parseInt(dataProfile.get("RADIUS"));
+        this.cell.setBornMaxNeighbors(Integer.parseInt(dataProfile.get("NEIGHBORS-BIRTH-MAX")));
+        this.cell.setBornMinNeighbors(Integer.parseInt(dataProfile.get("NEIGHBORS-BIRTH-MIN")));
+        this.cell.setDieMaxNeighbors(Integer.parseInt(dataProfile.get("NEIGHBORS-DEATH-MAX")));
+        this.cell.setDieMinNeighbors(Integer.parseInt(dataProfile.get("NEIGHBORS-DEATH-MIN")));
+        this.cell.setRadius(Integer.parseInt(dataProfile.get("RADIUS")));
         this.loadProfileFrame.dispatchEvent(new WindowEvent(this.loadProfileFrame, WindowEvent.WINDOW_CLOSING));
     }
 
@@ -289,14 +292,14 @@ public class Window implements ActionListener, ComponentListener, Runnable {
         if (ProfileManager.isValidName(this.saveProfileT.getText())) {
             HashMap<String, HashMap<String, String>> map = ProfileManager.load();
             HashMap<String, String> profileSettings = new HashMap<>();
-            profileSettings.put("RADIUS", Integer.toString(this.radiusVal));
+            profileSettings.put("RADIUS", Integer.toString(this.cell.getRadius()));
             profileSettings.put("NUMBER-OF-ITERATION", Integer.toString(this.numberItVal));
-            profileSettings.put("NEIGHBORS-BIRTH-MIN", Integer.toString(this.minBornVal));
-            profileSettings.put("NEIGHBORS-DEATH-MIN", Integer.toString(this.minDieVal));
+            profileSettings.put("NEIGHBORS-BIRTH-MIN", Integer.toString(this.cell.getBornMinNeighbors()));
+            profileSettings.put("NEIGHBORS-DEATH-MIN", Integer.toString(this.cell.getDieMinNeighbors()));
             profileSettings.put("DELAY", Integer.toString(this.timeItVal));
             profileSettings.put("NAME", this.saveProfileT.getText());
-            profileSettings.put("NEIGHBORS-BIRTH-MAX", Integer.toString(this.maxBornVal));
-            profileSettings.put("NEIGHBORS-DEATH-MAX", Integer.toString(this.maxDieVal));
+            profileSettings.put("NEIGHBORS-BIRTH-MAX", Integer.toString(this.cell.getBornMaxNeighbors()));
+            profileSettings.put("NEIGHBORS-DEATH-MAX", Integer.toString(this.cell.getDieMaxNeighbors()));
             map.put(UUID.randomUUID().toString(), profileSettings);
             ProfileManager.save(map);
             this.saveProfileFrame.dispatchEvent(new WindowEvent(this.saveProfileFrame, WindowEvent.WINDOW_CLOSING));
@@ -469,32 +472,22 @@ public class Window implements ActionListener, ComponentListener, Runnable {
     }
 
     public void actionCell() {
-        this.cell = new JFrame();
-        this.cellDialog = new JDialog(cell, "Cell");
+        this.cellFrame = new JFrame();
+        this.cellDialog = new JDialog(this.cellFrame, "Cell");
         this.cellDialog.setLayout(new GridLayout(6, 1));
-
-        for (Cell[] row : this.grid.getBoard()) {
-            for (Cell cell : row) {
-                this.maxBornVal = cell.getBornMaxNeighbors();
-                this.minBornVal = cell.getBornMinNeighbors();
-                this.maxDieVal = cell.getDieMaxNeighbors();
-                this.minDieVal = cell.getDieMinNeighbors();
-                this.radiusVal = cell.getRadius();
-            }
-        }
 
         this.cellBorn = new JLabel("Neighboring cell born :");
         this.cellBornP = new JPanel();
 
         this.cellMaxBP = new JPanel();
         this.cellMaxB = new JLabel("Max :");
-        this.cellMaxBT = new JTextArea(Integer.toString(this.maxBornVal), 1, 4);
+        this.cellMaxBT = new JTextArea(Integer.toString(this.cell.getBornMaxNeighbors()), 1, 4);
         this.cellMaxBP.add(this.cellMaxB);
         this.cellMaxBP.add(this.cellMaxBT);
 
         this.cellMinBP = new JPanel();
         this.cellMinB = new JLabel("Min :");
-        this.cellMinBT = new JTextArea(Integer.toString(this.minBornVal), 1, 4);
+        this.cellMinBT = new JTextArea(Integer.toString(this.cell.getBornMinNeighbors()), 1, 4);
         this.cellMinBP.add(this.cellMinB);
         this.cellMinBP.add(this.cellMinBT);
 
@@ -506,13 +499,13 @@ public class Window implements ActionListener, ComponentListener, Runnable {
 
         this.cellMaxDP = new JPanel();
         this.cellMaxD = new JLabel("Max :");
-        this.cellMaxDT = new JTextArea(Integer.toString(this.maxDieVal), 1, 4);
+        this.cellMaxDT = new JTextArea(Integer.toString(this.cell.getDieMaxNeighbors()), 1, 4);
         this.cellMaxDP.add(this.cellMaxD);
         this.cellMaxDP.add(this.cellMaxDT);
 
         this.cellMinDP = new JPanel();
         this.cellMinD = new JLabel("Min :");
-        this.cellMinDT = new JTextArea(Integer.toString(this.minDieVal), 1, 4);
+        this.cellMinDT = new JTextArea(Integer.toString(this.cell.getDieMinNeighbors()), 1, 4);
         this.cellMinDP.add(this.cellMinD);
         this.cellMinDP.add(this.cellMinDT);
 
@@ -521,7 +514,7 @@ public class Window implements ActionListener, ComponentListener, Runnable {
 
         this.radiusP = new JPanel();
         this.radius = new JLabel("Radius :");
-        this.radiusT = new JTextArea(Integer.toString(this.radiusVal), 1, 4);
+        this.radiusT = new JTextArea(Integer.toString(this.cell.getRadius()), 1, 4);
         this.radiusP.add(this.radius);
         this.radiusP.add(this.radiusT);
 
@@ -540,31 +533,34 @@ public class Window implements ActionListener, ComponentListener, Runnable {
     }
 
     public void actionComfirmCell() {
-        this.maxBornVal = stringToInt(this.cellMaxBT);
-        this.minBornVal = stringToInt(this.cellMinBT);
-        this.maxDieVal = stringToInt(this.cellMaxDT);
-        this.minDieVal = stringToInt(this.cellMinDT);
-        this.radiusVal = stringToInt(this.radiusT);
-        if (this.maxBornVal == 0 || this.minBornVal == 0 || this.maxDieVal == 0 || this.minDieVal == 0
-                || this.radiusVal == 0) {
-            JOptionPane.showMessageDialog(this.cell, "Missing information");
-        } else {
+        if (stringToInt(this.cellMaxBT) < stringToInt(this.cellMinBT) || stringToInt(this.cellMaxDT) < stringToInt(this.cellMinDT)) {
+            JOptionPane.showMessageDialog(this.cellFrame, "Minimum values need to be superior or equal than maximum values");
+        }
+        else if(stringToInt(this.radiusT)<=0){
+            JOptionPane.showMessageDialog(this.cellFrame, "Radius must be superior to 0");
+        }
+        else {
+            this.cell.setBornMaxNeighbors(stringToInt(this.cellMaxBT));
+            this.cell.setBornMinNeighbors(stringToInt(this.cellMinBT));
+            this.cell.setDieMaxNeighbors(stringToInt(this.cellMaxDT));
+            this.cell.setDieMinNeighbors(stringToInt(this.cellMinDT));
+            this.cell.setRadius(stringToInt(this.radiusT));
+
             for (Cell[] row : this.grid.getBoard()) {
                 for (Cell cell : row) {
-                    cell.setBornMaxNeighbors(this.maxBornVal);
-                    cell.setBornMinNeighbors(this.minBornVal);
-                    cell.setDieMaxNeighbors(this.maxDieVal);
-                    cell.setDieMinNeighbors(this.minDieVal);
-                    cell.setRadius(this.radiusVal);
+                    cell.setBornMaxNeighbors(this.cell.getBornMaxNeighbors());
+                    cell.setBornMinNeighbors(this.cell.getBornMinNeighbors());
+                    cell.setDieMaxNeighbors(this.cell.getDieMaxNeighbors());
+                    cell.setDieMinNeighbors(this.cell.getDieMinNeighbors());
+                    cell.setRadius(this.cell.getRadius());
                 }
             }
-            this.cell.dispatchEvent(new WindowEvent(this.cell, WindowEvent.WINDOW_CLOSING));
+            this.cellFrame.dispatchEvent(new WindowEvent(this.cellFrame, WindowEvent.WINDOW_CLOSING));
         }
     }
 
     public void action(){
         this.grid.nextGen();
-        System.out.println(Thread.currentThread().getName());
     }
 
     public void btnEnabled(Boolean a){
