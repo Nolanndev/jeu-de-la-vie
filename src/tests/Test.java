@@ -2,11 +2,9 @@ package tests;
 
 import java.io.IOException;
 
-import tests.utils.TestQuadtree;
+import tests.utils.*;
 
-import tests.core.TestGrid;
-import tests.core.TestHashLife;
-import tests.core.TestCell;
+import tests.core.*;
 
 
 
@@ -15,14 +13,20 @@ public class Test {
     public static void main(String[] args) throws IOException{
 
         boolean ok = true;
-        
-        System.out.println("-------------");
+        System.out.println("-----TestProfileManager()----");
 
-        // TestProfileManager profileManagerTester = new TestProfileManager();
-        // //ok = ok && profileManagerTester.testSave();
-        // ok = ok && profileManagerTester.testLoad();
+        TestProfileManager profileManagerTester = new TestProfileManager();
+        //ok = ok && profileManagerTester.testSave();
+        ok = ok && profileManagerTester.testLoad();
+
+        System.out.println("-----TestPresetManager----");
+        TestPresetManager preset = new TestPresetManager();
+        ok = ok && preset.testIsName();
+        ok = ok && preset.testLoad();
+        ok = ok && preset.testSave();
+        ok = ok && preset.testGetPreset();
         
-        // System.out.println("-------------");
+        System.out.println("----TestQuadtree()-----");
      
         // All test OK
         TestQuadtree quadtree = new TestQuadtree();
@@ -32,7 +36,7 @@ public class Test {
         ok = ok && quadtree.testEquals();
         ok = ok && quadtree.testToString();
 
-        System.out.println("-------------");
+        System.out.println("-----TestGrid()------");
 
        
         //All test OK
@@ -47,7 +51,7 @@ public class Test {
         ok = ok && grid.testCountNeighbors();
         ok = ok && grid.testGetCell();
 
-        System.out.println("-------------");
+        System.out.println("----TestCell()-----");
 
         TestCell cell = new TestCell();
         ok = ok && cell.testIsAlive();
@@ -57,7 +61,7 @@ public class Test {
         ok = ok && cell.testGetDieMinNeighbors();
         ok = ok && cell.testGetDieMaxNeighbors();
 
-        System.out.println("-------------");
+        System.out.println("-----TestHashLife()-----");
 
         TestHashLife hashLife = new TestHashLife();
         ok = ok && hashLife.testAdvance();

@@ -15,11 +15,11 @@ public class TestCell{
         Cell cell = new Cell(true);
         Cell cell1 = new Cell(false);
 
-        assert cell.isAlive() == true: "La cellule devrait être vivante";
-        assert cell.isAlive() != false: "La cellule devrait être vivante";
+        assert cell.isAlive() == true: "La cellule devrait etre vivante";
+        assert cell.isAlive() != false: "La cellule devrait etre vivante";
 
-        assert cell1.isAlive() == false: "La cellule devrait être morte";
-        assert cell1.isAlive() != true: "La cellule devrait être vivante";
+        assert cell1.isAlive() == false: "La cellule devrait etre morte";
+        assert cell1.isAlive() != true: "La cellule devrait etre vivante";
         return true;
     }
 

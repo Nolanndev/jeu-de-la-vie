@@ -28,7 +28,8 @@ public class PresetManager {
     // }
 
     public static HashMap<String, ArrayList<Dimension>> load() {
-        return load("/src/main/assets/presets.gol.preset");
+        char fs = File.separatorChar;
+        return load(fs + "src" + fs + "main" + fs + "assets" + fs + "profiles.gol.profile");
     }
 
     public static HashMap<String, ArrayList<Dimension>> load(String filepath) {
@@ -87,7 +88,8 @@ public class PresetManager {
     }
 
     public static boolean save(HashMap<String, ArrayList<Dimension>> map) {
-        return save(map, "/src/main/assets/presets.gol.preset");
+        char fs = File.separatorChar;
+        return save(map, fs + "src" + fs + "main" + fs + "assets" + fs + "profiles.gol.profile");
     }
 
     public static boolean save(HashMap<String, ArrayList<Dimension>> map, String filepath) {

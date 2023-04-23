@@ -2,9 +2,6 @@ package tests.utils;
 
 import main.core.Quadtree;
 import main.core.Cell;
-
-import java.util.Objects; 
-
 /* 
 Ce fichier sert à tester la classe Quadtree.
 */
