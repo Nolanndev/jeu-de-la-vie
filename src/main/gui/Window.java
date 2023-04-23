@@ -224,108 +224,20 @@ public class Window implements ActionListener, ComponentListener, Runnable {
     }
 
     public void actionProfileLoad() {
-        this.loadProfileFrame = new JFrame();
-        this.loadProfileDialog = new JDialog(this.loadProfileFrame, "Profile - Load");
-        this.loadProfileDialog.setLayout(new GridLayout(0, 1));
-        ArrayList<String> profilesNames = ProfileManager.getNames();
-
-        for (String name : profilesNames) {
-            JButton profil = new JButton(name);
-            profil.addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (e.getSource() == profil) {
-                        dataProfiles(name);
-                    }
-                }
-
-            });
-            this.loadProfileDialog.add(profil);
+        ProfileWindow loadDialog = new ProfileWindow(this.window, ProfileWindow.Action.Load);
+        if(loadDialog.getCell()!=null){ // On verifie qu'on a bien charger une cellule
+            this.cell = loadDialog.getCell().copyCell();
+            this.numberItVal = loadDialog.getNumberIteration();
+            this.timeItVal = loadDialog.getDelay();
         }
-        this.loadProfileDialog.pack();
-        this.loadProfileDialog.setVisible(true);
-    }
-
-    public void dataProfiles(String name) {
-        HashMap<String, String> dataProfile = ProfileManager.getProfile(name);
-        this.timeItVal = Integer.parseInt(dataProfile.get("DELAY"));
-        this.numberItVal = Integer.parseInt(dataProfile.get("NUMBER-OF-ITERATION"));
-        this.cell.setBornMaxNeighbors(Integer.parseInt(dataProfile.get("NEIGHBORS-BIRTH-MAX")));
-        this.cell.setBornMinNeighbors(Integer.parseInt(dataProfile.get("NEIGHBORS-BIRTH-MIN")));
-        this.cell.setDieMaxNeighbors(Integer.parseInt(dataProfile.get("NEIGHBORS-DEATH-MAX")));
-        this.cell.setDieMinNeighbors(Integer.parseInt(dataProfile.get("NEIGHBORS-DEATH-MIN")));
-        this.cell.setRadius(Integer.parseInt(dataProfile.get("RADIUS")));
-        this.loadProfileFrame.dispatchEvent(new WindowEvent(this.loadProfileFrame, WindowEvent.WINDOW_CLOSING));
     }
 
     public void actionProfileSave() {
-        this.saveProfileFrame = new JFrame();
-        this.saveProfileDialog = new JDialog(this.saveProfileFrame, "Profile - Save");
-        this.saveProfileP = new JPanel();
-        this.saveProfileT = new JTextArea(1, 10);
-        this.confirmProfileSave = new JButton("Confirm");
-        this.confirmProfileSave.addActionListener(this);
-        this.saveProfileP.add(new JLabel("Profile name "));
-        this.saveProfileP.add(this.saveProfileT);
-        this.saveProfileP.add(this.confirmProfileSave);
-
-        this.saveProfileDialog.add(this.saveProfileP);
-
-        this.saveProfileDialog.pack();
-        this.saveProfileDialog.setVisible(true);
+        new ProfileWindow(this.window, this.cell, this.timeItVal, this.numberItVal);
     }
 
-    public void deleteProfile() {
-        this.loadProfileFrame = new JFrame();
-        this.loadProfileDialog = new JDialog(this.loadProfileFrame, "Profile - Delete");
-        this.loadProfileDialog.setLayout(new GridLayout(0, 1));
-        ArrayList<String> profilesNames = ProfileManager.getNames();
-
-        for (String name : profilesNames) {
-            JButton profil = new JButton(name);
-            profil.addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (e.getSource() == profil) {
-                        delPro(name);
-                    }
-                }
-
-            });
-            this.loadProfileDialog.add(profil);
-        }
-        this.loadProfileDialog.pack();
-        this.loadProfileDialog.setVisible(true);
-    }
-
-    public void delPro(String name) {
-        // we ensure not to delete the default profile
-        if (!name.equals("default")) {
-            HashMap<String, HashMap<String, String>> map = ProfileManager.load();
-            map.remove(ProfileManager.getId(name));
-            ProfileManager.save(map);
-            this.loadProfileFrame.dispatchEvent(new WindowEvent(this.loadProfileFrame, WindowEvent.WINDOW_CLOSING));
-        }
-    }
-
-    public void saveNewProfile() {
-        if (ProfileManager.isValidName(this.saveProfileT.getText())) {
-            HashMap<String, HashMap<String, String>> map = ProfileManager.load();
-            HashMap<String, String> profileSettings = new HashMap<>();
-            profileSettings.put("RADIUS", Integer.toString(this.cell.getRadius()));
-            profileSettings.put("NUMBER-OF-ITERATION", Integer.toString(this.numberItVal));
-            profileSettings.put("NEIGHBORS-BIRTH-MIN", Integer.toString(this.cell.getBornMinNeighbors()));
-            profileSettings.put("NEIGHBORS-DEATH-MIN", Integer.toString(this.cell.getDieMinNeighbors()));
-            profileSettings.put("DELAY", Integer.toString(this.timeItVal));
-            profileSettings.put("NAME", this.saveProfileT.getText());
-            profileSettings.put("NEIGHBORS-BIRTH-MAX", Integer.toString(this.cell.getBornMaxNeighbors()));
-            profileSettings.put("NEIGHBORS-DEATH-MAX", Integer.toString(this.cell.getDieMaxNeighbors()));
-            map.put(UUID.randomUUID().toString(), profileSettings);
-            ProfileManager.save(map);
-            this.saveProfileFrame.dispatchEvent(new WindowEvent(this.saveProfileFrame, WindowEvent.WINDOW_CLOSING));
-        }
+    public void actionDeleteProfile() {
+        new ProfileWindow(this.window, ProfileWindow.Action.Delete);
     }
 
     public void actionPresetLoad() {
@@ -670,7 +582,7 @@ public class Window implements ActionListener, ComponentListener, Runnable {
             actionProfileSave();
         }
         if (e.getSource() == this.deleteProfile) {
-            deleteProfile();
+            actionDeleteProfile();
         }
         if (e.getSource() == this.loadPreset) {
             actionPresetLoad();
