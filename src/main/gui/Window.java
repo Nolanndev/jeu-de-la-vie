@@ -179,11 +179,10 @@ public class Window implements ActionListener, ComponentListener, Runnable {
         this.window.add(this.vueGrid, BorderLayout.CENTER);
         this.window.setJMenuBar(this.menu);
         this.iconMenu.add(this.iconP);
-        this.iconMenu.setLayer(this.iconP, 5);
 
         this.iconP.setVisible(true);
-        this.window.setVisible(true);
 
+        this.window.pack();
         this.window.setVisible(true);
 
     }
@@ -585,7 +584,6 @@ public class Window implements ActionListener, ComponentListener, Runnable {
 
     public void action(){
         this.grid.nextGen();
-        System.out.println(Thread.currentThread().getName());
     }
 
     public void btnEnabled(Boolean a){
@@ -628,7 +626,6 @@ public class Window implements ActionListener, ComponentListener, Runnable {
                 this.playPauseBtn.setIcon(this.playIc);
                 go = false;
                 btnEnabled(true);
-                System.out.println("Bouton Pause");
             }
         }
         if (e.getSource()==play){
@@ -649,7 +646,6 @@ public class Window implements ActionListener, ComponentListener, Runnable {
         }
         if (e.getSource()==this.next || e.getSource()==this.nextBtn){
             action();
-            System.out.println("Bouton Next");
         }
         if (e.getSource() == this.reset || e.getSource() == this.resetBtn) {
             dataPreset(this.activePreset);
@@ -661,7 +657,6 @@ public class Window implements ActionListener, ComponentListener, Runnable {
             try {
                 actionScreen();
             } catch (Exception e1) {
-                System.out.print(e1);
                 e1.printStackTrace();
             }
         }
