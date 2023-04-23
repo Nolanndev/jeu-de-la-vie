@@ -19,26 +19,25 @@ import javax.imageio.ImageIO;
 
 public class Window implements ActionListener, ComponentListener, Runnable {
 
-    JFrame window, setting, cellFrame, loadProfileFrame, saveProfileFrame, loadPresetFrame, savePresetFrame;
+    JFrame window, setting, cellFrame, loadPresetFrame, savePresetFrame;
     VueGrid vueGrid;
     JMenuBar menu;
     JMenu commandsMenu, profileMenu, presetMenu;
-    JMenuItem play, pause, next, reset, clear, photo, video, icon, loadProfile, saveProfile, deleteProfile, loadPreset,
+    JMenuItem play, pause, next, reset, clear, photo, icon, loadProfile, saveProfile, deleteProfile, loadPreset,
             savePreset, deletePreset, settingsMenu, cellMenu;
-    JDialog settingDialog, cellDialog, loadProfileDialog, saveProfileDialog, loadPresetDialog, savePresetDialog;
-    JPanel startItP, saveProfileP, savePresetP, iterationP, timeItP, numberItP, cellBornP, cellMaxBP, cellMinBP, cellDieP,
+    JDialog settingDialog, cellDialog, loadPresetDialog, savePresetDialog;
+    JPanel startItP, savePresetP, iterationP, timeItP, numberItP, cellBornP, cellMaxBP, cellMinBP, cellDieP,
             cellMaxDP, cellMinDP, radiusP, iconP;
     JLabel startIt, iteration, timeIt, numberIt, cellBorn, cellMaxB, cellMinB, cellDie, cellMaxD, cellMinD, radius;
-    JTextArea startItT, saveProfileT, savePresetT, timeItT, numberItT, cellMaxBT, cellMinBT, cellMaxDT, cellMinDT, radiusT;
+    JTextArea startItT, savePresetT, timeItT, numberItT, cellMaxBT, cellMinBT, cellMaxDT, cellMinDT, radiusT;
     JCheckBox infinite, finite;
-    JButton confirmProfileSave, confirmPresetSave, confimSetting, confirmCell, nextBtn, resetBtn, clearBtn, photoBtn, videoBtn, closeBtn;
+    JButton confirmPresetSave, confimSetting, confirmCell, nextBtn, resetBtn, clearBtn, photoBtn, closeBtn;
     JToggleButton playPauseBtn;
     Icon playIc, pauseIc, nextIc, resetIc, clearIc, photoIc, closeIc;
     JLayeredPane iconMenu;
     Grid grid;
-    Quadtree tree;
-    HashLife hashLife;
     Cell cell;
+
     int timeItVal = 1000,  startItVal = 0, numberItVal = 10;
     String activePreset = "default";
     
@@ -57,11 +56,9 @@ public class Window implements ActionListener, ComponentListener, Runnable {
         this.window.setResizable(true);
         
         this.cell = new Cell(3,3,2,3,1,false);
-        this.hashLife = new HashLife(cell);
         this.grid = new Grid(new Dimension(500,500));
-
-
-        Dimension dimGrid = new Dimension((int) (this.window.getSize().getWidth() * 0.75),(int) this.window.getSize().getHeight() - this.window.getInsets().top);
+        
+        Dimension dimGrid = new Dimension((int) (this.window.getSize().getWidth()),(int) this.window.getSize().getHeight() - this.window.getInsets().top);
         this.vueGrid = new VueGrid(this.grid, dimGrid, true);
 
         // Bar Menu
@@ -239,8 +236,8 @@ public class Window implements ActionListener, ComponentListener, Runnable {
     }
 
     public void actionPresetLoad() {
-        this.loadProfileFrame = new JFrame();
-        this.loadPresetDialog = new JDialog(this.loadProfileFrame, "Preset - Load");
+        this.loadPresetFrame = new JFrame();
+        this.loadPresetDialog = new JDialog(this.loadPresetFrame, "Preset - Load");
         this.loadPresetDialog.setLayout(new GridLayout(2, 1));
         ArrayList<String> presetNames = PresetManager.getNames();
         if (presetNames == null) {
@@ -295,8 +292,8 @@ public class Window implements ActionListener, ComponentListener, Runnable {
     }
     
     public void deletePreset() {
-        this.loadProfileFrame = new JFrame();
-        this.loadPresetDialog = new JDialog(this.loadProfileFrame, "Preset - Delete");
+        this.loadPresetFrame = new JFrame();
+        this.loadPresetDialog = new JDialog(this.loadPresetFrame, "Preset - Delete");
         this.loadPresetDialog.setLayout(new GridLayout(2, 1));
         ArrayList<String> presetNames = PresetManager.getNames();
         if (presetNames == null) {
@@ -325,7 +322,7 @@ public class Window implements ActionListener, ComponentListener, Runnable {
         HashMap<String, ArrayList<Dimension>> map = PresetManager.load();
         map.remove(name);
         PresetManager.save(map);
-        this.loadProfileFrame.dispatchEvent(new WindowEvent(this.loadProfileFrame, WindowEvent.WINDOW_CLOSING));
+        // this.loadProfileFrame.dispatchEvent(new WindowEvent(this.loadProfileFrame, WindowEvent.WINDOW_CLOSING));
     }
     
     public void saveNewPreset() {
@@ -685,4 +682,6 @@ public class Window implements ActionListener, ComponentListener, Runnable {
             ImageIO.write(captureImage, "png", new File(path));
         }
     }
+
+
 }
