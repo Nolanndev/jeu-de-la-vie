@@ -2,7 +2,6 @@ package main.gui;
 
 import main.core.*;
 import main.utils.PresetManager;
-import main.utils.ProfileManager;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -15,7 +14,6 @@ import java.io.File;
 import java.lang.Thread;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.UUID;
 import javax.imageio.ImageIO;
 
 
