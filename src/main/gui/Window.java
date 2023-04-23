@@ -19,19 +19,17 @@ import javax.imageio.ImageIO;
 
 public class Window implements ActionListener, ComponentListener, Runnable {
 
-    JFrame window, setting, cellFrame, loadProfileFrame, saveProfileFrame, loadPresetFrame, savePresetFrame;
+    JFrame window, cellFrame, loadProfileFrame, saveProfileFrame, loadPresetFrame, savePresetFrame;
     VueGrid vueGrid;
     JMenuBar menu;
     JMenu commandsMenu, profileMenu, presetMenu;
     JMenuItem play, pause, next, reset, clear, photo, video, icon, loadProfile, saveProfile, deleteProfile, loadPreset,
             savePreset, deletePreset, settingsMenu, cellMenu;
-    JDialog settingDialog, cellDialog, loadProfileDialog, saveProfileDialog, loadPresetDialog, savePresetDialog;
-    JPanel startItP, saveProfileP, savePresetP, iterationP, timeItP, numberItP, cellBornP, cellMaxBP, cellMinBP, cellDieP,
-            cellMaxDP, cellMinDP, radiusP, iconP;
-    JLabel startIt, iteration, timeIt, numberIt, cellBorn, cellMaxB, cellMinB, cellDie, cellMaxD, cellMinD, radius;
-    JTextArea startItT, saveProfileT, savePresetT, timeItT, numberItT, cellMaxBT, cellMinBT, cellMaxDT, cellMinDT, radiusT;
-    JCheckBox infinite, finite;
-    JButton confirmProfileSave, confirmPresetSave, confimSetting, confirmCell, nextBtn, resetBtn, clearBtn, photoBtn, videoBtn, closeBtn;
+    JDialog cellDialog, loadProfileDialog, saveProfileDialog, loadPresetDialog, savePresetDialog;
+    JPanel startItP, saveProfileP, savePresetP, cellBornP, cellMaxBP, cellMinBP, cellDieP, cellMaxDP, cellMinDP, radiusP, iconP;
+    JLabel cellBorn, cellMaxB, cellMinB, cellDie, cellMaxD, cellMinD, radius;
+    JTextField saveProfileT, savePresetT, cellMaxBT, cellMinBT, cellMaxDT, cellMinDT, radiusT;
+    JButton confirmProfileSave, confirmPresetSave, confirmCell, nextBtn, resetBtn, clearBtn, photoBtn, videoBtn, closeBtn;
     JToggleButton playPauseBtn;
     Icon playIc, pauseIc, nextIc, resetIc, clearIc, photoIc, closeIc;
     JLayeredPane iconMenu;
@@ -41,6 +39,7 @@ public class Window implements ActionListener, ComponentListener, Runnable {
     Cell cell;
     int timeItVal = 1000,  startItVal = 0, numberItVal = 10;
     String activePreset = "default";
+    boolean go=false, iteration, confirm;
     
     public Window(String title){
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -207,7 +206,7 @@ public class Window implements ActionListener, ComponentListener, Runnable {
     @Override
     public void componentHidden(ComponentEvent e) {}
 
-    public int stringToInt(JTextArea txt) {
+    public int stringToInt(JTextField txt) {
         return Integer.valueOf(txt.getText());
     }
 
@@ -281,7 +280,7 @@ public class Window implements ActionListener, ComponentListener, Runnable {
         this.savePresetFrame = new JFrame();
         this.savePresetDialog = new JDialog(this.savePresetFrame, "Preset - Save");
         this.savePresetP = new JPanel();
-        this.savePresetT = new JTextArea(1, 10);
+        this.savePresetT = new JTextField(4);
         this.confirmPresetSave = new JButton("Confirm");
         this.confirmPresetSave.addActionListener(this);
         this.savePresetP.add(new JLabel("Profile name "));
@@ -346,61 +345,13 @@ public class Window implements ActionListener, ComponentListener, Runnable {
     }
 
     public void actionSetting() {
-        this.setting = new JFrame();
-        this.settingDialog = new JDialog(this.setting, "Setting");
-        this.settingDialog.setLayout(new GridLayout(4, 1));
-        
-        this.iterationP = new JPanel();
-        this.iteration = new JLabel("Type of iteration :");
-        this.infinite = new JCheckBox("Infinite");
-        this.infinite.addActionListener(this);
-        this.finite = new JCheckBox("Finite");
-        this.finite.addActionListener(this);
-        this.infinite.setSelected(true);
-        this.iterationP.add(this.iteration);
-        this.iterationP.add(this.infinite);
-        this.iterationP.add(this.finite);
-
-        this.timeItP = new JPanel();
-        this.timeIt = new JLabel("Time between iteration (ms) :");
-        this.timeItT = new JTextArea(Integer.toString(timeItVal), 1, 4);
-        this.timeItP.add(this.timeIt);
-        this.timeItP.add(this.timeItT);
-
-        this.startItP = new JPanel();
-        this.startIt = new JLabel("Start to iteration :");
-        this.startItT = new JTextArea(Integer.toString(startItVal),1,4);
-        this.startItP.add(this.startIt);
-        this.startItP.add(this.startItT);
-
-        this.numberItP = new JPanel();
-        this.numberIt = new JLabel("Number of iteration :");
-        this.numberItT = new JTextArea(Integer.toString(numberItVal), 1, 4);
-        this.numberItP.add(this.numberIt);
-        this.numberItP.add(this.numberItT);
-
-        this.confimSetting = new JButton("Confirm");
-        this.confimSetting.addActionListener(this);
-
-        this.settingDialog.add(this.confimSetting);
-        this.settingDialog.add(this.iterationP);
-        this.settingDialog.add(this.timeItP);
-        this.settingDialog.add(this.startItP);
-        this.settingDialog.add(this.confimSetting);
-        
-        this.settingDialog.pack();
-        this.settingDialog.setVisible(true);
-    }
-
-    public void actionComfirmSetting() {
-        this.timeItVal = stringToInt(this.timeItT);
-        this.numberItVal = stringToInt(this.numberItT);
-        this.startItVal = stringToInt(this.startItT);
-        if (this.timeItVal <= 0 || this.numberItVal <= 0 || this.startItVal < 0) {
-            JOptionPane.showMessageDialog(this.setting, "Missing information");
-        } else {
-            this.setting.dispatchEvent(new WindowEvent(this.setting, WindowEvent.WINDOW_CLOSING));
-        }
+        SettingWindow setting = new SettingWindow(this.window, this.timeItVal, this.startItVal, this.numberItVal);
+        this.iteration = setting.getIteration();
+        this.confirm = setting.getConf();
+        this.timeItVal = setting.getTime();
+        this.numberItVal = setting.getNumber();
+        this.startItVal = setting.getStart();
+        System.out.println(this.iteration);
     }
 
     public void actionCell() {
@@ -413,13 +364,13 @@ public class Window implements ActionListener, ComponentListener, Runnable {
 
         this.cellMaxBP = new JPanel();
         this.cellMaxB = new JLabel("Max :");
-        this.cellMaxBT = new JTextArea(Integer.toString(this.cell.getBornMaxNeighbors()), 1, 4);
+        this.cellMaxBT = new JTextField(Integer.toString(this.cell.getBornMaxNeighbors()), 4);
         this.cellMaxBP.add(this.cellMaxB);
         this.cellMaxBP.add(this.cellMaxBT);
 
         this.cellMinBP = new JPanel();
         this.cellMinB = new JLabel("Min :");
-        this.cellMinBT = new JTextArea(Integer.toString(this.cell.getBornMinNeighbors()), 1, 4);
+        this.cellMinBT = new JTextField(Integer.toString(this.cell.getBornMinNeighbors()), 4);
         this.cellMinBP.add(this.cellMinB);
         this.cellMinBP.add(this.cellMinBT);
 
@@ -431,13 +382,13 @@ public class Window implements ActionListener, ComponentListener, Runnable {
 
         this.cellMaxDP = new JPanel();
         this.cellMaxD = new JLabel("Max :");
-        this.cellMaxDT = new JTextArea(Integer.toString(this.cell.getDieMaxNeighbors()), 1, 4);
+        this.cellMaxDT = new JTextField(Integer.toString(this.cell.getDieMaxNeighbors()),4);
         this.cellMaxDP.add(this.cellMaxD);
         this.cellMaxDP.add(this.cellMaxDT);
 
         this.cellMinDP = new JPanel();
         this.cellMinD = new JLabel("Min :");
-        this.cellMinDT = new JTextArea(Integer.toString(this.cell.getDieMinNeighbors()), 1, 4);
+        this.cellMinDT = new JTextField(Integer.toString(this.cell.getDieMinNeighbors()),4);
         this.cellMinDP.add(this.cellMinD);
         this.cellMinDP.add(this.cellMinDT);
 
@@ -446,7 +397,7 @@ public class Window implements ActionListener, ComponentListener, Runnable {
 
         this.radiusP = new JPanel();
         this.radius = new JLabel("Radius :");
-        this.radiusT = new JTextArea(Integer.toString(this.cell.getRadius()), 1, 4);
+        this.radiusT = new JTextField(Integer.toString(this.cell.getRadius()), 4);
         this.radiusP.add(this.radius);
         this.radiusP.add(this.radiusT);
 
@@ -521,7 +472,7 @@ public class Window implements ActionListener, ComponentListener, Runnable {
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==this.playPauseBtn){
             if (this.playPauseBtn.isSelected()){
-                if (this.infinite != null){
+                if (this.confirm == true){
                     if (!go) {
                         new Thread(this).start();
                     }
@@ -538,7 +489,7 @@ public class Window implements ActionListener, ComponentListener, Runnable {
             }
         }
         if (e.getSource()==play){
-            if (this.infinite != null){
+            if (this.confirm == true){
                 if (!go) {
                     new Thread(this).start();
                 }
@@ -594,23 +545,6 @@ public class Window implements ActionListener, ComponentListener, Runnable {
         if (e.getSource() == this.settingsMenu) {
             actionSetting();
         }
-        if (e.getSource() == this.finite) {
-            this.settingDialog.add(this.numberItP);
-            this.settingDialog.setLayout(new GridLayout(5, 1));
-            this.infinite.setSelected(false);
-            this.settingDialog.add(this.confimSetting);
-            this.settingDialog.pack();
-        }
-        if (e.getSource() == this.infinite) {
-            this.settingDialog.remove(this.numberItP);
-            this.settingDialog.setLayout(new GridLayout(4, 1));
-            this.finite.setSelected(false);
-            this.settingDialog.add(this.confimSetting);
-            this.settingDialog.pack();
-        }
-        if (e.getSource() == this.confimSetting) {
-            actionComfirmSetting();
-        }
         if (e.getSource() == this.cellMenu) {
             actionCell();
         }
@@ -622,7 +556,6 @@ public class Window implements ActionListener, ComponentListener, Runnable {
         }
     }
 
-    private boolean go=false;
     public void run() {
         this.grid.removeListener(vueGrid);
         this.grid.advance(this.startItVal);
@@ -631,7 +564,7 @@ public class Window implements ActionListener, ComponentListener, Runnable {
 
         go=true;
         while(go){
-            if(this.finite.isSelected()){
+            if(this.iteration == true){
                 try {
                     for(int i=0; i<this.numberItVal; i++){
                         if(go){
