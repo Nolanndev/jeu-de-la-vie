@@ -22,7 +22,7 @@ public class TestProfileManager{
     
         assert ProfileManager.isUUID(valid) : "erreur sur le nom valide";
         assert !ProfileManager.isUUID(invalid) : "erreur sur le nom invalide";
-        assert !ProfileManager.isUUID("") : "erreur le nom ne peut pas être vide";
+        assert !ProfileManager.isUUID("") : "erreur le nom ne peut pas etre vide";
         assert !ProfileManager.isUUID(null) : "erreur le nom est de type null";
     
         return true;

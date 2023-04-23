@@ -5,7 +5,6 @@ import java.io.*;
 import java.io.IOException;
 import java.util.regex.*;
 import java.awt.Dimension;
-
 public class PresetManager {
 
     public static boolean isName(String line) {
@@ -27,7 +26,7 @@ public class PresetManager {
     // }
 
     public static HashMap<String, ArrayList<Dimension>> load() {
-        return load("\\src\\main\\assets\\presets.gol.preset");
+        return load("/src/main/assets/presets.gol.preset");
     }
 
     public static HashMap<String, ArrayList<Dimension>> load(String filepath) {
@@ -86,7 +85,7 @@ public class PresetManager {
     }
 
     public static boolean save(HashMap<String, ArrayList<Dimension>> map) {
-        return save(map, "\\src\\main\\assets\\presets.gol.preset");
+        return save(map, "/src/main/assets/presets.gol.preset");
     }
 
     public static boolean save(HashMap<String, ArrayList<Dimension>> map, String filepath) {

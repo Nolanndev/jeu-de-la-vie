@@ -24,12 +24,12 @@ public class ProfileManager{
     }
     
     public static HashMap<String, HashMap<String,String>> load() {
-	    return load("\\src\\main\\assets\\profiles.gol.profile");
+	    return load("/src/main/assets/profiles.gol.profile");
     }
 
     /**
      * Charge les profiles du jeu de la vie
-     * @requires les profiles doivent être écrits avec la fonction ProfileManager.load()
+     * @requires les profiles doivent etre écrits avec la fonction ProfileManager.load()
      * @ensures return null s'il y a une erreur lors du chargement des données
      * @return une HashMap<String, HashMap<String, String>> contenant tous les profiles
      */
@@ -92,12 +92,12 @@ public class ProfileManager{
     /**
      * 
      * @param map est une HashMap<String, HashMap<String,String>> contenant les différents profiles
-     * @requires map doit être une valeur retournée par la fonction ProfileManager.load()
+     * @requires map doit etre une valeur retournée par la fonction ProfileManager.load()
      * @return vrai si les données ont bien été sauvegardées et faux sinon
      */
 
     public static boolean save(HashMap<String, HashMap<String,String>> map) {
-        return save(map, "\\src\\main\\assets\\profiles.gol.profile");
+        return save(map, "/src/main/assets/profiles.gol.profile");
     }
 
     public static boolean save(HashMap<String, HashMap<String, String>> map, String filepath) {
