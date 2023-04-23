@@ -180,7 +180,10 @@ public class Window implements ActionListener, ComponentListener, Runnable {
         this.window.setJMenuBar(this.menu);
         this.iconMenu.add(this.iconP);
         this.iconMenu.setLayer(this.iconP, 5);
+
         this.iconP.setVisible(true);
+        this.window.setVisible(true);
+
         this.window.setVisible(true);
 
     }
