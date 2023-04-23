@@ -16,7 +16,7 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
     public Dimension vueDimension;
     public Boolean drawLine; // Draw line to delimit each Cell
 
-    public Dimension dimGrid;
+    public Dimension dimGrid; //Dimension de la grille actuellement affiché
 
     private int posUX = 0;
     private int posUY = 0;
@@ -38,6 +38,7 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
         this.drawLine = drawLine;
         super.setPreferredSize(vueDimension);
         this.setSizeCase(10);
+
 
         this.grid.addListener(this);
         
@@ -201,11 +202,15 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
 
 
                 if(SwingUtilities.isLeftMouseButton(e)){ //Left click
-                    this.grid.getCell(posCellX, posCellY).setState(true);
+                    Cell newCell = this.grid.getCell(posCellX,posCellY).copyCell();
+                    newCell.setState(true);
+                    this.grid.setCell(posCellX, posCellY, newCell);
                 }
                 
-                if(SwingUtilities.isRightMouseButton(e)){ //Left click
-                    this.grid.setCell(posCellX, posCellY, new Cell(false));
+                if(SwingUtilities.isRightMouseButton(e)){ //Right click
+                    Cell newCell = this.grid.getCell(posCellX,posCellY).copyCell();
+                        newCell.setState(false);
+                        this.grid.setCell(posCellX, posCellY, newCell);
                 }
 
             }

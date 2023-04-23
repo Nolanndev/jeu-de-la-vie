@@ -38,8 +38,10 @@ public class Window implements ActionListener, ComponentListener, Runnable {
     Icon playIc, pauseIc, nextIc, resetIc, clearIc, photoIc, closeIc;
     JLayeredPane iconMenu;
     Grid grid;
+    Quadtree tree;
+    HashLife hashLife;
     Cell cell;
-    int timeItVal = 1000,  startItVal = 1, numberItVal = 10;
+    int timeItVal = 1000,  startItVal = 0, numberItVal = 10;
     String activePreset = "default";
     
     public Window(String title){
@@ -57,6 +59,7 @@ public class Window implements ActionListener, ComponentListener, Runnable {
         this.window.setResizable(true);
         
         this.cell = new Cell(3,3,2,3,1,false);
+        this.hashLife = new HashLife(cell);
         this.grid = new Grid(new Dimension(500,500));
 
 
@@ -482,7 +485,8 @@ public class Window implements ActionListener, ComponentListener, Runnable {
     public void actionComfirmSetting() {
         this.timeItVal = stringToInt(this.timeItT);
         this.numberItVal = stringToInt(this.numberItT);
-        if (this.timeItVal == 0 || this.numberItVal == 0) {
+        this.startItVal = stringToInt(this.startItT);
+        if (this.timeItVal <= 0 || this.numberItVal <= 0 || this.startItVal < 0) {
             JOptionPane.showMessageDialog(this.setting, "Missing information");
         } else {
             this.setting.dispatchEvent(new WindowEvent(this.setting, WindowEvent.WINDOW_CLOSING));
@@ -578,7 +582,7 @@ public class Window implements ActionListener, ComponentListener, Runnable {
     }
 
     public void action(){
-        this.grid.nextGen();
+        this.grid.advance(1);
     }
 
     public void btnEnabled(Boolean a){
@@ -710,13 +714,18 @@ public class Window implements ActionListener, ComponentListener, Runnable {
 
     private boolean go=false;
     public void run() {
+        this.grid.removeListener(vueGrid);
+        this.grid.advance(this.startItVal);
+        this.grid.addListener(vueGrid);
+        this.vueGrid.changeOccured();
+
         go=true;
         while(go){
             if(this.finite.isSelected()){
                 try {
                     for(int i=0; i<this.numberItVal; i++){
                         if(go){
-                            this.grid.nextGen();
+                            this.grid.advance(1);
                             Thread.sleep(this.timeItVal);
                         }
                     }
@@ -727,7 +736,7 @@ public class Window implements ActionListener, ComponentListener, Runnable {
             } else {
                 try {
                     while(go){
-                        this.grid.nextGen();
+                        this.grid.advance(1);
                         Thread.sleep(this.timeItVal);
                     }
                 } catch (InterruptedException e) {
