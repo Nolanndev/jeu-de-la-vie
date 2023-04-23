@@ -428,31 +428,34 @@ public class Grid{
     }
 
     /**
-     * Compute the next generation of this Grid using the Game of Life rules.
+     * Compute the n-th generation of this Grid using the Game of Life rules.
      * matrix of this Grid is change to matrix of next generation.
+     * @param n number of generation to compute
      * 
      * Call the function{@link GridListener#changeCell(int, int)} for all listener in{@link #listeners}
      */
-    public void nextGen(){
-        Grid copyGrid = new Grid(this.copyBoard());
-        
-        for (int i = 0; i < getWidth() ; i++){
-            for (int j = 0; j < getHeight(); j++){
-                
-                int neighbors = copyGrid.countNeighbors(i,j);
-                Cell cell = copyGrid.getCell(i, j);
+    public void advance(int n){
+        for (int gen = 0; gen < n; gen++) {
+            Grid copyGrid = new Grid(this.copyBoard());
+            
+            for (int i = 0; i < getWidth() ; i++){
+                for (int j = 0; j < getHeight(); j++){
+                    
+                    int neighbors = copyGrid.countNeighbors(i,j);
+                    Cell cell = copyGrid.getCell(i, j);
 
-                Boolean nextState = ((cell.isAlive() && neighbors>=cell.getDieMinNeighbors() && neighbors<=cell.getDieMaxNeighbors()) || //respecte les conditions de mort déinie dans la Cellule cell
-                (!cell.isAlive() && neighbors>=cell.getBornMinNeighbors() && neighbors<=cell.getBornMaxNeighbors())); //ou respecte les conditions de naissance déinie dans la Cellule cell
-                
-                if(nextState != this.getCell(i, j).isAlive()){ //si l'etat de la cellule a la prochaine génération est différent de l'état actuelle, on change la cellule. 
-                    Cell newCell = cell.copyCell();
-                    newCell.setState(nextState);
-                    this.setCell(i, j, newCell);
-                    this.changeCell(i, j);
+                    Boolean nextState = ((cell.isAlive() && neighbors>=cell.getDieMinNeighbors() && neighbors<=cell.getDieMaxNeighbors()) || //respecte les conditions de mort déinie dans la Cellule cell
+                    (!cell.isAlive() && neighbors>=cell.getBornMinNeighbors() && neighbors<=cell.getBornMaxNeighbors())); //ou respecte les conditions de naissance déinie dans la Cellule cell
+                    
+                    if(nextState != this.getCell(i, j).isAlive()){ //si l'etat de la cellule a la prochaine génération est différent de l'état actuelle, on change la cellule. 
+                        Cell newCell = cell.copyCell();
+                        newCell.setState(nextState);
+                        this.setCell(i, j, newCell);
+                        this.changeCell(i, j);
+                    }
                 }
-            }
-        }
+            }  
+        } 
     }
 
     /**
