@@ -21,7 +21,7 @@ import javax.imageio.ImageIO;
 
 public class Window implements ActionListener, ComponentListener, Runnable {
 
-    JFrame window, setting, cell, loadProfileFrame, saveProfileFrame, loadPresetFrame, savePresetFrame;
+    JFrame window, setting, cellFrame, loadProfileFrame, saveProfileFrame, loadPresetFrame, savePresetFrame;
     VueGrid vueGrid;
     JMenuBar menu;
     JMenu commandsMenu, profileMenu, presetMenu;
@@ -39,7 +39,8 @@ public class Window implements ActionListener, ComponentListener, Runnable {
     JLayeredPane iconMenu;
     Grid grid;
 
-    int timeItVal = 1000,  startItVal = 1, numberItVal = 10, maxBornVal = 3, minBornVal = 2, maxDieVal = 3, minDieVal = 2, radiusVal = 1;
+    int timeItVal = 500,  startItVal = 1, numberItVal = 10, maxBornVal = 3, minBornVal = 2, maxDieVal = 3, minDieVal = 2, radiusVal = 1;
+    String activePreset = "default";
     
     public Window(String title){
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -86,10 +87,12 @@ public class Window implements ActionListener, ComponentListener, Runnable {
         this.clear.setToolTipText("Effacer la grille");
         this.clear.addActionListener(this);
         this.photo = new JMenuItem("Photo");
+        this.photo.setToolTipText("Enregistrer la grille actuelle en format jpg");
         this.photo.addActionListener(this);
         this.icon = new JMenuItem("Icons");
-        this.icon.setToolTipText("Afficher la barre de raccourci d'actions");
         this.icon.addActionListener(this);
+        this.icon.setToolTipText("Afficher la barre de raccourci d'actions");
+
 
         this.commandsMenu.add(this.play);
         this.commandsMenu.add(this.pause);
@@ -101,17 +104,23 @@ public class Window implements ActionListener, ComponentListener, Runnable {
 
         this.loadProfile = new JMenuItem("Load profile");
         this.loadProfile.addActionListener(this);
+        this.loadProfile.setToolTipText("Afficher les profiles disponibles");
         this.saveProfile = new JMenuItem("Save current profile");
         this.saveProfile.addActionListener(this);
+        this.saveProfile.setToolTipText("Enregistrer les paramètres de la simulation dans un nouveau profil");
         this.deleteProfile = new JMenuItem("Delete profile");
         this.deleteProfile.addActionListener(this);
+        this.deleteProfile.setToolTipText("Supprimer les profils (sauf default)");
 
         this.loadPreset = new JMenuItem("Load preset");
         this.loadPreset.addActionListener(this);
+        this.loadPreset.setToolTipText("Affichers les presets disponibles");
         this.savePreset = new JMenuItem("Save current Preset");
         this.savePreset.addActionListener(this);
+        this.savePreset.setToolTipText("Enregistrer l'état actuel de la grille");
         this.deletePreset = new JMenuItem("Delete preset");
         this.deletePreset.addActionListener(this);
+        this.deletePreset.setToolTipText("Affiche les presets pour les supprimer");
 
         this.profileMenu.add(this.loadProfile);
         this.profileMenu.add(this.saveProfile);
@@ -122,11 +131,16 @@ public class Window implements ActionListener, ComponentListener, Runnable {
         this.presetMenu.add(this.deletePreset);
 
         this.menu.add(this.commandsMenu);
+        this.menu.setToolTipText("Afficher les actions de simulation");
         this.menu.add(this.profileMenu);
+        this.menu.setToolTipText("Afficher les options des profiles");
         this.menu.add(this.presetMenu);
+        this.menu.setToolTipText("Afficher les options des presets");
         this.menu.add(this.settingsMenu);
+        this.menu.setToolTipText("Afficher les paramètres de simulation");
         this.settingsMenu.addActionListener(this);
         this.menu.add(this.cellMenu);
+        this.menu.setToolTipText("Afficher les paramètres des cellules");
         this.cellMenu.addActionListener(this);
 
         // Icon Menu
@@ -168,6 +182,7 @@ public class Window implements ActionListener, ComponentListener, Runnable {
         this.window.setVisible(true);
 
         this.iconMenu.add(this.iconP);
+        this.iconMenu.setLayer(this.iconP, 5);
         this.iconP.setVisible(true);
     }
 
@@ -194,8 +209,10 @@ public class Window implements ActionListener, ComponentListener, Runnable {
     public void actionIcon() {
         if (this.iconP.isVisible() == false) {
             iconP.setVisible(true);
+            this.icon.setToolTipText("Cacher la barre de raccourci d'actions");
         } else {
             iconP.setVisible(false);
+            this.icon.setToolTipText("Afficher la barre de raccourci d'actions");
         }
     }
 
@@ -414,7 +431,7 @@ public class Window implements ActionListener, ComponentListener, Runnable {
     public void actionSetting() {
         this.setting = new JFrame();
         this.settingDialog = new JDialog(this.setting, "Setting");
-        this.settingDialog.setLayout(new GridLayout(5, 1));
+        this.settingDialog.setLayout(new GridLayout(4, 1));
         
         this.iterationP = new JPanel();
         this.iteration = new JLabel("Type of iteration :");
@@ -422,7 +439,7 @@ public class Window implements ActionListener, ComponentListener, Runnable {
         this.infinite.addActionListener(this);
         this.finite = new JCheckBox("Finite");
         this.finite.addActionListener(this);
-        this.finite.setSelected(true);
+        this.infinite.setSelected(true);
         this.iterationP.add(this.iteration);
         this.iterationP.add(this.infinite);
         this.iterationP.add(this.finite);
@@ -452,7 +469,6 @@ public class Window implements ActionListener, ComponentListener, Runnable {
         this.settingDialog.add(this.iterationP);
         this.settingDialog.add(this.timeItP);
         this.settingDialog.add(this.startItP);
-        this.settingDialog.add(this.numberItP);
         this.settingDialog.add(this.confimSetting);
         
         this.settingDialog.pack();
@@ -470,8 +486,8 @@ public class Window implements ActionListener, ComponentListener, Runnable {
     }
 
     public void actionCell() {
-        this.cell = new JFrame();
-        this.cellDialog = new JDialog(cell, "Cell");
+        this.cellFrame = new JFrame();
+        this.cellDialog = new JDialog(cellFrame, "Cell");
         this.cellDialog.setLayout(new GridLayout(6, 1));
 
         for (Cell[] row : this.grid.getBoard()) {
@@ -529,12 +545,12 @@ public class Window implements ActionListener, ComponentListener, Runnable {
         this.confirmCell = new JButton("Confirm");
         this.confirmCell.addActionListener(this);
 
-        this.cellDialog.add(this.confirmCell);
         this.cellDialog.add(this.cellBorn);
         this.cellDialog.add(this.cellBornP);
         this.cellDialog.add(this.cellDie);
         this.cellDialog.add(this.cellDieP);
         this.cellDialog.add(this.radiusP);
+        this.cellDialog.add(this.confirmCell);
 
         this.cellDialog.pack();
         this.cellDialog.setVisible(true);
@@ -548,7 +564,9 @@ public class Window implements ActionListener, ComponentListener, Runnable {
         this.radiusVal = stringToInt(this.radiusT);
         if (this.maxBornVal == 0 || this.minBornVal == 0 || this.maxDieVal == 0 || this.minDieVal == 0
                 || this.radiusVal == 0) {
-            JOptionPane.showMessageDialog(this.cell, "Missing information");
+            JOptionPane.showMessageDialog(this.cellFrame, "Missing information");
+        }else if(this.maxBornVal<this.minBornVal || this.maxDieVal<this.minDieVal){
+            JOptionPane.showMessageDialog(this.cellFrame, "Neighbors Max must be superior to Neighbors Min");
         } else {
             for (Cell[] row : this.grid.getBoard()) {
                 for (Cell cell : row) {
@@ -559,7 +577,7 @@ public class Window implements ActionListener, ComponentListener, Runnable {
                     cell.setRadius(this.radiusVal);
                 }
             }
-            this.cell.dispatchEvent(new WindowEvent(this.cell, WindowEvent.WINDOW_CLOSING));
+            this.cellFrame.dispatchEvent(new WindowEvent(this.cellFrame, WindowEvent.WINDOW_CLOSING));
         }
     }
 
@@ -594,11 +612,15 @@ public class Window implements ActionListener, ComponentListener, Runnable {
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==this.playPauseBtn){
             if (this.playPauseBtn.isSelected()){
-                if (!go) {
-                    new Thread(this).start();
+                if (this.infinite != null){
+                    if (!go) {
+                        new Thread(this).start();
+                    }
+                    this.playPauseBtn.setIcon(this.pauseIc);
+                    btnEnabled(false);
+                } else {
+                    JOptionPane.showMessageDialog(this.window, "Comfirm setting information");
                 }
-                this.playPauseBtn.setIcon(this.pauseIc);
-                btnEnabled(false);
             }
             else{
                 this.playPauseBtn.setIcon(this.playIc);
@@ -608,8 +630,12 @@ public class Window implements ActionListener, ComponentListener, Runnable {
             }
         }
         if (e.getSource()==play){
-            if ( !go ) {
-                new Thread(this).start();
+            if (this.infinite != null){
+                if (!go) {
+                    new Thread(this).start();
+                }
+            } else {
+                JOptionPane.showMessageDialog(this.window, "Comfirm setting information");
             }
             this.playPauseBtn.setIcon(this.pauseIc);
             btnEnabled(false);
@@ -618,15 +644,13 @@ public class Window implements ActionListener, ComponentListener, Runnable {
             go = false;
             this.playPauseBtn.setIcon(playIc);
             btnEnabled(true);
-            System.out.println("Bouton Pause");
         }
         if (e.getSource()==this.next || e.getSource()==this.nextBtn){
             action();
             System.out.println("Bouton Next");
         }
         if (e.getSource() == this.reset || e.getSource() == this.resetBtn) {
-            // this.grid.removeListener(this.vueGrid);
-            ;
+            dataPreset(this.activePreset);
         }
         if (e.getSource() == this.clear || e.getSource() == this.clearBtn) {
             this.grid.clearGrid();
@@ -705,8 +729,6 @@ public class Window implements ActionListener, ComponentListener, Runnable {
                         }
                     }
                     go=false;
-                    this.playPauseBtn.setIcon(this.pauseIc);
-                    this.playPauseBtn.setEnabled(true);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

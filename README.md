@@ -14,4 +14,11 @@
 - Faire le rapport
 - Ecrire toute la documentation des fonctions
 - Faire tous les tests
-- 
+-
+
+
+
+- bouton reset
+- preset : taille de la grille `out of bound`
+- z-order icon menu
+- file separator chemins fichiers
