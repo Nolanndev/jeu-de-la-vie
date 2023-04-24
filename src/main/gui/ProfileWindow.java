@@ -100,7 +100,6 @@ public class ProfileWindow extends JDialog{
                         dispose();
                     }
                 }
-
             });
             this.add(profil);
         }

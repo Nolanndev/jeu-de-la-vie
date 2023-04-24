@@ -25,11 +25,10 @@ public class Window implements ActionListener, ComponentListener, Runnable {
     JMenu commandsMenu, profileMenu, presetMenu;
     JMenuItem play, pause, next, reset, clear, photo, video, icon, loadProfile, saveProfile, deleteProfile, loadPreset,
             savePreset, deletePreset, settingsMenu, cellMenu;
-    JDialog cellDialog, loadProfileDialog, saveProfileDialog, loadPresetDialog, savePresetDialog;
-    JPanel startItP, saveProfileP, savePresetP, cellBornP, cellMaxBP, cellMinBP, cellDieP, cellMaxDP, cellMinDP, radiusP, iconP;
-    JLabel cellBorn, cellMaxB, cellMinB, cellDie, cellMaxD, cellMinD, radius;
-    JTextField saveProfileT, savePresetT, cellMaxBT, cellMinBT, cellMaxDT, cellMinDT, radiusT;
-    JButton confirmProfileSave, confirmPresetSave, confirmCell, nextBtn, resetBtn, clearBtn, photoBtn, videoBtn, closeBtn;
+    JDialog loadProfileDialog, saveProfileDialog, loadPresetDialog, savePresetDialog;
+    JPanel saveProfileP, savePresetP, iconP;
+    JTextField saveProfileT, savePresetT;
+    JButton confirmProfileSave, confirmPresetSave, nextBtn, resetBtn, clearBtn, photoBtn, videoBtn, closeBtn;
     JToggleButton playPauseBtn;
     Icon playIc, pauseIc, nextIc, resetIc, clearIc, photoIc, closeIc;
     JLayeredPane iconMenu;
@@ -345,105 +344,91 @@ public class Window implements ActionListener, ComponentListener, Runnable {
     }
 
     public void actionSetting() {
-        SettingWindow setting = new SettingWindow(this.window, this.timeItVal, this.startItVal, this.numberItVal);
-        this.iteration = setting.getIteration();
-        this.confirm = setting.getConf();
-        this.timeItVal = setting.getTime();
-        this.numberItVal = setting.getNumber();
-        this.startItVal = setting.getStart();
-        System.out.println(this.iteration);
+        SettingWindow iterationSetting = new SettingWindow(this.window, this.timeItVal, this.startItVal, this.numberItVal);
+        this.iteration = iterationSetting.getIteration();
+        this.confirm = iterationSetting.getConf();
+        this.timeItVal = iterationSetting.getTime();
+        this.numberItVal = iterationSetting.getNumber();
+        this.startItVal = iterationSetting.getStart();
     }
 
-    public void actionCell() {
-        this.cellFrame = new JFrame();
-        this.cellDialog = new JDialog(this.cellFrame, "Cell");
-        this.cellDialog.setLayout(new GridLayout(6, 1));
-
-        this.cellBorn = new JLabel("Neighboring cell born :");
-        this.cellBornP = new JPanel();
-
-        this.cellMaxBP = new JPanel();
-        this.cellMaxB = new JLabel("Max :");
-        this.cellMaxBT = new JTextField(Integer.toString(this.cell.getBornMaxNeighbors()), 4);
-        this.cellMaxBP.add(this.cellMaxB);
-        this.cellMaxBP.add(this.cellMaxBT);
-
-        this.cellMinBP = new JPanel();
-        this.cellMinB = new JLabel("Min :");
-        this.cellMinBT = new JTextField(Integer.toString(this.cell.getBornMinNeighbors()), 4);
-        this.cellMinBP.add(this.cellMinB);
-        this.cellMinBP.add(this.cellMinBT);
-
-        this.cellBornP.add(cellMaxBP);
-        this.cellBornP.add(cellMinBP);
-
-        this.cellDie = new JLabel("Neighboring cell dead :");
-        this.cellDieP = new JPanel();
-
-        this.cellMaxDP = new JPanel();
-        this.cellMaxD = new JLabel("Max :");
-        this.cellMaxDT = new JTextField(Integer.toString(this.cell.getDieMaxNeighbors()),4);
-        this.cellMaxDP.add(this.cellMaxD);
-        this.cellMaxDP.add(this.cellMaxDT);
-
-        this.cellMinDP = new JPanel();
-        this.cellMinD = new JLabel("Min :");
-        this.cellMinDT = new JTextField(Integer.toString(this.cell.getDieMinNeighbors()),4);
-        this.cellMinDP.add(this.cellMinD);
-        this.cellMinDP.add(this.cellMinDT);
-
-        this.cellDieP.add(cellMaxDP);
-        this.cellDieP.add(cellMinDP);
-
-        this.radiusP = new JPanel();
-        this.radius = new JLabel("Radius :");
-        this.radiusT = new JTextField(Integer.toString(this.cell.getRadius()), 4);
-        this.radiusP.add(this.radius);
-        this.radiusP.add(this.radiusT);
-
-        this.confirmCell = new JButton("Confirm");
-        this.confirmCell.addActionListener(this);
-
-        this.cellDialog.add(this.cellBorn);
-        this.cellDialog.add(this.cellBornP);
-        this.cellDialog.add(this.cellDie);
-        this.cellDialog.add(this.cellDieP);
-        this.cellDialog.add(this.radiusP);
-        this.cellDialog.add(this.confirmCell);
-
-        this.cellDialog.pack();
-        this.cellDialog.setVisible(true);
-    }
-
-    public void actionComfirmCell() {
-        if (stringToInt(this.cellMaxBT) < stringToInt(this.cellMinBT) || stringToInt(this.cellMaxDT) < stringToInt(this.cellMinDT)) {
-            JOptionPane.showMessageDialog(this.cellFrame, "Minimum values need to be superior or equal than maximum values");
-        }
-        else if(stringToInt(this.radiusT)<=0){
-            JOptionPane.showMessageDialog(this.cellFrame, "Radius must be superior to 0");
-        }
-        else {
-            this.cell.setBornMaxNeighbors(stringToInt(this.cellMaxBT));
-            this.cell.setBornMinNeighbors(stringToInt(this.cellMinBT));
-            this.cell.setDieMaxNeighbors(stringToInt(this.cellMaxDT));
-            this.cell.setDieMinNeighbors(stringToInt(this.cellMinDT));
-            this.cell.setRadius(stringToInt(this.radiusT));
-
-            for (Cell[] row : this.grid.getBoard()) {
-                for (Cell cell : row) {
-                    cell.setBornMaxNeighbors(this.cell.getBornMaxNeighbors());
-                    cell.setBornMinNeighbors(this.cell.getBornMinNeighbors());
-                    cell.setDieMaxNeighbors(this.cell.getDieMaxNeighbors());
-                    cell.setDieMinNeighbors(this.cell.getDieMinNeighbors());
-                    cell.setRadius(this.cell.getRadius());
-                }
+    public void actionCell(){
+        CellWindow cellSetting = new CellWindow(this.window, this.cell);
+        this.cell = cellSetting.getConfCell().copyCell();
+        for (Cell[] row : this.grid.getBoard()) {
+            for (Cell cell : row) {
+                Boolean alive = cell.isAlive();
+                cell = this.cell.copyCell();
+                cell.setState(alive);
             }
-            this.cellFrame.dispatchEvent(new WindowEvent(this.cellFrame, WindowEvent.WINDOW_CLOSING));
         }
     }
 
     public void action(){
         this.grid.advance(1);
+    }
+
+    public void actionScreen() throws Exception{
+        String path="";
+        JFileChooser choose = new JFileChooser(
+            FileSystemView
+            .getFileSystemView()
+            .getHomeDirectory()
+        );
+        
+        choose.setDialogTitle("Enregistrer sous: ");
+        choose.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        choose.setAcceptAllFileFilterUsed(false);
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("JPG", "jpg");
+        choose.addChoosableFileFilter(filter);
+        choose.setSelectedFile(new File("screenshot.jpg"));
+        int res = choose.showSaveDialog(null);
+        if(res == JFileChooser.APPROVE_OPTION) 
+        {
+            path = choose.getSelectedFile().toString();
+        }
+        if(path!=""){
+            Rectangle rect = this.vueGrid.getBounds();
+            BufferedImage captureImage =
+                new BufferedImage(rect.width, rect.height,
+                                    BufferedImage.TYPE_INT_ARGB);
+            this.vueGrid.paint(captureImage.getGraphics());
+    
+            ImageIO.write(captureImage, "png", new File(path));
+        }
+    }
+
+    public void run() {
+        this.grid.removeListener(vueGrid);
+        this.grid.advance(this.startItVal);
+        this.grid.addListener(vueGrid);
+        this.vueGrid.changeOccured();
+
+        go=true;
+        while(go){
+            if(this.iteration == true){
+                try {
+                    for(int i=0; i<this.numberItVal; i++){
+                        if(go){
+                            action();
+                            Thread.sleep(this.timeItVal);
+                        }
+                    }
+                    go=false;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                try {
+                    while(go){
+                        action();
+                        Thread.sleep(this.timeItVal);
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     public void btnEnabled(Boolean a){
@@ -548,74 +533,9 @@ public class Window implements ActionListener, ComponentListener, Runnable {
         if (e.getSource() == this.cellMenu) {
             actionCell();
         }
-        if (e.getSource() == this.confirmCell) {
-            actionComfirmCell();
-        }
         if (e.getSource() == this.confirmPresetSave) {
             saveNewPreset();
         }
     }
 
-    public void run() {
-        this.grid.removeListener(vueGrid);
-        this.grid.advance(this.startItVal);
-        this.grid.addListener(vueGrid);
-        this.vueGrid.changeOccured();
-
-        go=true;
-        while(go){
-            if(this.iteration == true){
-                try {
-                    for(int i=0; i<this.numberItVal; i++){
-                        if(go){
-                            this.grid.advance(1);
-                            Thread.sleep(this.timeItVal);
-                        }
-                    }
-                    go=false;
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                try {
-                    while(go){
-                        this.grid.advance(1);
-                        Thread.sleep(this.timeItVal);
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    public void actionScreen() throws Exception{
-        String path="";
-        JFileChooser choose = new JFileChooser(
-            FileSystemView
-            .getFileSystemView()
-            .getHomeDirectory()
-        );
-        
-        choose.setDialogTitle("Enregistrer sous: ");
-        choose.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        choose.setAcceptAllFileFilterUsed(false);
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("JPG", "jpg");
-        choose.addChoosableFileFilter(filter);
-        choose.setSelectedFile(new File("screenshot.jpg"));
-        int res = choose.showSaveDialog(null);
-        if(res == JFileChooser.APPROVE_OPTION) 
-        {
-            path = choose.getSelectedFile().toString();
-        }
-        if(path!=""){
-            Rectangle rect = this.vueGrid.getBounds();
-            BufferedImage captureImage =
-                new BufferedImage(rect.width, rect.height,
-                                    BufferedImage.TYPE_INT_ARGB);
-            this.vueGrid.paint(captureImage.getGraphics());
-    
-            ImageIO.write(captureImage, "png", new File(path));
-        }
-    }
 }
