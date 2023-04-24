@@ -18,61 +18,59 @@ public class PresetManager {
         return matcher.find();
     }
 
-    // public static boolean isDimension(String line) {
-    //     if (line == null || line.isBlank()) {
-    //         return false;
-    //     }
-    //     Pattern regex = Pattern.compile("^_([0-9]+,[0-9]+)$");
-    //     Matcher matcher = regex.matcher(line);
-    //     return matcher.find();
-    // }
-
-    public static HashMap<String, ArrayList<Dimension>> load() {
-        char fs = File.separatorChar;
-        return load(fs + "src" + fs + "main" + fs + "assets" + fs + "profiles.gol.profile");
+    public static boolean isGridSize(String line) {
+        if (line == null || line.isBlank()) {
+            return false;
+        }
+        Pattern regex = Pattern.compile("^\\([0-9]+,[0-9]+\\)$");
+        Matcher matcher = regex.matcher(line);
+        return matcher.find();
+    }
+    
+    public static boolean isCoordinate(String line) {
+        if (line == null || line.isBlank()) {
+            return false;
+        }
+        Pattern regex = Pattern.compile("^[0-9]+:[0-9]+$");
+        Matcher matcher = regex.matcher(line);
+        return matcher.find();
     }
 
-    public static HashMap<String, ArrayList<Dimension>> load(String filepath) {
+    public static Dimension parseSize(String line) {
+        String[] words = line.replaceAll("[\\(\\)]", "").split(",");
+        return new Dimension(Integer.parseInt(words[0]), Integer.parseInt(words[1]));
+    }
+    
+    public static Dimension parseCoordinate(String line) {
+        String[] words = line.split(":");
+        return new Dimension(Integer.parseInt(words[0]), Integer.parseInt(words[1]));
+    }
+
+    public static HashMap<String, HashMap<String, Object>> load() {
+        char fs = File.separatorChar;
+        return load(fs + "src" + fs + "main" + fs + "assets" + fs + "presets.gol.preset");
+    }
+
+    public static HashMap<String,HashMap<String,Object>> load(String filepath) {
         try {
             String path = System.getProperty("user.dir") + filepath;
             File f = new File(path);
             if (f.exists() && !f.isDirectory()) {
                 BufferedReader reader = new BufferedReader(new FileReader(path));
-                HashMap<String, ArrayList<Dimension>> map = new HashMap<>();
+                HashMap<String,HashMap<String,Object>> map = new HashMap<>();
                 if (reader != null) {
-                    String name = "", keyContent, keyValue;
-                    boolean key = true;
-
+                    String name = "";
                     while (reader.ready()) {
                         String line = reader.readLine();
-                        key = true;
-                        keyContent = "";
-                        keyValue = "";
                         if (isName(line)) {
                             name = line;
-                            map.put(name, new ArrayList<>());
-                        } else {
-                            for (int i = 0; i < line.length(); i++) {
-                                if (line.charAt(i) == ':') {
-                                    key = false;
-                                } else if (line.charAt(i) == ' ' || line.charAt(i) == '_' || line.charAt(i) == '\n') {
-                                    ;
-                                } else {
-                                    if (key) {
-                                        keyContent += line.charAt(i);
-                                    } else {
-                                        keyValue += line.charAt(i);
-                                    }
-                                }
-                            }
-                            if (map.containsKey(name) && !keyContent.isBlank() && !keyValue.isBlank()) {
-                                // map.get(name).add(new Dimension(Integer.parseInt(keyContent), Integer.parseInt(keyValue)));
-                                map.get(name).add(new Dimension((int)Integer.parseInt(keyContent), (int)Integer.parseInt(keyValue)));
-                                keyContent = "";
-                                keyValue = "";
-                            }
+                            map.put(name, new HashMap<>());
+                            map.get(name).put("CELLS", new ArrayList<>());
+                        } else if (isGridSize(line)) {
+                            map.get(name).put("SIZE", parseSize(line));
+                        } else if (isCoordinate(line)) {
+                            ((ArrayList<Dimension>)map.get(name).get("CELLS")).add(parseCoordinate(line));
                         }
-
                     }
                 }
                 reader.close();
@@ -87,20 +85,23 @@ public class PresetManager {
         }
     }
 
-    public static boolean save(HashMap<String, ArrayList<Dimension>> map) {
+    public static boolean save(HashMap<String, HashMap<String, Object>> map) {
         char fs = File.separatorChar;
-        return save(map, fs + "src" + fs + "main" + fs + "assets" + fs + "profiles.gol.profile");
+        return save(map, fs + "src" + fs + "main" + fs + "assets" + fs + "presets.gol.preset");
     }
 
-    public static boolean save(HashMap<String, ArrayList<Dimension>> map, String filepath) {
+    public static boolean save(HashMap<String, HashMap<String, Object>> map, String filepath) {
         try {
             String path = System.getProperty("user.dir") + filepath;
             FileWriter writer = new FileWriter(path);
             String file = "";
             for (String name : map.keySet()) {
                 file += name + "\n";
-                for (Dimension dim : map.get(name)) {
-                    file += "_" + (int)dim.getWidth() + ":" + (int)dim.getHeight() + "\n";
+                Dimension dim = (Dimension)map.get(name).get("SIZE");
+                file += "(" + Integer.toString((int)dim.getWidth()) + "," + Integer.toString((int)dim.getHeight()) + ")\n";
+                ArrayList<Dimension> cells = (ArrayList<Dimension>) map.get(name).get("CELLS");
+                for (Dimension dimi : cells) {
+                    file += Integer.toString((int)dimi.getWidth()) + ":" + Integer.toString((int)dimi.getHeight())+ "\n";
                 }
                 file += "\n";
             }
@@ -112,9 +113,20 @@ public class PresetManager {
         }
     }
 
+    public static void delete (String name) {
+        char fs = File.separatorChar;
+        delete(fs + "src" + fs + "main" + fs + "assets" + fs + "presets.gol.preset", name);
+    }
+
+    public static void delete(String filepath, String name) {
+        HashMap<String, HashMap<String, Object>> map = PresetManager.load(filepath);
+        map.remove(name);
+        PresetManager.save(map);
+    }
+
     public static ArrayList<String> getNames() {
         ArrayList<String> presets = new ArrayList<>();
-        HashMap<String, ArrayList<Dimension>> names = PresetManager.load();
+        HashMap<String, HashMap<String, Object>> names = PresetManager.load();
         if (names != null) {
             for (String name : PresetManager.load().keySet()) {
                 presets.add(name);
@@ -124,8 +136,8 @@ public class PresetManager {
         return null;
     }
 
-    public static ArrayList<Dimension> getPreset(String name) {
-        HashMap<String, ArrayList<Dimension>> map = PresetManager.load();
+    public static HashMap<String, Object> getPreset(String name) {
+        HashMap<String, HashMap<String, Object>> map = PresetManager.load();
         for (String presetName : map.keySet()) {
             if (presetName.equals(name)) {
                 return map.get(presetName);
