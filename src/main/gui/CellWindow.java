@@ -10,8 +10,6 @@ public class CellWindow extends JDialog {
 
     private Frame frame;
     private Cell cell;
-    private JPanel cellBornP, cellMaxBP, cellMinBP, cellDieP, cellMaxDP, cellMinDP, radiusP;
-    private JLabel cellBorn, cellMaxB, cellMinB, cellDie, cellMaxD, cellMinD, radius;
     private JTextField cellMaxBT, cellMinBT, cellMaxDT, cellMinDT, radiusT;
 
     public CellWindow(Frame frame, Cell cell){
@@ -21,7 +19,7 @@ public class CellWindow extends JDialog {
         this.setTitle("Cell");
         this.setLocationRelativeTo(this.frame);
         this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        this.actionCell();
+        this.displayUI();
         this.pack();
         this.setVisible(true);
     }
@@ -30,56 +28,56 @@ public class CellWindow extends JDialog {
         return Integer.valueOf(txt.getText());
     }
 
-    public void actionCell() {
+    private void displayUI() {
         this.setLayout(new GridLayout(6, 1));
 
-        this.cellBorn = new JLabel("Neighboring cell born :");
-        this.cellBornP = new JPanel();
+        JLabel cellBorn = new JLabel("Neighboring cell born :");
+        JPanel cellBornP = new JPanel();
 
-        this.cellMaxBP = new JPanel();
-        this.cellMaxB = new JLabel("Max :");
+        JPanel cellMaxBP = new JPanel();
+        JLabel cellMaxB = new JLabel("Max :");
         this.cellMaxBT = new JTextField(Integer.toString(this.cell.getBornMaxNeighbors()), 4);
-        this.cellMaxBP.add(this.cellMaxB);
-        this.cellMaxBP.add(this.cellMaxBT);
+        cellMaxBP.add(cellMaxB);
+        cellMaxBP.add(this.cellMaxBT);
 
-        this.cellMinBP = new JPanel();
-        this.cellMinB = new JLabel("Min :");
+        JPanel cellMinBP = new JPanel();
+        JLabel cellMinB = new JLabel("Min :");
         this.cellMinBT = new JTextField(Integer.toString(this.cell.getBornMinNeighbors()), 4);
-        this.cellMinBP.add(this.cellMinB);
-        this.cellMinBP.add(this.cellMinBT);
+        cellMinBP.add(cellMinB);
+        cellMinBP.add(this.cellMinBT);
+    
+        cellBornP.add(cellMaxBP);
+        cellBornP.add(cellMinBP);
 
-        this.cellBornP.add(cellMaxBP);
-        this.cellBornP.add(cellMinBP);
+        JLabel cellDie = new JLabel("Neighboring cell dead :");
+        JPanel cellDieP = new JPanel();
 
-        this.cellDie = new JLabel("Neighboring cell dead :");
-        this.cellDieP = new JPanel();
-
-        this.cellMaxDP = new JPanel();
-        this.cellMaxD = new JLabel("Max :");
+        JPanel cellMaxDP = new JPanel();
+        JLabel cellMaxD = new JLabel("Max :");
         this.cellMaxDT = new JTextField(Integer.toString(this.cell.getDieMaxNeighbors()),4);
-        this.cellMaxDP.add(this.cellMaxD);
-        this.cellMaxDP.add(this.cellMaxDT);
+        cellMaxDP.add(cellMaxD);
+        cellMaxDP.add(this.cellMaxDT);
 
-        this.cellMinDP = new JPanel();
-        this.cellMinD = new JLabel("Min :");
+        JPanel cellMinDP = new JPanel();
+        JLabel cellMinD = new JLabel("Min :");
         this.cellMinDT = new JTextField(Integer.toString(this.cell.getDieMinNeighbors()),4);
-        this.cellMinDP.add(this.cellMinD);
-        this.cellMinDP.add(this.cellMinDT);
+        cellMinDP.add(cellMinD);
+        cellMinDP.add(this.cellMinDT);
 
-        this.cellDieP.add(cellMaxDP);
-        this.cellDieP.add(cellMinDP);
+        cellDieP.add(cellMaxDP);
+        cellDieP.add(cellMinDP);
 
-        this.radiusP = new JPanel();
-        this.radius = new JLabel("Radius :");
+        JPanel radiusP = new JPanel();
+        JLabel radius = new JLabel("Radius :");
         this.radiusT = new JTextField(Integer.toString(this.cell.getRadius()), 4);
-        this.radiusP.add(this.radius);
-        this.radiusP.add(this.radiusT);
+        radiusP.add(radius);
+        radiusP.add(this.radiusT);
         
-        this.add(this.cellBorn);
-        this.add(this.cellBornP);
-        this.add(this.cellDie);
-        this.add(this.cellDieP);
-        this.add(this.radiusP);
+        this.add(cellBorn);
+        this.add(cellBornP);
+        this.add(cellDie);
+        this.add(cellDieP);
+        this.add(radiusP);
         
         JButton confirmCell = new JButton("Confirm");
         add(confirmCell);
@@ -96,7 +94,12 @@ public class CellWindow extends JDialog {
     }
 
     public void actionConfirmCell() {
-        int cellMinBVal = stringToInt(this.cellMinBT), cellMaxBVal = stringToInt(this.cellMaxBT), cellMinDVal = stringToInt(this.cellMinDT), cellMaxDVal = stringToInt(this.cellMaxDT), radiusVal =stringToInt(this.radiusT);
+        int cellMinBVal = stringToInt(this.cellMinBT);
+        int cellMaxBVal = stringToInt(this.cellMaxBT);
+        int cellMinDVal = stringToInt(this.cellMinDT);
+        int cellMaxDVal = stringToInt(this.cellMaxDT);
+        int radiusVal =stringToInt(this.radiusT);
+
         if (cellMaxBVal < cellMinBVal || cellMaxDVal < cellMinDVal) {
             JOptionPane.showMessageDialog(this.frame, "Maximum values need to be superior or equal than minimum values");
         }
@@ -110,7 +113,7 @@ public class CellWindow extends JDialog {
         }
     }
 
-    public Cell getConfCell(){
+    public Cell getCell(){
         return this.cell;
     }
 }
