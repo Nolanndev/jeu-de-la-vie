@@ -10,20 +10,53 @@ import main.core.GridListener;
 import main.core.Grid;
 import main.core.Cell;
 
+/**
+ * Class which represent view of Grid in game of life.
+ * VueGrid is defined by :
+ * <ul>
+ * <li>Grid associated to it.</li>
+ * <li>Is Dimension on pixel.</li>
+ * </ul>
+ * @author David Matthias
+ * 
+ * @see Grid
+ */
 public class VueGrid extends JPanel implements MouseListener, MouseMotionListener, MouseWheelListener, GridListener{
-    
+    /**
+     * Grid associated to the VueGrid
+     */
     public Grid grid;
+
+    /**
+     * Dimension of the VueGrid
+     */
     public Dimension vueDimension;
+
+    /**
+     * To know if VueGrid will be display with squares pattern or not
+     */
     public Boolean drawLine; // Draw line to delimit each Cell
 
-    public Dimension dimGrid; //Dimension de la grille actuellement affiché
+    /**
+     * Size of the grid currently displayed (Depend of zoom and vueDimension) 
+     */
+    private Dimension dimGrid; //Dimension de la grille actuellement affiché
 
-    private int posUX = 0;
+    /**
+     * Correspond to the index of the top left Cell of the currently displayed grid relative to the model 'grid' 
+     */
+    private int posUX = 0; 
     private int posUY = 0;
 
-    Integer lastX;
-    Integer lastY;
+    /**
+     * Correspond the last Cell where mouse is released, used during the dragging of the mouse
+     */
+    private Integer lastX;
+    private Integer lastY;
 
+    /**
+     * Size in pixel of each Cell
+     */
     private Integer sizeCase;
 
 
@@ -55,7 +88,7 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
         setDimGrid();
     }
 
-    public void setSizeCase(int sizeCase){
+    private void setSizeCase(int sizeCase){
         if(this.sizeCase == null){
             this.sizeCase = sizeCase;
         }
@@ -120,7 +153,7 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
     }
 
 
-    public void setDimGrid() {
+    private void setDimGrid() {
         if(this.sizeCase != null){
             int dimX = Math.min(this.grid.getWidth(), Math.floorDiv((int)this.vueDimension.getWidth(), this.sizeCase));
             int dimY = Math.min(this.grid.getHeight(), Math.floorDiv((int)this.vueDimension.getHeight(), this.sizeCase));
@@ -135,7 +168,7 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
     @Override
     public void paintComponent(Graphics g){
         super.paintComponent(g);
-
+        
         g.setColor(Color.black);
         if(this.drawLine && this.sizeCase>3){
             for(int i = 0; i<=this.dimGrid.height; i++){
@@ -145,11 +178,15 @@ public class VueGrid extends JPanel implements MouseListener, MouseMotionListene
                 g.fillRect(i*sizeCase-1, 0, 1, this.dimGrid.height*this.sizeCase);
             }
         }
-
+        
         this.drawGrid(g);
         
     }
 
+    /**
+     * Draw each Cell of the Grid (not the squares pattern) correspond of index in 'dimGrid' with the right size; 
+     * @param g Grpahics where we draw
+     */
     private void drawGrid(Graphics g){
         for(int x = 0; x<this.dimGrid.width; x++){
             for(int y = 0; y<this.dimGrid.height; y++){

@@ -7,7 +7,14 @@ import javax.swing.*;
 
 import main.core.Cell;
 import main.utils.ProfileManager;
-
+/**
+ * Class which extend JDialog, which allow to interact between users and ProfileManager.
+ * @author David Matthias
+ * @author Parcheminer Nolann
+ * 
+ * @see ProfileManager
+ * @see Window
+ */
 public class ProfileWindow extends JDialog{
     
     public enum Action{
@@ -123,7 +130,7 @@ public class ProfileWindow extends JDialog{
     
     private void save(){
         JPanel panel = new JPanel();
-        JLabel error = new JLabel("");
+        JLabel error = new JLabel();
         JTextField inputField = new JTextField(10);
         JButton confirmButton = new JButton("Confirm");
         confirmButton.addActionListener(new ActionListener() {
@@ -142,6 +149,7 @@ public class ProfileWindow extends JDialog{
             }
         });
 
+        panel.add(error);
         panel.add(new JLabel("Profile name : "));
         panel.add(inputField);
         panel.add(confirmButton);
@@ -152,7 +160,6 @@ public class ProfileWindow extends JDialog{
 
 
     private void deleteDataProfile(String name){
-        // we ensure not to delete the default profile
         HashMap<String, HashMap<String, String>> map = ProfileManager.load();
         map.remove(ProfileManager.getId(name));
         ProfileManager.save(map);
