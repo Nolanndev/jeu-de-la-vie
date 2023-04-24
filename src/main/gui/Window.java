@@ -1,7 +1,6 @@
 package main.gui;
 
 import main.core.*;
-import main.utils.PresetManager;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -12,26 +11,24 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.lang.Thread;
-import java.util.ArrayList;
-import java.util.HashMap;
 import javax.imageio.ImageIO;
 
 
 public class Window implements ActionListener, ComponentListener, Runnable {
 
-    JFrame window, cellFrame, saveProfileFrame, loadPresetFrame, savePresetFrame;
+    JFrame window;
     VueGrid vueGrid;
     JMenuBar menu;
     JMenu commandsMenu, profileMenu, presetMenu;
     JMenuItem play, pause, next, reset, clear, photo, icon, loadProfile, saveProfile, deleteProfile, loadPreset,
             savePreset, deletePreset, settingsMenu, cellMenu;
-    JDialog loadProfileDialog, saveProfileDialog, loadPresetDialog, savePresetDialog;
-    JPanel saveProfileP, savePresetP, iconP;
-    JTextField saveProfileT, savePresetT;
-    JButton confirmProfileSave, confirmPresetSave, nextBtn, resetBtn, clearBtn, photoBtn, videoBtn, closeBtn;
+    JPanel iconP;
+    JButton nextBtn, resetBtn, clearBtn, photoBtn, videoBtn, closeBtn;
     JToggleButton playPauseBtn;
     Icon playIc, pauseIc, nextIc, resetIc, clearIc, photoIc, closeIc;
     JLayeredPane iconMenu;
+
+
     Grid grid;
     Cell cell;
 
@@ -202,10 +199,7 @@ public class Window implements ActionListener, ComponentListener, Runnable {
     @Override
     public void componentHidden(ComponentEvent e) {}
 
-    public int stringToInt(JTextField txt) {
-        return Integer.valueOf(txt.getText());
-    }
-
+    
     public void actionIcon() {
         if (this.iconP.isVisible() == false) {
             iconP.setVisible(true);
@@ -233,111 +227,20 @@ public class Window implements ActionListener, ComponentListener, Runnable {
         new ProfileWindow(this.window, ProfileWindow.Action.Delete);
     }
 
+
     public void actionPresetLoad() {
-        this.loadPresetFrame = new JFrame();
-        this.loadPresetDialog = new JDialog(this.loadPresetFrame, "Preset - Load");
-        this.loadPresetDialog.setLayout(new GridLayout(2, 1));
-        ArrayList<String> presetNames = PresetManager.getNames();
-        if (presetNames == null) {
-            this.loadPresetDialog.add(new JLabel("you don't have any preset"));
-        } else {
-            for (String presetName : presetNames) {
-                JButton profil = new JButton(presetName);
-                profil.addActionListener(new ActionListener() {
-    
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        if (e.getSource() == profil) {
-                            dataPreset(presetName);
-                        }
-                    }
-                    
-                });
-                this.loadPresetDialog.add(profil);
-            }
-        }
-        this.loadPresetDialog.setSize(200, 200);
-        this.loadPresetDialog.setVisible(true);
-    }
-    
-    public void dataPreset(String name) {
-        this.grid.clearGrid();
-        System.lineSeparator();
-        for (Dimension dim : PresetManager.getPreset(name)) {
-            System.out.println("taille grille : " + this.grid.getSize());
-            System.out.println("dim : " + dim);
-            // this.grid.setCell(dim, new Cell(this.minBornVal, this.maxBornVal, this.minDieVal, this.maxDieVal, this.radiusVal, true));
-            // this.grid.setCell(dim, new Cell(true));
-            this.grid.getCell(dim);
+        PresetWindow loadDialog = new PresetWindow(this.window, PresetWindow.Action.Load, this.cell, null);
+        if(loadDialog.getGrid() != null){
+            this.grid.setBoard(loadDialog.getGrid().getBoard());
         }
     }
 
-    public void actionPresetSave() {
-        this.savePresetFrame = new JFrame();
-        this.savePresetDialog = new JDialog(this.savePresetFrame, "Preset - Save");
-        this.savePresetP = new JPanel();
-        this.savePresetT = new JTextField(4);
-        this.confirmPresetSave = new JButton("Confirm");
-        this.confirmPresetSave.addActionListener(this);
-        this.savePresetP.add(new JLabel("Profile name "));
-        this.savePresetP.add(this.savePresetT);
-        this.savePresetP.add(this.confirmPresetSave);
+    public void actionPresetDelete() {
+        new PresetWindow(this.window, PresetWindow.Action.Delete,null, null);
+    }
 
-        this.savePresetDialog.add(this.savePresetP);
-
-        this.savePresetDialog.pack();
-        this.savePresetDialog.setVisible(true);
-    }
-    
-    public void deletePreset() {
-        this.loadPresetFrame = new JFrame();
-        this.loadPresetDialog = new JDialog(this.loadPresetFrame, "Preset - Delete");
-        this.loadPresetDialog.setLayout(new GridLayout(2, 1));
-        ArrayList<String> presetNames = PresetManager.getNames();
-        if (presetNames == null) {
-            this.loadPresetDialog.add(new JLabel("you don't have any preset"));
-        } else {
-            for (String presetName : presetNames) {
-                JButton profil = new JButton(presetName);
-                profil.addActionListener(new ActionListener() {
-    
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        if (e.getSource() == profil) {
-                            delPre(presetName);
-                        }
-                    }
-                    
-                });
-                this.loadPresetDialog.add(profil);
-            }
-        }
-        this.loadPresetDialog.setSize(200, 200);
-        this.loadPresetDialog.setVisible(true);
-    }
-    
-    public void delPre(String name) {
-        HashMap<String, ArrayList<Dimension>> map = PresetManager.load();
-        map.remove(name);
-        PresetManager.save(map);
-        // this.loadProfileFrame.dispatchEvent(new WindowEvent(this.loadProfileFrame, WindowEvent.WINDOW_CLOSING));
-    }
-    
-    public void saveNewPreset() {
-        if (PresetManager.isValidName(this.savePresetT.getText())) {
-            HashMap<String, ArrayList<Dimension>> map = PresetManager.load();
-            ArrayList<Dimension> dims = new ArrayList<>();
-            for (int i=0; i<this.grid.getWidth(); i++) {
-                for (int j=0; j<this.grid.getHeight(); j++) {
-                    if (this.grid.getCell(i,j).isAlive()) {
-                        dims.add(new Dimension(i,j));
-                    }
-                }
-            }
-            map.put(this.savePresetT.getText(), dims);
-            PresetManager.save(map);
-            this.savePresetFrame.dispatchEvent(new WindowEvent(this.savePresetFrame, WindowEvent.WINDOW_CLOSING));
-        }
+    public void actionPresetSave(){
+        new PresetWindow(this.window, PresetWindow.Action.Save, null, grid);
     }
 
     public void actionSetting() {
@@ -351,7 +254,8 @@ public class Window implements ActionListener, ComponentListener, Runnable {
 
     public void actionCell(){
         CellWindow cellSetting = new CellWindow(this.window, this.cell);
-        this.cell = cellSetting.getConfCell().copyCell();
+
+        this.cell = cellSetting.getCell().copyCell();
         for (Cell[] row : this.grid.getBoard()) {
             for (Cell cell : row) {
                 Boolean alive = cell.isAlive();
@@ -490,7 +394,7 @@ public class Window implements ActionListener, ComponentListener, Runnable {
             action();
         }
         if (e.getSource() == this.reset || e.getSource() == this.resetBtn) {
-            dataPreset(this.activePreset);
+            ;
         }
         if (e.getSource() == this.clear || e.getSource() == this.clearBtn) {
             this.grid.clearGrid();
@@ -522,16 +426,13 @@ public class Window implements ActionListener, ComponentListener, Runnable {
             actionPresetSave();
         }
         if (e.getSource() == this.deletePreset) {
-            deletePreset();
+            actionPresetDelete();
         }
         if (e.getSource() == this.settingsMenu) {
             actionSetting();
         }
         if (e.getSource() == this.cellMenu) {
             actionCell();
-        }
-        if (e.getSource() == this.confirmPresetSave) {
-            saveNewPreset();
         }
     }
 
