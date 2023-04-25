@@ -36,15 +36,37 @@ public class PresetManager {
         return matcher.find();
     }
 
-    public static Dimension parseSize(String line) {
+    public static Dimension parseSize(String line){
         String[] words = line.replaceAll("[\\(\\)]", "").split(",");
-        return new Dimension(Integer.parseInt(words[0]), Integer.parseInt(words[1]));
+        int width, height;
+    
+        try{
+            width = Integer.parseInt(words[0]);
+            height = Integer.parseInt(words[1]);
+        } 
+        catch (NumberFormatException e) {
+            width = (int) words[0].charAt(0); // code ASCII
+            height = (int) words[1].charAt(0);
+        }
+    
+        return new Dimension(width, height);
     }
+    
     
     public static Dimension parseCoordinate(String line) {
         String[] words = line.split(":");
-        return new Dimension(Integer.parseInt(words[0]), Integer.parseInt(words[1]));
+        int x, y;
+        try {
+            x = Integer.parseInt(words[0]);
+            y = Integer.parseInt(words[1]);
+        } catch (NumberFormatException e) {
+            x = (int) words[0].charAt(0); 
+            y = (int) words[1].charAt(0);
+        }
+    
+        return new Dimension(x, y);
     }
+    
 
     public static HashMap<String, HashMap<String, Object>> load() {
         char fs = File.separatorChar;
@@ -121,7 +143,7 @@ public class PresetManager {
     public static void delete(String filepath, String name) {
         HashMap<String, HashMap<String, Object>> map = PresetManager.load(filepath);
         map.remove(name);
-        PresetManager.save(map);
+        PresetManager.save(map,filepath);
     }
 
     public static ArrayList<String> getNames() {

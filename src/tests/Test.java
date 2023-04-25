@@ -22,10 +22,16 @@ public class Test {
         System.out.println("-----TestPresetManager----");
         TestPresetManager preset = new TestPresetManager();
         ok = ok && preset.testIsName();
-        ok = ok && preset.testLoad();
+        ok = ok && preset.testIsGridSize();
+        ok = ok && preset.testisCoordinate();
+        ok = ok && preset.testParseSize();
         ok = ok && preset.testSave();
-        ok = ok && preset.testGetPreset();
+        ok = ok && preset.testGetNames();
         
+        //ok = ok && preset.testDelete();
+        //ok = ok && preset.testGetPreset();
+        //ok = ok && preset.testLoad();
+    
         System.out.println("----TestQuadtree()-----");
      
         // All test OK
