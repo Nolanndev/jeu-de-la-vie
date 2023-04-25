@@ -143,14 +143,19 @@ public class PresetManager {
     public static void delete(String filepath, String name) {
         HashMap<String, HashMap<String, Object>> map = PresetManager.load(filepath);
         map.remove(name);
-        PresetManager.save(map,filepath);
+        PresetManager.save(map, filepath);
     }
 
     public static ArrayList<String> getNames() {
+        char fs = File.separatorChar;
+        return getNames(fs + "src" + fs + "main" + fs + "assets" + fs + "presets.gol.preset");
+    }
+
+    public static ArrayList<String> getNames(String filepath) {
         ArrayList<String> presets = new ArrayList<>();
-        HashMap<String, HashMap<String, Object>> names = PresetManager.load();
+        HashMap<String, HashMap<String, Object>> names = PresetManager.load(filepath);
         if (names != null) {
-            for (String name : PresetManager.load().keySet()) {
+            for (String name : PresetManager.load(filepath).keySet()) {
                 presets.add(name);
             }
             return presets;
@@ -158,8 +163,13 @@ public class PresetManager {
         return null;
     }
 
-    public static HashMap<String, Object> getPreset(String name) {
-        HashMap<String, HashMap<String, Object>> map = PresetManager.load();
+    public static HashMap<String, Object> getPreset(String name){
+        char fs = File.separatorChar;
+        return getPreset(name, fs + "src" + fs + "main" + fs + "assets" + fs + "presets.gol.preset");
+    }
+
+    public static HashMap<String, Object> getPreset(String name, String filepath) {
+        HashMap<String, HashMap<String, Object>> map = PresetManager.load(filepath);
         for (String presetName : map.keySet()) {
             if (presetName.equals(name)) {
                 return map.get(presetName);
