@@ -1,6 +1,7 @@
 package main.gui;
 
 import main.core.*;
+import main.utils.PresetManager;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -11,6 +12,9 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.lang.Thread;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import javax.imageio.ImageIO;
 
 
@@ -33,7 +37,7 @@ public class Window implements ActionListener, ComponentListener, Runnable {
     Cell cell;
 
     int timeItVal = 1000,  startItVal = 0, numberItVal = 10;
-    String activePreset = "default";
+    boolean presetSave = false;
     boolean go=false, iteration, confirm;
     
     public Window(String title){
@@ -266,10 +270,32 @@ public class Window implements ActionListener, ComponentListener, Runnable {
     }
 
     public void action(){
+        if(this.presetSave == false){
+            this.presetSave = true; //on passe a true afin que le contenue de ce if ne s'execute que la premiere fois qu'on appel action()
+
+            PresetManager.delete("default"); //on supprime le preset par default
+
+            //on sauvegarde la grille actuelle dans le fichier de preset avec le nom default
+            HashMap<String,HashMap<String,Object>> map = PresetManager.load();
+            ArrayList<Dimension> dims = new ArrayList<>();
+            for (int i = 0; i < this.grid.getWidth(); i++) {
+                for (int j = 0; j < this.grid.getHeight(); j++) {
+                    if (this.grid.getCell(i, j).isAlive()) {
+                        dims.add(new Dimension(i, j));
+                    }
+                }
+            }
+
+            HashMap<String, Object> map2 = new HashMap<>();
+            map2.put("SIZE", this.grid.getSize());
+            map2.put("CELLS", dims);
+            map.put("default", map2);
+            PresetManager.save(map);
+        }
         this.grid.advance(1);
     }
 
-    public void actionScreen() throws Exception{
+    public void actionScreen() throws Exception{ //take screenshot
         String path="";
         JFileChooser choose = new JFileChooser(
             FileSystemView
@@ -300,7 +326,7 @@ public class Window implements ActionListener, ComponentListener, Runnable {
     }
 
     public void run() {
-        this.grid.removeListener(vueGrid);
+        this.grid.removeListener(vueGrid); //On cache le calcul des n génération
         this.grid.advance(this.startItVal);
         this.grid.addListener(vueGrid);
         this.vueGrid.changeOccured();
@@ -394,9 +420,23 @@ public class Window implements ActionListener, ComponentListener, Runnable {
             action();
         }
         if (e.getSource() == this.reset || e.getSource() == this.resetBtn) {
-            ;
+            //on charge le preset "default"
+            if(this.presetSave == true){
+                HashMap<String,Object> dataPreset = PresetManager.getPreset("default");
+
+                Dimension dimGrid = (Dimension)dataPreset.get("SIZE");
+
+                Grid loadGrid = new Grid(dimGrid, this.cell);
+                
+                ArrayList<Dimension> dimCells = (ArrayList<Dimension>)dataPreset.get("CELLS");
+                for (Dimension coord : dimCells) {
+                    loadGrid.getCell(coord).setState(true);
+                }
+                this.grid.setBoard(loadGrid.getBoard());
+            }
         }
         if (e.getSource() == this.clear || e.getSource() == this.clearBtn) {
+            this.presetSave = false; //on reinitialise le preset par défaut
             this.grid.clearGrid();
         }
         if (e.getSource()==this.photo || e.getSource()==this.photoBtn){
