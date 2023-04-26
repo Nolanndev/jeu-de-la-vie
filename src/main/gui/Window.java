@@ -23,8 +23,7 @@ public class Window implements ActionListener, ComponentListener, Runnable {
     VueGrid vueGrid;
     JMenuBar menu;
     JMenu commandsMenu, profileMenu, presetMenu;
-    JMenuItem play, pause, next, reset, clear, photo, icon, loadProfile, saveProfile, deleteProfile, loadPreset,
-            savePreset, deletePreset, settingsMenu, cellMenu;
+    JMenuItem play, pause, next, reset, clear, photo, icon, loadProfile, saveProfile, deleteProfile, loadPreset, savePreset, deletePreset, iterationMenu, cellMenu;
     JDialog loadProfileDialog, saveProfileDialog, loadPresetDialog, savePresetDialog;
     JPanel saveProfileP, savePresetP, iconP;
     JTextField saveProfileT, savePresetT;
@@ -60,6 +59,7 @@ public class Window implements ActionListener, ComponentListener, Runnable {
         this.vueGrid = new VueGrid(this.grid, dimGrid, true);
 
         // Bar Menu
+
         this.menu = new JMenuBar();
 
         this.menu.setLayout(new GridLayout(1, 4));
@@ -67,30 +67,30 @@ public class Window implements ActionListener, ComponentListener, Runnable {
         this.commandsMenu = new JMenu("Commands");
         this.profileMenu = new JMenu("Profiles");
         this.presetMenu = new JMenu("Presets");
-        this.settingsMenu = new JMenuItem("Settings");
+        this.iterationMenu = new JMenuItem("Iteration");
         this.cellMenu = new JMenuItem("Cell");
 
         this.play = new JMenuItem("Play");
-        this.play.setToolTipText("Lancer la simulation");
+        this.play.setToolTipText("Run the simulation");
         this.play.addActionListener(this);
         this.pause = new JMenuItem("Pause");
-        this.pause.setToolTipText("Mettre la simulation en pause");
+        this.pause.setToolTipText("Pause the simulation");
         this.pause.addActionListener(this);
         this.next = new JMenuItem("Next");
-        this.next.setToolTipText("Prochaine géneration");
+        this.next.setToolTipText("Next generation");
         this.next.addActionListener(this);
         this.reset = new JMenuItem("Reset");
-        this.reset.setToolTipText("Réinitialiser la simulation");
+        this.reset.setToolTipText("Reset Simulation");
         this.reset.addActionListener(this);
         this.clear = new JMenuItem("Clear");
-        this.clear.setToolTipText("Effacer la grille");
+        this.clear.setToolTipText("Clear grid");
         this.clear.addActionListener(this);
         this.photo = new JMenuItem("Photo");
-        this.photo.setToolTipText("Enregistrer la grille actuelle en format jpg");
+        this.photo.setToolTipText("Save current grid in jpg format");
         this.photo.addActionListener(this);
         this.icon = new JMenuItem("Icons");
         this.icon.addActionListener(this);
-        this.icon.setToolTipText("Afficher la barre de raccourci d'actions");
+        this.icon.setToolTipText("Show or hide the action shortcut bar");
 
 
         this.commandsMenu.add(this.play);
@@ -103,23 +103,23 @@ public class Window implements ActionListener, ComponentListener, Runnable {
 
         this.loadProfile = new JMenuItem("Load profile");
         this.loadProfile.addActionListener(this);
-        this.loadProfile.setToolTipText("Afficher les profiles disponibles");
+        this.loadProfile.setToolTipText("Show available profiles");
         this.saveProfile = new JMenuItem("Save current profile");
         this.saveProfile.addActionListener(this);
-        this.saveProfile.setToolTipText("Enregistrer les paramètres de la simulation dans un nouveau profil");
+        this.saveProfile.setToolTipText("Save simulation settings to a new profile");
         this.deleteProfile = new JMenuItem("Delete profile");
         this.deleteProfile.addActionListener(this);
-        this.deleteProfile.setToolTipText("Supprimer les profils (sauf default)");
+        this.deleteProfile.setToolTipText("Delete profiles (except default)");
 
         this.loadPreset = new JMenuItem("Load preset");
         this.loadPreset.addActionListener(this);
-        this.loadPreset.setToolTipText("Affichers les presets disponibles");
+        this.loadPreset.setToolTipText("Show available presets");
         this.savePreset = new JMenuItem("Save current Preset");
         this.savePreset.addActionListener(this);
-        this.savePreset.setToolTipText("Enregistrer l'état actuel de la grille");
+        this.savePreset.setToolTipText("Save current grid state");
         this.deletePreset = new JMenuItem("Delete preset");
         this.deletePreset.addActionListener(this);
-        this.deletePreset.setToolTipText("Affiche les presets pour les supprimer");
+        this.deletePreset.setToolTipText("Display presets to delete them");
 
         this.profileMenu.add(this.loadProfile);
         this.profileMenu.add(this.saveProfile);
@@ -130,16 +130,16 @@ public class Window implements ActionListener, ComponentListener, Runnable {
         this.presetMenu.add(this.deletePreset);
 
         this.menu.add(this.commandsMenu);
-        this.menu.setToolTipText("Afficher les actions de simulation");
+        this.menu.setToolTipText("Show simulation actions");
         this.menu.add(this.profileMenu);
-        this.menu.setToolTipText("Afficher les options des profiles");
+        this.menu.setToolTipText("Show profile options");
         this.menu.add(this.presetMenu);
-        this.menu.setToolTipText("Afficher les options des presets");
-        this.menu.add(this.settingsMenu);
-        this.menu.setToolTipText("Afficher les paramètres de simulation");
-        this.settingsMenu.addActionListener(this);
+        this.menu.setToolTipText("Show preset options");
+        this.menu.add(this.iterationMenu);
+        this.menu.setToolTipText("Show iteration settings");
+        this.iterationMenu.addActionListener(this);
         this.menu.add(this.cellMenu);
-        this.menu.setToolTipText("Afficher les paramètres des cellules");
+        this.menu.setToolTipText("Show cell settings");
         this.cellMenu.addActionListener(this);
 
         // Icon Menu
@@ -209,16 +209,16 @@ public class Window implements ActionListener, ComponentListener, Runnable {
     public void actionIcon() {
         if (this.iconP.isVisible() == false) {
             iconP.setVisible(true);
-            this.icon.setToolTipText("Cacher la barre de raccourci d'actions");
+            this.icon.setToolTipText("Hide action shortcut bar");
         } else {
             iconP.setVisible(false);
-            this.icon.setToolTipText("Afficher la barre de raccourci d'actions");
+            this.icon.setToolTipText("Show action shortcut bar");
         }
     }
 
     public void actionProfileLoad() {
         ProfileWindow loadDialog = new ProfileWindow(this.window, ProfileWindow.Action.Load);
-        if(loadDialog.getCell()!=null){ // On verifie qu'on a bien charger une cellule
+        if(loadDialog.getCell()!=null){ // We check that we have loaded a cell
             this.cell = loadDialog.getCell().copyCell();
             this.numberItVal = loadDialog.getNumberIteration();
             this.timeItVal = loadDialog.getDelay();
@@ -264,7 +264,7 @@ public class Window implements ActionListener, ComponentListener, Runnable {
         this.grid.clearGrid();
         System.lineSeparator();
         for (Dimension dim : PresetManager.getPreset(name)) {
-            System.out.println("taille grille : " + this.grid.getSize());
+            System.out.println("grid size : " + this.grid.getSize());
             System.out.println("dim : " + dim);
             // this.grid.setCell(dim, new Cell(this.minBornVal, this.maxBornVal, this.minDieVal, this.maxDieVal, this.radiusVal, true));
             // this.grid.setCell(dim, new Cell(true));
@@ -340,8 +340,8 @@ public class Window implements ActionListener, ComponentListener, Runnable {
         }
     }
 
-    public void actionSetting() {
-        SettingWindow iterationSetting = new SettingWindow(this.window, this.timeItVal, this.startItVal, this.numberItVal);
+    public void actionIteration() {
+        IterationWindow iterationSetting = new IterationWindow(this.window, this.timeItVal, this.startItVal, this.numberItVal);
         this.iteration = iterationSetting.getIteration();
         this.confirm = iterationSetting.getConf();
         this.timeItVal = iterationSetting.getTime();
@@ -403,6 +403,7 @@ public class Window implements ActionListener, ComponentListener, Runnable {
 
         go=true;
         while(go){
+            this.iconMenu.setVisible(true);
             if(this.iteration == true){
                 try {
                     for(int i=0; i<this.numberItVal; i++){
@@ -428,8 +429,8 @@ public class Window implements ActionListener, ComponentListener, Runnable {
         }
     }
 
-    public void btnEnabled(Boolean a){
-        if(a){
+    public void btnEnabled(Boolean touch){
+        if(touch){
             this.next.setEnabled(true);
             this.reset.setEnabled(true);
             this.clear.setEnabled(true);
@@ -461,7 +462,7 @@ public class Window implements ActionListener, ComponentListener, Runnable {
                     this.playPauseBtn.setIcon(this.pauseIc);
                     btnEnabled(false);
                 } else {
-                    JOptionPane.showMessageDialog(this.window, "Comfirm setting information");
+                    JOptionPane.showMessageDialog(this.window, "Comfirm itertion information");
                 }
             }
             else{
@@ -476,7 +477,7 @@ public class Window implements ActionListener, ComponentListener, Runnable {
                     new Thread(this).start();
                 }
             } else {
-                JOptionPane.showMessageDialog(this.window, "Comfirm setting information");
+                JOptionPane.showMessageDialog(this.window, "Comfirm itertion information");
             }
             this.playPauseBtn.setIcon(this.pauseIc);
             btnEnabled(false);
@@ -524,8 +525,8 @@ public class Window implements ActionListener, ComponentListener, Runnable {
         if (e.getSource() == this.deletePreset) {
             deletePreset();
         }
-        if (e.getSource() == this.settingsMenu) {
-            actionSetting();
+        if (e.getSource() == this.iterationMenu) {
+            actionIteration();
         }
         if (e.getSource() == this.cellMenu) {
             actionCell();
