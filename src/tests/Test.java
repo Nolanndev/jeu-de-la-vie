@@ -16,16 +16,22 @@ public class Test {
         System.out.println("-----TestProfileManager()----");
 
         TestProfileManager profileManagerTester = new TestProfileManager();
-        //ok = ok && profileManagerTester.testSave();
+        ok = ok && profileManagerTester.testSave(); // attention, on ecrit dans le fichier profiles.gol.profile lors d'un ant test
         ok = ok && profileManagerTester.testLoad();
 
         System.out.println("-----TestPresetManager----");
         TestPresetManager preset = new TestPresetManager();
         ok = ok && preset.testIsName();
-        ok = ok && preset.testLoad();
+        ok = ok && preset.testIsGridSize();
+        ok = ok && preset.testisCoordinate();
+        ok = ok && preset.testParseSize();
         ok = ok && preset.testSave();
-        ok = ok && preset.testGetPreset();
+        ok = ok && preset.testLoad();
+        ok = ok && preset.testGetNames();
         
+        ok = ok && preset.testGetPreset();
+        ok = ok && preset.testDelete();
+    
         System.out.println("----TestQuadtree()-----");
      
         // All test OK

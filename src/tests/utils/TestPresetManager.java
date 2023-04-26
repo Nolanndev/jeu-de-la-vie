@@ -11,7 +11,7 @@ public class TestPresetManager{
         System.out.println("isName()");
         assert PresetManager.isName("9876543210") == true : "erreur, les chiffres sont acceptés";
         assert PresetManager.isName("Ca Passe Normalement") == true : "erreur, les espace et majuscules sont acceptés";
-        assert PresetManager.isName("John Doe 123        ") == true : "erreur, les espace, majuscules et nombres sont acceptés ";
+        assert PresetManager.isName("Test12        ") == true : "erreur, les espace, majuscules et nombres sont acceptés ";
 
         assert PresetManager.isName("XXX_XXX") == false : "le nom ne peut pas contenir d'underscore";
         assert PresetManager.isName("!!") == false : "le nom ne peut pas contenir !!";
@@ -23,129 +23,214 @@ public class TestPresetManager{
         return true;
     }
 
+    public boolean testIsGridSize(){
+        System.out.println("isGridSize()");
+        assert PresetManager.isGridSize("(10,10)") == true : "la dimension est acceptée 10x10";
+        assert PresetManager.isGridSize("(100,100)") == true : "la dimension est acceptée 100x100";
+        assert PresetManager.isGridSize("(1000,1000)") == true : "la dimension est acceptée 1000x1000";
+
+        assert PresetManager.isGridSize("(1a,1a)") == false : "les lettres ne sont pas acceptées";
+        assert PresetManager.isGridSize("(OO,OO)") == false : "OO n'est pas accepté";
+        assert PresetManager.isGridSize("(,)") == false : "il faut mettre des nombres";
+
+        return true;
+    }
+
+    
+    public boolean testisCoordinate(){
+        System.out.println("isCoordinate()");
+        assert PresetManager.isCoordinate("9:9") == true : "la dimension 9x9 est acceptée";
+        assert PresetManager.isCoordinate("100:100") == true : "la dimension 100x100 est acceptée";
+        assert PresetManager.isCoordinate("1:1") == true : "la dimension 1x1 est acceptée";
+
+        assert PresetManager.isCoordinate("1:") == false : "la dimension n'est pas bonne 1:";
+        assert PresetManager.isCoordinate("") == false : "la coordonnée n'est pas bonne (vide)";
+        assert PresetManager.isCoordinate("vide") == false : "la coordonnée n'est pas bonne (vide)";
+        assert PresetManager.isCoordinate("(10,10)") == false : "la coordonnée n'est pas bonne 10x10";
+        assert PresetManager.isCoordinate("(100,100)") == false : "la coordonnée n'est pas bonne 100x100";
+        assert PresetManager.isCoordinate("(1000,1000)") == false : "la coordonnée n'est pas bonne 1000x1000";
+
+        return true;
+    }
+
+    public boolean testParseSize(){
+        System.out.println("isParseSize()");
+        assert PresetManager.parseSize("(100,200)").width == 100 : "100 est censé etre la largeur";
+        assert PresetManager.parseSize("(100,200)").height == 200 : "200 est censé etre la hauteur";
+        assert PresetManager.parseSize("(-50,-52)").width == -50 : "-50 est censé etre la largeur";
+        assert PresetManager.parseSize("(-50,-52)").height == -52 : "-52 est censé etre la hauteur";
+
+        assert PresetManager.parseSize("(c,a)").width == 99 : "-50 est censé etre la largeur";
+        assert PresetManager.parseSize("(c,a)").height == 97 : "-52 est censé etre la hauteur";
+        return true;
+    }
+
+    public boolean testParseCoordinate(){
+        assert PresetManager.parseCoordinate("100:200").width == 100 : "100 est censé etre la largeur";
+        assert PresetManager.parseCoordinate("100:200").height == 200 : "200 est censé etre la hauteur";
+        assert PresetManager.parseCoordinate("-50:-52").width == -50 : "-50 est censé etre la largeur";
+        assert PresetManager.parseCoordinate("-50:-52").height == -52 : "-52 est censé etre la hauteur";
+
+        assert PresetManager.parseCoordinate("a:b").width == 97 : "a est censé etre la hauteur";
+        assert PresetManager.parseCoordinate("a:b").height == 98 : "b est censé etre la hauteur";
+
+        return true;
+    }
+
+
     public boolean testLoad() {
         System.out.println("load()");
-        String filepath = "\\src\\main\\assets\\presets.gol.preset";
+        String filepath = "/src/main/assets/test.gol.preset";
     
-        HashMap<String, ArrayList<Dimension>> result = PresetManager.load(filepath);
+        HashMap<String, HashMap<String,Object>> result = PresetManager.load(filepath);
         assert result != null : "le fichier chargé est null";
+
+        assert result.containsKey("Le dernier") : "Le fichier doit contenir le preset 'le dernier'";
+        assert result.containsKey("un autre") : "Le fichier doit contenir le preset 'un autre'";
+        assert result.containsKey("default") : "Le fichier doit contenir le preset 'default'";
+
     
         assert result.size() == 3 : "Le nombre de presets doit etre de 3";
-        
-
-        ArrayList<Dimension> dernierDimensions = result.get("Le dernier");
+ 
+        ArrayList<Dimension> dernierDimensions = (ArrayList<Dimension>) result.get("Le dernier").get("CELLS");
         assert dernierDimensions != null && dernierDimensions.size() == 4 : "Le nombre de dimensions pour 'le dernier' doit etre de 4";
-        ArrayList<Dimension> defaultDimensions = result.get("default");
+
+        ArrayList<Dimension> defaultDimensions = (ArrayList<Dimension>) result.get("default").get("CELLS");
         assert defaultDimensions != null && defaultDimensions.size() == 4 : "Le nombre de dimensions pour 'default' doit etre de 4";
-        ArrayList<Dimension> autreDimensions = result.get("un autre");
+
+        ArrayList<Dimension> autreDimensions = (ArrayList<Dimension>) result.get("un autre").get("CELLS");
         assert autreDimensions != null && autreDimensions.size() == 4 : "Le nombre de dimensions pour 'un autre' doit etre de 4";
-
-
-        assert result.containsKey("Le dernier") == true : "Le fichier doit contenir le preset 'le dernier'";
+      
     
-        assert defaultDimensions.get(0).width == 10 : "La largeur de la dimension 0 de 'default' doit etre de 10";
-        assert defaultDimensions.get(0).height == 15 : "La hauteur de la dimension 0 de 'default' doit etre de 15";
-        assert defaultDimensions.get(1).width == 10 : "La largeur de la dimension 1 de 'default' doit etre de 10";
-        assert defaultDimensions.get(1).height == 16 : "La hauteur de la dimension 1 de 'default' doit etre de 16";
+        assert ((Dimension)defaultDimensions.get(0)).width == 10 : "La largeur de la dimension 0 de 'default' doit etre de 10";
+        assert ((Dimension)defaultDimensions.get(0)).height == 15 : "La hauteur de la dimension 0 de 'default' doit etre de 15";
+        assert ((Dimension)defaultDimensions.get(1)).width == 10 : "La largeur de la dimension 1 de 'default' doit etre de 10";
+        assert ((Dimension)defaultDimensions.get(1)).height == 16 : "La hauteur de la dimension 1 de 'default' doit etre de 16";
     
-        assert autreDimensions.get(2).width == 11 : "La largeur de la dimension 2 de 'un autre' doit etre de 11";
-        assert autreDimensions.get(2).height == 15 : "La hauteur de la dimension 2 de 'un autre' doit etre de 15";
+        assert ((Dimension)autreDimensions.get(2)).width == 11 : "La largeur de la dimension 2 de 'un autre' doit etre de 11";
+        assert ((Dimension)autreDimensions.get(2)).height == 15 : "La hauteur de la dimension 2 de 'un autre' doit etre de 15";
     
-        assert dernierDimensions.get(3).width == 11 : "La largeur de la dimension 3 de 'le dernier' doit etre de 11";
-        assert dernierDimensions.get(3).height == 16 : "La hauteur de la dimension 3 de 'le dernier' doit etre de 16";
-    
+        assert ((Dimension)dernierDimensions.get(3)).width == 11 : "La largeur de la dimension 3 de 'le dernier' doit etre de 11";
+        assert ((Dimension)dernierDimensions.get(3)).height == 16 : "La hauteur de la dimension 3 de 'le dernier' doit etre de 16";
+   
         return true;
     }
     
-    
 
-    
-    public boolean testSave(){
+
+    public boolean testSave() {
         System.out.println("save()");
-        HashMap<String, ArrayList<Dimension>> map = new HashMap<String, ArrayList<Dimension>>();
 
+        HashMap<String, HashMap<String, Object>> map = new HashMap<String, HashMap<String, Object>>();
+
+        HashMap<String, Object> preset1 = new HashMap<String, Object>();
         ArrayList<Dimension> dimensions1 = new ArrayList<Dimension>();
         dimensions1.add(new Dimension(10, 15));
         dimensions1.add(new Dimension(10, 16));
         dimensions1.add(new Dimension(11, 15));
         dimensions1.add(new Dimension(11, 16));
 
+        
+        
+        preset1.put("SIZE", new Dimension(10, 10));
+        preset1.put("CELLS", dimensions1);
+        
+        HashMap<String, Object> preset2 = new HashMap<String, Object>();
         ArrayList<Dimension> dimensions2 = new ArrayList<Dimension>();
         dimensions2.add(new Dimension(10, 15));
         dimensions2.add(new Dimension(10, 16));
         dimensions2.add(new Dimension(11, 15));
         dimensions2.add(new Dimension(11, 16));
 
+        preset2.put("SIZE", new Dimension(10, 10));
+        preset2.put("CELLS", dimensions2);
+
+        HashMap<String, Object> preset3 = new HashMap<String, Object>();
         ArrayList<Dimension> dimensions3 = new ArrayList<Dimension>();
         dimensions3.add(new Dimension(10, 15));
         dimensions3.add(new Dimension(10, 16));
         dimensions3.add(new Dimension(11, 15));
         dimensions3.add(new Dimension(11, 16));
-        map.put("default", dimensions1);
-        map.put("un autre", dimensions2);
-        map.put("Le dernier", dimensions3);
-        
-        String filepath = "\\src\\main\\assets\\presets.gol.preset";
-        String invalidfilepath = "\\src\\main\\assets\\default.gol.preset";
 
-        assert PresetManager.save(map, filepath) == true : "erreur avec la fonction save()";
-        //assert PresetManager.save(map, invalidfilepath) == false : "erreur avec la fonction save()";
+        preset3.put("SIZE", new Dimension(10, 10));
+        preset3.put("CELLS", dimensions3);
 
+        map.put("default", preset1);
+        map.put("un autre", preset2);
+        map.put("Le dernier", preset3);
+
+        String filepath2 = "/src/main/assets/test.gol.preset";
+
+        assert PresetManager.save(map, filepath2) : "erreur avec la fonction save()";
 
         return true;
     }
+
+    public boolean testGetNames(){
+        System.out.println("getNames()");
+
+        ArrayList<String> names = PresetManager.getNames();
+        assert names != null : "la liste des noms n'est pas null";
+        assert !names.isEmpty() : "la liste n'est pas vide non plus";
     
+        assert names.contains("default") : "Erreur avec la fonction getNames, elle doit contenir default";
+        assert names.contains("test") : "Erreur avec la fonction getNames, elle doit contenir test";
+        assert names.contains("un autre") : "Erreur avec la fonction getNames, elle doit contenir un autre";
+        return true;
+    }
+
+    public boolean testDelete(){
+        System.out.println("delete()");
+        String filepath = "/src/main/assets/test.gol.preset";
+
+        String default_v = "default";
+        String un_autre = "un autre";
+        String le_dernier = "Le dernier";
+
+        ArrayList<String> initialPresets = PresetManager.getNames(filepath);
+        assert initialPresets.contains(default_v) == true : "la fonction save provoque une erreur defaut";
+        assert initialPresets.contains(un_autre) == true : "la fonction save provoque une erreur un autre";
+        assert initialPresets.contains(le_dernier) == true : "la fonction save provoque une erreur Le dernier";
+
+        PresetManager.delete(filepath, un_autre);
+        PresetManager.delete(filepath, default_v);
+        PresetManager.delete(filepath, le_dernier);
+        
+        ArrayList<String> updatedPresets = PresetManager.getNames(filepath);
+
+        assert updatedPresets.contains(un_autre) == false : "la fonction ne supprime pas comme il faut un autre";
+        assert updatedPresets.contains(le_dernier) == false : "la fonction ne supprime pas comme il faut le dernier";
+        assert updatedPresets.contains(default_v) == false : "la fonction ne supprime pas comme il faut default";
+        return true;
+    }
+
     public boolean testGetPreset(){
-        ArrayList<Dimension> default_v = PresetManager.getPreset("default");
-        assert default_v != null : "default doit etre != null";
-        assert default_v.size() == 4 : "la taile doit etre de 4";
-        assert default_v.get(0).width == 10 : "la largeur doit etre de 10";
-        assert default_v.get(0).height == 15 : "la hauteur doit etre de 15";
+        System.out.println("getPreset()");
 
-        assert default_v.get(1).width == 10 : "la largeur doit etre de 10";
-        assert default_v.get(1).height == 16 : "la hauteur doit etre de 16";
+        String filepath = "/src/main/assets/test.gol.preset";
 
-        assert default_v.get(2).width == 11: "la largeur doit etre de 11";
-        assert default_v.get(2).height == 15 : "la hauteur doit etre de 15";
+        HashMap<String, Object> default_preset = PresetManager.getPreset("default", filepath);
+        HashMap<String, Object> un_autre = PresetManager.getPreset("un autre", filepath);
+        HashMap<String, Object> le_dernier = PresetManager.getPreset("Le dernier", filepath);
 
-        assert default_v.get(3).width == 11: "la largeur doit etre de 11";
-        assert default_v.get(3).height == 16 : "la hauteur doit etre de 16";
- 
+        assert default_preset != null : "default doit etre != null";
+        assert default_preset.containsKey("SIZE") : "Le preset default doit contenir la dimension (10,10)";
+        assert default_preset.containsKey("CELLS") : "Le preset default doit contenir la dimension 10:15";
 
 
-        ArrayList<Dimension> autre = PresetManager.getPreset("un autre");
-        assert autre != null : "autre doit etre != null";
-        assert autre.size() == 4 : "la taile doit etre de 4";
-        assert autre.get(0).width == 10 : "la largeur doit etre de 10";
-        assert autre.get(0).height == 15 : "la hauteur doit etre de 15";
+        assert un_autre != null : "un autre doit etre != null";
+        assert un_autre.containsKey("SIZE") : "Le preset un autre doit contenir la dimension (10,10)";
+        assert un_autre.containsKey("CELLS") : "Le preset un autre doit contenir la dimension 10:15";
 
-        assert autre.get(1).width == 10 : "la largeur doit etre de 10";
-        assert autre.get(1).height == 16 : "la hauteur doit etre de 16";
 
-        assert autre.get(2).width == 11: "la largeur doit etre de 11";
-        assert autre.get(2).height == 15 : "la hauteur doit etre de 15";
+        assert le_dernier != null : "Le dernier doit etre != null";
+        assert le_dernier.containsKey("SIZE") : "Le preset Le dernier doit contenir la dimension (10,10)";
+        assert le_dernier.containsKey("CELLS") : "Le preset Le dernier doit contenir la dimension (10,10)";
 
-        assert autre.get(3).width == 11: "la largeur doit etre de 11";
-        assert autre.get(3).height == 16 : "la hauteur doit etre de 16";
 
-        ArrayList<Dimension> dernier = PresetManager.getPreset("Le dernier");
-        assert dernier != null : "dernier doit etre != null";
-        assert dernier.size() == 4 : "la taile doit etre de 4";
-        assert dernier.get(0).width == 10 : "la largeur doit etre de 10";
-        assert dernier.get(0).height == 15 : "la hauteur doit etre de 15";
+        HashMap<String, Object> inexistant_preset = PresetManager.getPreset("inexistant", filepath);
+        assert inexistant_preset == null : "Le preset inexistant ne doit pas exister";
 
-        assert dernier.get(1).width == 10 : "la largeur doit etre de 10";
-        assert dernier.get(1).height == 16 : "la hauteur doit etre de 16";
-
-        assert dernier.get(2).width == 11: "la largeur doit etre de 11";
-        assert dernier.get(2).height == 15 : "la hauteur doit etre de 15";
-
-        assert dernier.get(3).width == 11: "la largeur doit etre de 11";
-        assert dernier.get(3).height == 16 : "la hauteur doit etre de 16";
-    
-        // Test avec un preset inexistant
-        ArrayList<Dimension> presetInexistant = PresetManager.getPreset("inexistant");
-        assert presetInexistant == null;
         return true;
     }
 }

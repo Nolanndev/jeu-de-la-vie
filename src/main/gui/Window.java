@@ -14,28 +14,30 @@ import java.io.File;
 import java.lang.Thread;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import javax.imageio.ImageIO;
 
 
 public class Window implements ActionListener, ComponentListener, Runnable {
 
-    JFrame window, cellFrame, saveProfileFrame, loadPresetFrame, savePresetFrame;
+    JFrame window;
     VueGrid vueGrid;
     JMenuBar menu;
     JMenu commandsMenu, profileMenu, presetMenu;
-    JMenuItem play, pause, next, reset, clear, photo, icon, loadProfile, saveProfile, deleteProfile, loadPreset, savePreset, deletePreset, iterationMenu, cellMenu;
-    JDialog loadProfileDialog, saveProfileDialog, loadPresetDialog, savePresetDialog;
-    JPanel saveProfileP, savePresetP, iconP;
-    JTextField saveProfileT, savePresetT;
-    JButton confirmProfileSave, confirmPresetSave, nextBtn, resetBtn, clearBtn, photoBtn, videoBtn, closeBtn;
+    JMenuItem play, pause, next, reset, clear, photo, icon, loadProfile, saveProfile, deleteProfile, loadPreset,
+            savePreset, deletePreset, iterationMenu, cellMenu;
+    JPanel iconP;
+    JButton nextBtn, resetBtn, clearBtn, photoBtn, videoBtn, closeBtn;
     JToggleButton playPauseBtn;
     Icon playIc, pauseIc, nextIc, resetIc, clearIc, photoIc, closeIc;
     JLayeredPane iconMenu;
+
+
     Grid grid;
     Cell cell;
 
     int timeItVal = 1000,  startItVal = 0, numberItVal = 10;
-    String activePreset = "default";
+    boolean presetSave = false;
     boolean go=false, iteration, confirm;
     
     public Window(String title){
@@ -202,10 +204,7 @@ public class Window implements ActionListener, ComponentListener, Runnable {
     @Override
     public void componentHidden(ComponentEvent e) {}
 
-    public int stringToInt(JTextField txt) {
-        return Integer.valueOf(txt.getText());
-    }
-
+    
     public void actionIcon() {
         if (this.iconP.isVisible() == false) {
             iconP.setVisible(true);
@@ -233,111 +232,20 @@ public class Window implements ActionListener, ComponentListener, Runnable {
         new ProfileWindow(this.window, ProfileWindow.Action.Delete);
     }
 
+
     public void actionPresetLoad() {
-        this.loadPresetFrame = new JFrame();
-        this.loadPresetDialog = new JDialog(this.loadPresetFrame, "Preset - Load");
-        this.loadPresetDialog.setLayout(new GridLayout(2, 1));
-        ArrayList<String> presetNames = PresetManager.getNames();
-        if (presetNames == null) {
-            this.loadPresetDialog.add(new JLabel("you don't have any preset"));
-        } else {
-            for (String presetName : presetNames) {
-                JButton profil = new JButton(presetName);
-                profil.addActionListener(new ActionListener() {
-    
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        if (e.getSource() == profil) {
-                            dataPreset(presetName);
-                        }
-                    }
-                    
-                });
-                this.loadPresetDialog.add(profil);
-            }
-        }
-        this.loadPresetDialog.setSize(200, 200);
-        this.loadPresetDialog.setVisible(true);
-    }
-    
-    public void dataPreset(String name) {
-        this.grid.clearGrid();
-        System.lineSeparator();
-        for (Dimension dim : PresetManager.getPreset(name)) {
-            System.out.println("grid size : " + this.grid.getSize());
-            System.out.println("dim : " + dim);
-            // this.grid.setCell(dim, new Cell(this.minBornVal, this.maxBornVal, this.minDieVal, this.maxDieVal, this.radiusVal, true));
-            // this.grid.setCell(dim, new Cell(true));
-            this.grid.getCell(dim);
+        PresetWindow loadDialog = new PresetWindow(this.window, PresetWindow.Action.Load, this.cell, null);
+        if(loadDialog.getGrid() != null){
+            this.grid.setBoard(loadDialog.getGrid().getBoard());
         }
     }
 
-    public void actionPresetSave() {
-        this.savePresetFrame = new JFrame();
-        this.savePresetDialog = new JDialog(this.savePresetFrame, "Preset - Save");
-        this.savePresetP = new JPanel();
-        this.savePresetT = new JTextField(4);
-        this.confirmPresetSave = new JButton("Confirm");
-        this.confirmPresetSave.addActionListener(this);
-        this.savePresetP.add(new JLabel("Profile name "));
-        this.savePresetP.add(this.savePresetT);
-        this.savePresetP.add(this.confirmPresetSave);
+    public void actionPresetDelete() {
+        new PresetWindow(this.window, PresetWindow.Action.Delete,null, null);
+    }
 
-        this.savePresetDialog.add(this.savePresetP);
-
-        this.savePresetDialog.pack();
-        this.savePresetDialog.setVisible(true);
-    }
-    
-    public void deletePreset() {
-        this.loadPresetFrame = new JFrame();
-        this.loadPresetDialog = new JDialog(this.loadPresetFrame, "Preset - Delete");
-        this.loadPresetDialog.setLayout(new GridLayout(2, 1));
-        ArrayList<String> presetNames = PresetManager.getNames();
-        if (presetNames == null) {
-            this.loadPresetDialog.add(new JLabel("you don't have any preset"));
-        } else {
-            for (String presetName : presetNames) {
-                JButton profil = new JButton(presetName);
-                profil.addActionListener(new ActionListener() {
-    
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        if (e.getSource() == profil) {
-                            delPre(presetName);
-                        }
-                    }
-                    
-                });
-                this.loadPresetDialog.add(profil);
-            }
-        }
-        this.loadPresetDialog.setSize(200, 200);
-        this.loadPresetDialog.setVisible(true);
-    }
-    
-    public void delPre(String name) {
-        HashMap<String, ArrayList<Dimension>> map = PresetManager.load();
-        map.remove(name);
-        PresetManager.save(map);
-        // this.loadProfileFrame.dispatchEvent(new WindowEvent(this.loadProfileFrame, WindowEvent.WINDOW_CLOSING));
-    }
-    
-    public void saveNewPreset() {
-        if (PresetManager.isValidName(this.savePresetT.getText())) {
-            HashMap<String, ArrayList<Dimension>> map = PresetManager.load();
-            ArrayList<Dimension> dims = new ArrayList<>();
-            for (int i=0; i<this.grid.getWidth(); i++) {
-                for (int j=0; j<this.grid.getHeight(); j++) {
-                    if (this.grid.getCell(i,j).isAlive()) {
-                        dims.add(new Dimension(i,j));
-                    }
-                }
-            }
-            map.put(this.savePresetT.getText(), dims);
-            PresetManager.save(map);
-            this.savePresetFrame.dispatchEvent(new WindowEvent(this.savePresetFrame, WindowEvent.WINDOW_CLOSING));
-        }
+    public void actionPresetSave(){
+        new PresetWindow(this.window, PresetWindow.Action.Save, null, grid);
     }
 
     public void actionIteration() {
@@ -351,7 +259,8 @@ public class Window implements ActionListener, ComponentListener, Runnable {
 
     public void actionCell(){
         CellWindow cellSetting = new CellWindow(this.window, this.cell);
-        this.cell = cellSetting.getConfCell().copyCell();
+
+        this.cell = cellSetting.getCell().copyCell();
         for (Cell[] row : this.grid.getBoard()) {
             for (Cell cell : row) {
                 Boolean alive = cell.isAlive();
@@ -362,10 +271,32 @@ public class Window implements ActionListener, ComponentListener, Runnable {
     }
 
     public void action(){
+        if(this.presetSave == false){
+            this.presetSave = true; //on passe a true afin que le contenue de ce if ne s'execute que la premiere fois qu'on appel action()
+
+            PresetManager.delete("default"); //on supprime le preset par default
+
+            //on sauvegarde la grille actuelle dans le fichier de preset avec le nom default
+            HashMap<String,HashMap<String,Object>> map = PresetManager.load();
+            ArrayList<Dimension> dims = new ArrayList<>();
+            for (int i = 0; i < this.grid.getWidth(); i++) {
+                for (int j = 0; j < this.grid.getHeight(); j++) {
+                    if (this.grid.getCell(i, j).isAlive()) {
+                        dims.add(new Dimension(i, j));
+                    }
+                }
+            }
+
+            HashMap<String, Object> map2 = new HashMap<>();
+            map2.put("SIZE", this.grid.getSize());
+            map2.put("CELLS", dims);
+            map.put("default", map2);
+            PresetManager.save(map);
+        }
         this.grid.advance(1);
     }
 
-    public void actionScreen() throws Exception{
+    public void actionScreen() throws Exception{ //take screenshot
         String path="";
         JFileChooser choose = new JFileChooser(
             FileSystemView
@@ -396,7 +327,7 @@ public class Window implements ActionListener, ComponentListener, Runnable {
     }
 
     public void run() {
-        this.grid.removeListener(vueGrid);
+        this.grid.removeListener(vueGrid); //On cache le calcul des n génération
         this.grid.advance(this.startItVal);
         this.grid.addListener(vueGrid);
         this.vueGrid.changeOccured();
@@ -491,9 +422,23 @@ public class Window implements ActionListener, ComponentListener, Runnable {
             action();
         }
         if (e.getSource() == this.reset || e.getSource() == this.resetBtn) {
-            dataPreset(this.activePreset);
+            //on charge le preset "default"
+            if(this.presetSave == true){
+                HashMap<String,Object> dataPreset = PresetManager.getPreset("default");
+
+                Dimension dimGrid = (Dimension)dataPreset.get("SIZE");
+
+                Grid loadGrid = new Grid(dimGrid, this.cell);
+                
+                ArrayList<Dimension> dimCells = (ArrayList<Dimension>)dataPreset.get("CELLS");
+                for (Dimension coord : dimCells) {
+                    loadGrid.getCell(coord).setState(true);
+                }
+                this.grid.setBoard(loadGrid.getBoard());
+            }
         }
         if (e.getSource() == this.clear || e.getSource() == this.clearBtn) {
+            this.presetSave = false; //on reinitialise le preset par défaut
             this.grid.clearGrid();
         }
         if (e.getSource()==this.photo || e.getSource()==this.photoBtn){
@@ -523,16 +468,13 @@ public class Window implements ActionListener, ComponentListener, Runnable {
             actionPresetSave();
         }
         if (e.getSource() == this.deletePreset) {
-            deletePreset();
+            actionPresetDelete();
         }
         if (e.getSource() == this.iterationMenu) {
             actionIteration();
         }
         if (e.getSource() == this.cellMenu) {
             actionCell();
-        }
-        if (e.getSource() == this.confirmPresetSave) {
-            saveNewPreset();
         }
     }
 

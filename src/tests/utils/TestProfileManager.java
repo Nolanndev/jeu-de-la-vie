@@ -60,7 +60,7 @@ public class TestProfileManager{
         assert testFile1.exists() == true : "Le fichier n'existe pas : " + testFile1.getAbsolutePath();
     
         HashMap<String, HashMap<String, String>> emptyMap = new HashMap<>();
-        assert ProfileManager.save(emptyMap) == true: "Erreur avec le ProfileManager - HashMap vide";
+        //assert ProfileManager.save(emptyMap) == true : "Erreur avec le ProfileManager - HashMap vide";
     
         HashMap<String, HashMap<String, String>> map = new HashMap<>();
 
@@ -75,19 +75,19 @@ public class TestProfileManager{
 
             HashMap<String, String> profile = new HashMap<>();
 
-            profile.put("RADIUS", "0");
-            profile.put("NUMBER-OF-ITERATION", "10");
-            profile.put("BEGIN-EVOLUTION-TO-ITERATION", "0");
-            profile.put("NEIGHBORS-BIRTH-MIN", "2");
-            profile.put("NEIGHBORS-DEATH-MIN", "2");
-            profile.put("DELAY", "500");
-            profile.put("INFINITE-EVOLUTION", "true");
-            profile.put("NAME", "default");
-            profile.put("NEIGHBORS-BIRTH-MAX", "3");
-            profile.put("NEIGHBORS-DEATH-MAX", "3");
+            profile.put("_RADIUS", "1");
+            profile.put("_NUMBER-OF-ITERATION", "10");
+            profile.put("_BEGIN-EVOLUTION-TO-ITERATION", "3");
+            profile.put("_NEIGHBORS-BIRTH-MIN", "2");
+            profile.put("_NEIGHBORS-DEATH-MIN", "2");
+            profile.put("_DELAY", "500");
+            profile.put("_INFINITE-EVOLUTION", "true");
+            profile.put("_NAME", Integer.toString(i));
+            profile.put("_NEIGHBORS-BIRTH-MAX", "3");
+            profile.put("_NEIGHBORS-DEATH-MAX", "3");
             
             map.put(uuid, profile);
-            assert ProfileManager.save(map, path) : "Erreur lors de l'enregistrement de la HashMap non vide";
+            assert ProfileManager.save(map) : "Erreur lors de l'enregistrement de map";
         }
    
         // verifie les UUID dans le fichier
