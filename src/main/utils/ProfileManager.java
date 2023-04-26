@@ -8,10 +8,10 @@ import java.util.regex.*;
 public class ProfileManager{
 
     /**
-     * Retourne vrai si la chaîne de caractères passée en paramètre est un uuid
-     * @param line une chaine de caractère
-     * @ensures return true si line est générée par java.util.UUID.randomUUID();
-     * @return vrai si le paramètre line est un uuid
+     * Return if line is a UUID
+     * @param line from a .gol.profile file
+     * @ensures return true if line if generate by java.util.UUID.randomUUID();
+     * @return vrai if line is a UUID
      */
     public static boolean isUUID(String line){
         if (line == null){
@@ -23,6 +23,10 @@ public class ProfileManager{
         return matcher.find();
     }
     
+    /**
+     * Return load with the default path
+     * @return profiles 
+     */
     public static HashMap<String, HashMap<String,String>> load() {
 	    // return load("/src/main/assets/profiles.gol.profile");
 	    char fs = File.separatorChar;
@@ -30,10 +34,11 @@ public class ProfileManager{
     }
 
     /**
-     * Charge les profiles du jeu de la vie
-     * @requires les profiles doivent etre écrits avec la fonction ProfileManager.load()
-     * @ensures return null s'il y a une erreur lors du chargement des données
-     * @return une HashMap<String, HashMap<String, String>> contenant tous les profiles
+     * load profiles of game of life
+     * @param filepath file of the .gol.profile we want to load
+     * @requires the filepath must have been write with ProfileManager.save()
+     * @ensures return null if there is an error during data loading
+     * @return une HashMap<String, HashMap<String, String>> containing all profiles
      */
     public static HashMap<String, HashMap<String, String>> load(String filepath){
         try{
@@ -92,10 +97,10 @@ public class ProfileManager{
     }
 
     /**
-     * 
-     * @param map est une HashMap<String, HashMap<String,String>> contenant les différents profiles
-     * @requires map doit etre une valeur retournée par la fonction ProfileManager.load()
-     * @return vrai si les données ont bien été sauvegardées et faux sinon
+     * save profiles in the default file
+     * @param map a map containing profiles
+     * @requires a map created by ProfileManager.load()
+     * @return true if data have been successfully write, else 0
      */
 
     public static boolean save(HashMap<String, HashMap<String,String>> map) {
@@ -103,6 +108,12 @@ public class ProfileManager{
         return save(map, fs + "src" + fs + "main" + fs + "assets" + fs + "profiles.gol.profile");
     }
 
+    /**
+     * save profiles in a file
+     * @param map all profiles
+     * @param filepath the file of the target file
+     * @return true if data have been successfully write, else 0
+     */
     public static boolean save(HashMap<String, HashMap<String, String>> map, String filepath) {
         try {
             String path = System.getProperty("user.dir") + filepath;
@@ -125,6 +136,10 @@ public class ProfileManager{
         }
     }
 
+    /**
+     * get all profiles names
+     * @return an ArrayList<String> containing all profiles names
+     */
     public static ArrayList<String> getNames() {
         HashMap<String, HashMap<String,String>> map = load();
         ArrayList<String> names = new ArrayList<>();
@@ -134,6 +149,12 @@ public class ProfileManager{
         return names;
     }
 
+    /**
+     * get a profile from a name
+     * @param profileName name of the profile
+     * ensures return null if the profiles doesn't exist
+     * @return profile
+     */
     public static HashMap<String,String> getProfile(String profileName) {
         HashMap<String, HashMap<String,String>> profiles = load();
         for (String id : profiles.keySet()) {
@@ -144,6 +165,11 @@ public class ProfileManager{
         return null;
     }
 
+    /**
+     * check is a name is valid to be added in profiles
+     * @param profileName new profile we want to check
+     * @return true if we can add the name, false else
+     */
     public static boolean isValidName(String profileName) {
         if (profileName == null || profileName.isBlank()){
             return false;
@@ -158,6 +184,12 @@ public class ProfileManager{
         return matcher.find();
     }
 
+    /**
+     * return id of a name
+     * @param profileName name of the profile
+     * @ensures return null if name is not a profile
+     * @return a string containing a uuid of the profile
+     */
     public static String getId(String profileName) {
         HashMap<String, HashMap<String,String>> map = ProfileManager.load();
         for (String id : map.keySet()) {
