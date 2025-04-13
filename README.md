@@ -1,10 +1,2 @@
-# JEU DE LA VIE
-## Utilisation
-<!-- Faire une partie utilisation, pour montrer et expliquer le fonctionnement du logiciel -->
-
-
-- rapport
-- javadoc
-- preset (loading) : taille de la grille `out of bound`
-- z-order icon menu (pour la simulation et le (dé)zoom)
-- 
+Projet réalisé dans le cadre de l'UE _Conception Logicielle_ en deuxième année de licence informatique
+Projet réalisé en équipe avec DAVID Mathias, LE BRIS Ilan, MARCHERON Bastien et PARCHEMINER Nolann
